@@ -1,54 +1,436 @@
 ---
-const title = "Rencontres avec le vivant";
+const nav = [
+  { label: "Comment ça fonctionne ?", href: "#fonctionnement" },
+  { label: "Les malles", href: "#malles" },
+  { label: "Pour qui ?", href: "#pour-qui" },
+  { label: "Le blog", href: "/blog" },
+  { label: "Me contacter", href: "/contact" },
+];
 ---
 
+<!doctype html>
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>{title}</title>
+    <meta
+      name="description"
+      content="Rencontres avec le vivant — des malles pédagogiques pour observer, écouter, expérimenter et s’émerveiller."
+    />
+    <title>Rencontres avec le vivant</title>
   </head>
 
   <body>
-    <main>
-      <h1>Rencontres avec le vivant</h1>
-      <p>Écouter, observer, s’émerveiller.</p>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Accueil">
+        <img
+          src="/images/logo.png"
+          alt="Rencontres avec le vivant"
+        />
+      </a>
 
-      <h2>Les oiseaux</h2>
-      <p>
-        Une malle pédagogique pour inviter les jeunes enfants
-        à découvrir les oiseaux par l’observation, l’écoute,
-        l’expérimentation et le jeu.
-      </p>
+      <nav aria-label="Navigation principale">
+        {nav.map((item) => (
+          <a href={item.href}>{item.label}</a>
+        ))}
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <img
+          class="hero-image"
+          src="/images/hero.jpg"
+          alt="Enfant observant un arbre avec une loupe"
+        />
+
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content">
+          <h1>
+            Des outils<br />
+            pour prendre le temps<br />
+            de rencontrer le vivant
+          </h1>
+
+          <p>
+            Des malles pédagogiques pensées pour éveiller
+            la curiosité, l’attention et l’émerveillement des enfants.
+          </p>
+
+          <a class="button button-light" href="#fonctionnement">
+            En savoir plus <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="approach" id="fonctionnement">
+        <div class="section-heading">
+          <h2>Observer · Écouter · S’émerveiller</h2>
+          <p>
+            Des malles pédagogiques qui invitent les enfants à vivre des
+            expériences sensibles et ludiques pour découvrir le vivant par
+            l’observation, la manipulation, l’écoute et le jeu.
+          </p>
+        </div>
+
+        <div class="steps">
+          <article class="step">
+            <div class="step-icon">📖</div>
+            <h3>Je découvre</h3>
+            <p>
+              Des histoires, des images et des éléments pour s’émerveiller.
+            </p>
+          </article>
+
+          <article class="step">
+            <div class="step-icon">✋</div>
+            <h3>J’expérimente</h3>
+            <p>
+              Manipuler, jouer, écouter, comparer, toucher, créer…
+            </p>
+          </article>
+
+          <article class="step">
+            <div class="step-icon">🍃</div>
+            <h3>Je poursuis dehors</h3>
+            <p>
+              Prolonger l’expérience dans la nature, au fil des saisons.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="malle" id="malles">
+        <div class="malle-image">
+          <img
+            src="/images/malle-oiseaux.jpg"
+            alt="Malle pédagogique Les oiseaux et son matériel"
+          />
+        </div>
+
+        <div class="malle-content">
+          <p class="eyebrow">Rencontres avec le vivant · Malle 01</p>
+
+          <h2>Les oiseaux</h2>
+
+          <p class="lead">
+            Une malle pour partir à la rencontre du monde des oiseaux avec
+            les enfants de 3 à 5 ans.
+          </p>
+
+          <p>
+            À l’intérieur, des histoires, un mini-monde à manipuler, des
+            expériences autour des chants, des œufs, des traces et du
+            mouvement… puis des invitations à poursuivre les découvertes
+            dehors.
+          </p>
+
+          <p class="details">
+            Matériel inclus · Fiches d’animation · Utilisable en intérieur et dehors
+          </p>
+
+          <a class="button button-green" href="/les-oiseaux">
+            Découvrir la malle <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </section>
     </main>
+
+    <style>
+      :global(*) {
+        box-sizing: border-box;
+      }
+
+      :global(html) {
+        scroll-behavior: smooth;
+      }
+
+      :global(body) {
+        margin: 0;
+        background: #f9f7f6;
+        color: #292c25;
+        font-family: Georgia, "Times New Roman", serif;
+      }
+
+      .site-header {
+        min-height: 94px;
+        padding: 16px 5.5%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 32px;
+        background: #f9f7f6;
+      }
+
+      .brand img {
+        width: 190px;
+        max-height: 66px;
+        object-fit: contain;
+        display: block;
+      }
+
+      nav {
+        display: flex;
+        align-items: center;
+        gap: clamp(24px, 4vw, 56px);
+      }
+
+      nav a {
+        color: #171814;
+        text-decoration: none;
+        font-size: 1.05rem;
+        font-weight: 600;
+      }
+
+      nav a:hover {
+        opacity: 0.65;
+      }
+
+      .hero {
+        position: relative;
+        min-height: 520px;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      .hero-image,
+      .hero-overlay {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .hero-image {
+        object-fit: cover;
+        object-position: center;
+      }
+
+      .hero-overlay {
+        background:
+          linear-gradient(
+            90deg,
+            rgba(18, 25, 17, 0.78) 0%,
+            rgba(18, 25, 17, 0.56) 35%,
+            rgba(18, 25, 17, 0.08) 70%
+          );
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        width: min(560px, 85%);
+        margin-left: 5.5%;
+        padding: 68px 0;
+        color: #fffdf7;
+      }
+
+      .hero h1 {
+        margin: 0 0 28px;
+        font-size: clamp(2.4rem, 4vw, 4.3rem);
+        line-height: 0.98;
+        font-weight: 600;
+      }
+
+      .hero p {
+        max-width: 420px;
+        margin: 0 0 34px;
+        font-size: 1.15rem;
+        line-height: 1.45;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 18px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .button-light,
+      .button-green {
+        background: #7d8957;
+        color: white;
+      }
+
+      .button span {
+        font-size: 1.55rem;
+        line-height: 1;
+      }
+
+      .approach {
+        padding: 34px 5.5% 42px;
+        text-align: center;
+      }
+
+      .section-heading {
+        max-width: 780px;
+        margin: 0 auto 30px;
+      }
+
+      .section-heading h2 {
+        margin: 0 0 10px;
+        font-size: clamp(1.8rem, 3vw, 2.8rem);
+        font-weight: 500;
+      }
+
+      .section-heading p {
+        margin: 0;
+        color: #686654;
+        line-height: 1.55;
+      }
+
+      .steps {
+        max-width: 850px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+      }
+
+      .step-icon {
+        width: 72px;
+        height: 72px;
+        margin: 0 auto 12px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: #eef0e2;
+        font-size: 2.2rem;
+      }
+
+      .step h3 {
+        margin: 0 0 10px;
+        font-size: 1.15rem;
+      }
+
+      .step p {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        font-size: 0.88rem;
+        line-height: 1.5;
+      }
+
+      .malle {
+        display: grid;
+        grid-template-columns: 1fr 1.1fr;
+        min-height: 355px;
+        margin-top: 10px;
+        background: #f2efe9;
+      }
+
+      .malle-image img {
+        width: 100%;
+        height: 100%;
+        min-height: 355px;
+        object-fit: cover;
+        display: block;
+      }
+
+      .malle-content {
+        padding: 42px clamp(32px, 6vw, 76px);
+        align-self: center;
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        color: #73765d;
+        font-family: Arial, sans-serif;
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .malle h2 {
+        margin: 0 0 20px;
+        font-size: clamp(2rem, 3.5vw, 3.2rem);
+        font-weight: 500;
+      }
+
+      .malle p {
+        max-width: 620px;
+        line-height: 1.45;
+      }
+
+      .lead {
+        font-size: 1.18rem;
+      }
+
+      .details {
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      @media (max-width: 850px) {
+        .site-header {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        nav {
+          width: 100%;
+          overflow-x: auto;
+          gap: 22px;
+          padding-bottom: 5px;
+        }
+
+        nav a {
+          white-space: nowrap;
+          font-size: 0.95rem;
+        }
+
+        .hero {
+          min-height: 590px;
+        }
+
+        .hero-content {
+          margin-left: 7%;
+        }
+
+        .steps {
+          grid-template-columns: 1fr;
+          max-width: 420px;
+        }
+
+        .malle {
+          grid-template-columns: 1fr;
+        }
+
+        .malle-image img {
+          min-height: 300px;
+          max-height: 440px;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .site-header {
+          padding: 16px 20px;
+        }
+
+        .brand img {
+          width: 160px;
+        }
+
+        .hero-content {
+          width: auto;
+          margin: 0;
+          padding: 60px 24px;
+        }
+
+        .hero-overlay {
+          background: rgba(20, 27, 18, 0.56);
+        }
+
+        .approach,
+        .malle-content {
+          padding-left: 24px;
+          padding-right: 24px;
+        }
+      }
+    </style>
   </body>
 </html>
-
-<style>
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f5f2e8;
-    color: #2f3a2f;
-  }
-
-  main {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 80px 24px;
-  }
-
-  h1 {
-    font-size: 3rem;
-    margin-bottom: 12px;
-  }
-
-  h2 {
-    margin-top: 60px;
-  }
-
-  p {
-    font-size: 1.2rem;
-    line-height: 1.6;
-  }
-</style>
