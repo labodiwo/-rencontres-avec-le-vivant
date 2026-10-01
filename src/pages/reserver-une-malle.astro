@@ -814,29 +814,29 @@ const nav = [
         gap: 12px;
       }
 
-      .calendar-week {
+      :global(.calendar-week) {
         padding: 17px 18px;
         border: 1px solid #dedbd2;
         border-radius: 7px;
         background: #fffefa;
       }
 
-      .calendar-week.available {
+      :global(.calendar-week.available) {
         background: #e6efdd;
         border-color: #a8b88f;
       }
 
-      .calendar-week.selected {
+      :global(.calendar-week.selected) {
         border-color: #596243;
         box-shadow: 0 0 0 2px rgba(89, 98, 67, .11);
       }
 
-      .calendar-week.pending,
-      .calendar-week.booked {
+      :global(.calendar-week.pending),
+      :global(.calendar-week.booked) {
         background: #f2f0eb;
       }
 
-      .week-topline {
+      :global(.week-topline) {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -844,18 +844,18 @@ const nav = [
         margin-bottom: 10px;
       }
 
-      .week-topline > div {
+      :global(.week-topline > div) {
         min-width: 0;
       }
 
-      .week-topline strong {
+      :global(.week-topline strong) {
         display: block;
         margin-bottom: 4px;
         font-size: 1rem;
         font-weight: 500;
       }
 
-      .week-status {
+      :global(.week-status) {
         display: inline-flex;
         align-items: center;
         gap: 8px;
@@ -864,7 +864,7 @@ const nav = [
         text-transform: uppercase;
       }
 
-      .week-status::before {
+      :global(.week-status::before) {
         content: "";
         width: 10px;
         height: 10px;
@@ -872,31 +872,31 @@ const nav = [
         flex: 0 0 auto;
       }
 
-      .available .week-status {
+      .available :global(.week-status) {
         color: #3f642c;
       }
 
-      .available .week-status::before {
+      .available :global(.week-status::before) {
         background: #5f8a3f;
       }
 
-      .pending .week-status {
+      .pending :global(.week-status) {
         color: #9b6a21;
       }
 
-      .pending .week-status::before {
+      .pending :global(.week-status::before) {
         background: #c59e5d;
       }
 
-      .booked .week-status {
+      .booked :global(.week-status) {
         color: #6f7068;
       }
 
-      .booked .week-status::before {
+      .booked :global(.week-status::before) {
         background: #9b9b92;
       }
 
-      .select-week {
+      :global(.select-week) {
         flex: 0 0 auto;
         min-width: 132px;
         min-height: 48px;
@@ -909,17 +909,17 @@ const nav = [
         font: 700 .92rem Arial, Helvetica, sans-serif;
       }
 
-      .select-week:hover {
+      :global(.select-week:hover) {
         background: #69754a;
         border-color: #69754a;
       }
 
-      .selected .select-week {
+      .selected :global(.select-week) {
         background: #596243;
         color: #fff;
       }
 
-      .select-week:disabled {
+      :global(.select-week:disabled) {
         border-color: #c8c5bc;
         color: #999a92;
         background: #eceae5;
@@ -1173,12 +1173,12 @@ const nav = [
           padding: 18px 14px;
         }
 
-        .week-topline {
+        :global(.week-topline) {
           align-items: center;
           gap: 12px;
         }
 
-        .select-week {
+        :global(.select-week) {
           min-width: 104px;
           min-height: 44px;
           padding: 10px 12px;
