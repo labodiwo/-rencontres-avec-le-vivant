@@ -20,6 +20,17 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    if (url.pathname === "/api/turnstile-config") {
+      if (!env.TURNSTILE_SITE_KEY) {
+        return json({ ok: false, error: "Captcha non configuré." }, 503);
+      }
+
+      return json({
+        ok: true,
+        siteKey: env.TURNSTILE_SITE_KEY,
+      });
+    }
+
     if (url.pathname !== "/api/reservation") {
       return env.ASSETS.fetch(request);
     }
@@ -39,6 +50,46 @@ export default {
       // Champ anti-spam invisible : s'il est rempli, on ignore silencieusement.
       if (clean(body.website, 200)) {
         return json({ ok: true });
+      }
+
+      if (!env.TURNSTILE_SECRET_KEY) {
+        console.error("TURNSTILE_SECRET_KEY n'est pas configuré.");
+        return json(
+          { ok: false, error: "Le captcha n’est pas encore configuré." },
+          503,
+        );
+      }
+
+      const turnstileToken = clean(body.turnstileToken, 3000);
+
+      if (!turnstileToken) {
+        return json(
+          { ok: false, error: "Merci de valider le captcha." },
+          400,
+        );
+      }
+
+      const verificationResponse = await fetch(
+        "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/x-www-form-urlencoded",
+          },
+          body: new URLSearchParams({
+            secret: env.TURNSTILE_SECRET_KEY,
+            response: turnstileToken,
+          }),
+        },
+      );
+
+      const verification = await verificationResponse.json();
+
+      if (!verification.success) {
+        return json(
+          { ok: false, error: "La vérification anti-robot a échoué. Merci de réessayer." },
+          400,
+        );
       }
 
       const data = {
