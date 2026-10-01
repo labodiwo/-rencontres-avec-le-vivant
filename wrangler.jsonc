@@ -30,5 +30,12 @@
       "type": "durable-object",
       "storage": "sqlite"
     }
+  },
+  "secrets": {
+    "required": [
+      "BOOKING_TO",
+      "TURNSTILE_SECRET_KEY",
+      "ADMIN_KEY"
+    ]
   }
 }
