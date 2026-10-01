@@ -1,7 +1,7 @@
 ---
 const nav = [
-  { label: "Les malles", href: "/les-malles" },
   { label: "Comment ça fonctionne ?", href: "/#fonctionnement" },
+  { label: "Les malles", href: "/les-malles" },
   { label: "Pour qui ?", href: "/#pour-qui" },
   { label: "Le blog", href: "/blog" },
   { label: "Me contacter", href: "/contact" },
@@ -10,43 +10,69 @@ const nav = [
 
 <!doctype html>
 <html lang="fr">
+
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
 
     <meta
       name="description"
-      content="Contactez Rencontres avec le vivant pour échanger autour des malles pédagogiques, de votre structure ou de votre projet."
+      content="Contactez Rencontres avec le vivant pour obtenir des informations sur les malles pédagogiques, leur fonctionnement, leur utilisation ou leur disponibilité."
     />
 
     <title>Me contacter · Rencontres avec le vivant</title>
   </head>
+
 
   <body>
 
     <!-- EN-TÊTE -->
     <header class="site-header">
 
-      <a class="brand" href="/" aria-label="Accueil">
-        <span class="brand-decoration" aria-hidden="true">⌇</span>
+      <a
+        class="brand"
+        href="/"
+        aria-label="Accueil"
+      >
+
+        <span
+          class="brand-decoration"
+          aria-hidden="true"
+        >
+          ⌇
+        </span>
 
         <span class="brand-text">
           <span>Rencontres</span>
           <span>avec le vivant</span>
         </span>
+
       </a>
 
+
       <nav aria-label="Navigation principale">
+
         {
           nav.map((item) => (
+
             <a
               href={item.href}
-              aria-current={item.href === "/contact" ? "page" : undefined}
+              aria-current={
+                item.href === "/contact"
+                  ? "page"
+                  : undefined
+              }
             >
               {item.label}
             </a>
+
           ))
         }
+
       </nav>
 
     </header>
@@ -54,32 +80,42 @@ const nav = [
 
     <main>
 
+
       <!-- BANDEAU -->
       <section class="contact-hero">
 
-        <div class="hero-decoration" aria-hidden="true">
+        <div
+          class="hero-decoration"
+          aria-hidden="true"
+        >
+
           <span class="stem"></span>
+
           <span class="leaf leaf-one"></span>
+
           <span class="leaf leaf-two"></span>
+
           <span class="leaf leaf-three"></span>
+
         </div>
+
 
         <div class="hero-content">
 
           <p class="eyebrow light">
-Une question sur les malles ?
+            Une question sur les malles ?
           </p>
 
           <h1>
-            Parlons<br />
-            des malles pédagogiques
+            Parlons des<br />
+            malles pédagogiques
           </h1>
 
           <p>
-Vous souhaitez en savoir plus sur une malle,
-  connaître son fonctionnement, sa disponibilité
-  ou son utilisation dans votre structure ?
-  Vous pouvez me contacter ici.
+            Vous souhaitez en savoir plus sur une malle,
+            connaître son fonctionnement, sa disponibilité
+            ou son utilisation dans votre structure ?
+            Vous pouvez me contacter ici.
           </p>
 
         </div>
@@ -87,33 +123,42 @@ Vous souhaitez en savoir plus sur une malle,
       </section>
 
 
+
       <!-- CONTACT -->
       <section class="contact-section">
 
+
+        <!-- TEXTE -->
         <div class="contact-intro">
 
           <p class="eyebrow">
-            Prendre contact
+            Me contacter
           </p>
 
           <h2>
-            Parlez-moi de votre projet
+            Une question sur une malle ?
           </h2>
 
           <p>
-            Quelques lignes suffisent pour commencer.
-            Indiquez-moi votre contexte, l’âge des enfants concernés
-            et ce que vous imaginez : nous pourrons ensuite
-            en discuter ensemble.
+            Indiquez-moi simplement ce que vous souhaitez savoir :
+            la malle qui vous intéresse, votre structure,
+            l’âge des enfants concernés ou votre question.
           </p>
+
 
           <div class="reply-note">
 
-            <span aria-hidden="true">↗</span>
+            <span aria-hidden="true">
+              ↗
+            </span>
 
             <p>
-              <strong>Une réponse personnalisée</strong>
-              Je prendrai le temps de revenir vers vous dès que possible.
+              <strong>
+                Je vous répondrai dès que possible
+              </strong>
+
+              Votre message me permettra de vous répondre
+              plus précisément sur les malles et leur utilisation.
             </p>
 
           </div>
@@ -121,24 +166,20 @@ Vous souhaitez en savoir plus sur une malle,
         </div>
 
 
+
         <!-- FORMULAIRE -->
         <form
           class="contact-form"
-          name="contact"
           method="POST"
-          data-netlify="true"
         >
 
-          <input
-            type="hidden"
-            name="form-name"
-            value="contact"
-          />
 
-
+          <!-- NOM + EMAIL -->
           <div class="field-row">
 
+
             <div class="field">
+
               <label for="name">
                 Votre nom
                 <span aria-hidden="true">*</span>
@@ -151,10 +192,12 @@ Vous souhaitez en savoir plus sur une malle,
                 autocomplete="name"
                 required
               />
+
             </div>
 
 
             <div class="field">
+
               <label for="email">
                 Votre adresse e-mail
                 <span aria-hidden="true">*</span>
@@ -167,16 +210,22 @@ Vous souhaitez en savoir plus sur une malle,
                 autocomplete="email"
                 required
               />
+
             </div>
 
           </div>
 
 
+
+          <!-- STRUCTURE -->
           <div class="field">
 
             <label for="organisation">
               Votre structure
-              <span class="optional">(facultatif)</span>
+
+              <span class="optional">
+                (facultatif)
+              </span>
             </label>
 
             <input
@@ -189,36 +238,72 @@ Vous souhaitez en savoir plus sur une malle,
           </div>
 
 
+
+          <!-- ÂGE -->
+          <div class="field">
+
+            <label for="age">
+              Âge des enfants concernés
+
+              <span class="optional">
+                (facultatif)
+              </span>
+            </label>
+
+            <input
+              id="age"
+              name="age"
+              type="text"
+              placeholder="Par exemple : 3–5 ans"
+            />
+
+          </div>
+
+
+
+          <!-- SUJET -->
           <div class="field">
 
             <label for="subject">
-              Quel est le sujet de votre message ?
+              Votre demande concerne
             </label>
 
             <select
               id="subject"
               name="subject"
             >
+
+              <option value="Malle Les oiseaux">
+                La malle « Les oiseaux »
+              </option>
+
               <option value="Découvrir les malles">
-                Découvrir les malles
+                Découvrir les malles pédagogiques
               </option>
 
-              <option value="Projet pédagogique">
-                Imaginer un projet pédagogique
+              <option value="Disponibilité et location">
+                La disponibilité ou la location d’une malle
               </option>
 
-              <option value="Partenariat">
-                Proposer un partenariat
+              <option value="Fonctionnement">
+                Le fonctionnement ou le contenu d’une malle
+              </option>
+
+              <option value="Utilisation en structure">
+                L’utilisation d’une malle dans ma structure
               </option>
 
               <option value="Autre">
-                Une autre demande
+                Une autre question
               </option>
+
             </select>
 
           </div>
 
 
+
+          <!-- MESSAGE -->
           <div class="field">
 
             <label for="message">
@@ -230,12 +315,15 @@ Vous souhaitez en savoir plus sur une malle,
               id="message"
               name="message"
               rows="7"
+              placeholder="Votre question, vos besoins ou quelques informations sur votre contexte…"
               required
             ></textarea>
 
           </div>
 
 
+
+          <!-- CONSENTEMENT -->
           <label class="consent">
 
             <input
@@ -245,22 +333,33 @@ Vous souhaitez en savoir plus sur une malle,
             />
 
             <span>
-              J’accepte que mes informations soient utilisées
-              pour répondre à ma demande.
+              J’accepte que les informations renseignées
+              soient utilisées pour répondre à ma demande.
             </span>
 
           </label>
 
 
-          <button type="submit">
-            Envoyer mon message
-            <span aria-hidden="true">→</span>
-          </button>
+
+          <!-- ENVOI -->
+          <div class="form-bottom">
+
+            <button type="submit">
+
+              Envoyer mon message
+
+              <span aria-hidden="true">
+                →
+              </span>
+
+            </button>
 
 
-          <p class="required-note">
-            * Champs obligatoires
-          </p>
+            <p class="required-note">
+              * Champs obligatoires
+            </p>
+
+          </div>
 
         </form>
 
@@ -269,14 +368,20 @@ Vous souhaitez en savoir plus sur une malle,
     </main>
 
 
+
+    <!-- PIED DE PAGE -->
     <footer>
 
-      <a class="footer-brand" href="/">
+      <a
+        class="footer-brand"
+        href="/"
+      >
         Rencontres avec le vivant
       </a>
 
       <p>
-        Des outils pour prendre le temps de rencontrer le vivant.
+        Des outils pour prendre le temps
+        de rencontrer le vivant.
       </p>
 
       <small>
@@ -286,25 +391,42 @@ Vous souhaitez en savoir plus sur une malle,
     </footer>
 
 
+
     <style>
 
-      /* BASE */
+
+      /* =========================
+         BASE
+      ========================= */
 
       :global(*) {
         box-sizing: border-box;
       }
 
+
+      :global(html) {
+        scroll-behavior: smooth;
+      }
+
+
       :global(body) {
         margin: 0;
 
         background: #f9f7f2;
+
         color: #292b23;
 
-        font-family: Georgia, "Times New Roman", serif;
+        font-family:
+          Georgia,
+          "Times New Roman",
+          serif;
       }
 
 
-      /* HEADER */
+
+      /* =========================
+         HEADER
+      ========================= */
 
       .site-header {
         min-height: 94px;
@@ -312,7 +434,9 @@ Vous souhaitez en savoir plus sur une malle,
         padding: 15px 5.5%;
 
         display: flex;
+
         align-items: center;
+
         justify-content: space-between;
 
         gap: 40px;
@@ -320,8 +444,10 @@ Vous souhaitez en savoir plus sur une malle,
         background: #f9f7f2;
       }
 
+
       .brand {
         display: flex;
+
         align-items: center;
 
         color: #29271f;
@@ -329,10 +455,12 @@ Vous souhaitez en savoir plus sur une malle,
         text-decoration: none;
       }
 
+
       .brand-decoration {
         margin-right: 10px;
 
         font-size: 2.7rem;
+
         line-height: 1;
 
         color: #747b51;
@@ -340,20 +468,30 @@ Vous souhaitez en savoir plus sur une malle,
         transform: rotate(-15deg);
       }
 
+
       .brand-text {
         display: flex;
+
         flex-direction: column;
 
         font-size: 1.55rem;
+
         line-height: 1.05;
       }
 
+
       nav {
         display: flex;
+
         align-items: center;
 
-        gap: clamp(24px, 3.7vw, 55px);
+        gap: clamp(
+          24px,
+          3.7vw,
+          55px
+        );
       }
+
 
       nav a {
         color: #161713;
@@ -361,10 +499,12 @@ Vous souhaitez en savoir plus sur une malle,
         text-decoration: none;
 
         font-size: 1rem;
+
         font-weight: 600;
 
         white-space: nowrap;
       }
+
 
       nav a:hover,
       nav a[aria-current="page"] {
@@ -372,39 +512,51 @@ Vous souhaitez en savoir plus sur une malle,
       }
 
 
-      /* BANDEAU */
+
+      /* =========================
+         BANDEAU
+      ========================= */
 
       .contact-hero {
         position: relative;
 
-        min-height: 395px;
+        min-height: 360px;
 
-        padding: 70px 8%;
+        padding: 60px 8%;
 
         display: flex;
+
         align-items: center;
 
         overflow: hidden;
 
         background: #596243;
+
         color: #fffdf8;
       }
 
+
       .hero-content {
         position: relative;
+
         z-index: 1;
 
         max-width: 720px;
       }
+
 
       .eyebrow {
         margin: 0 0 10px;
 
         color: #74785e;
 
-        font-family: Arial, Helvetica, sans-serif;
+        font-family:
+          Arial,
+          Helvetica,
+          sans-serif;
 
         font-size: 0.73rem;
+
         line-height: 1.3;
 
         letter-spacing: 0.12em;
@@ -412,17 +564,31 @@ Vous souhaitez en savoir plus sur une malle,
         text-transform: uppercase;
       }
 
+
       .eyebrow.light {
-        color: rgba(255, 255, 255, 0.72);
+        color: rgba(
+          255,
+          255,
+          255,
+          0.72
+        );
       }
+
 
       h1 {
         margin: 0 0 22px;
 
-        font-size: clamp(3.2rem, 6vw, 5.7rem);
+        font-size: clamp(
+          3.1rem,
+          6vw,
+          5.5rem
+        );
+
         font-weight: 500;
-        line-height: 0.95;
+
+        line-height: 0.96;
       }
+
 
       .hero-content > p:last-child {
         max-width: 590px;
@@ -430,19 +596,25 @@ Vous souhaitez en savoir plus sur une malle,
         margin: 0;
 
         font-size: 1.08rem;
+
         line-height: 1.65;
       }
 
 
-      /* DÉCOR DU BANDEAU */
+
+      /* =========================
+         DÉCOR BANDEAU
+      ========================= */
 
       .hero-decoration {
         position: absolute;
 
         right: 4%;
+
         bottom: -70px;
 
         width: 330px;
+
         height: 390px;
 
         opacity: 0.18;
@@ -450,13 +622,16 @@ Vous souhaitez en savoir plus sur une malle,
         transform: rotate(8deg);
       }
 
+
       .stem {
         position: absolute;
 
         left: 50%;
+
         bottom: 0;
 
         width: 3px;
+
         height: 360px;
 
         background: #fff;
@@ -466,66 +641,103 @@ Vous souhaitez en savoir plus sur une malle,
         border-radius: 50%;
       }
 
+
       .leaf {
         position: absolute;
 
         width: 115px;
+
         height: 62px;
 
         border: 3px solid #fff;
 
-        border-radius: 100% 0 100% 0;
+        border-radius:
+          100%
+          0
+          100%
+          0;
       }
+
 
       .leaf-one {
         top: 62px;
+
         left: 69px;
 
         transform: rotate(22deg);
       }
 
+
       .leaf-two {
         top: 145px;
+
         right: 28px;
 
-        transform: scaleX(-1) rotate(17deg);
+        transform:
+          scaleX(-1)
+          rotate(17deg);
       }
+
 
       .leaf-three {
         top: 225px;
+
         left: 42px;
 
         transform: rotate(17deg);
       }
 
 
-      /* SECTION CONTACT */
+
+      /* =========================
+         SECTION CONTACT
+      ========================= */
 
       .contact-section {
-        width: min(1180px, 89%);
+        width: min(
+          1180px,
+          89%
+        );
 
         margin: 0 auto;
 
-        padding: 88px 0 100px;
+        padding: 75px 0 90px;
 
         display: grid;
-        grid-template-columns: 0.85fr 1.25fr;
 
-        gap: clamp(55px, 8vw, 120px);
+        grid-template-columns:
+          0.85fr
+          1.25fr;
+
+        gap: clamp(
+          55px,
+          8vw,
+          120px
+        );
 
         align-items: start;
       }
 
 
-      /* TEXTE */
+
+      /* =========================
+         INTRODUCTION
+      ========================= */
 
       .contact-intro h2 {
         margin: 0 0 22px;
 
-        font-size: clamp(2.25rem, 3.6vw, 3.4rem);
+        font-size: clamp(
+          2.2rem,
+          3.6vw,
+          3.3rem
+        );
+
         font-weight: 500;
+
         line-height: 1.04;
       }
+
 
       .contact-intro > p:not(.eyebrow) {
         margin: 0;
@@ -534,6 +746,12 @@ Vous souhaitez en savoir plus sur une malle,
 
         line-height: 1.7;
       }
+
+
+
+      /* =========================
+         PETIT ENCADRÉ
+      ========================= */
 
       .reply-note {
         margin-top: 38px;
@@ -544,8 +762,12 @@ Vous souhaitez en savoir plus sur une malle,
 
         gap: 16px;
 
-        border-top: 1px solid #d8d5cc;
+        border-top:
+          1px
+          solid
+          #d8d5cc;
       }
+
 
       .reply-note > span {
         display: grid;
@@ -559,82 +781,124 @@ Vous souhaitez en savoir plus sur une malle,
         border-radius: 50%;
 
         background: #e5e8da;
+
         color: #596243;
 
         font-size: 1.35rem;
       }
+
 
       .reply-note p {
         margin: 1px 0 0;
 
         color: #67685d;
 
-        font-family: Arial, Helvetica, sans-serif;
+        font-family:
+          Arial,
+          Helvetica,
+          sans-serif;
 
         font-size: 0.9rem;
+
         line-height: 1.5;
       }
+
 
       .reply-note strong {
         display: block;
 
-        margin-bottom: 3px;
+        margin-bottom: 5px;
 
         color: #292b23;
 
-        font-family: Georgia, "Times New Roman", serif;
+        font-family:
+          Georgia,
+          "Times New Roman",
+          serif;
 
         font-size: 1.05rem;
       }
 
 
-      /* FORMULAIRE */
+
+      /* =========================
+         FORMULAIRE
+      ========================= */
 
       .contact-form {
-        padding: clamp(30px, 4vw, 48px);
+        padding: clamp(
+          30px,
+          4vw,
+          48px
+        );
 
         background: #efede6;
 
-        border-radius: 5px;
+        border-radius: 6px;
 
-        box-shadow: 0 16px 45px rgba(53, 58, 42, 0.06);
+        box-shadow:
+          0
+          16px
+          45px
+          rgba(
+            53,
+            58,
+            42,
+            0.06
+          );
       }
+
 
       .field-row {
         display: grid;
 
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns:
+          1fr
+          1fr;
 
         gap: 20px;
       }
 
+
       .field {
         margin-bottom: 22px;
       }
+
 
       label {
         display: block;
 
         margin-bottom: 8px;
 
-        font-family: Arial, Helvetica, sans-serif;
+        font-family:
+          Arial,
+          Helvetica,
+          sans-serif;
 
         font-size: 0.84rem;
+
         font-weight: 600;
 
         color: #383a31;
       }
 
+
       label span:not(.optional) {
         color: #7d8957;
       }
+
 
       .optional {
         color: #85867d;
 
         font-size: 0.76rem;
+
         font-weight: 400;
       }
+
+
+
+      /* CHAMPS */
 
       input:not([type="checkbox"]),
       select,
@@ -643,13 +907,22 @@ Vous souhaitez en savoir plus sur une malle,
 
         padding: 13px 14px;
 
-        border: 1px solid #cac7bd;
+        border:
+          1px
+          solid
+          #cac7bd;
+
         border-radius: 3px;
 
         background: #fffefa;
+
         color: #292b23;
 
-        font: 1rem Arial, Helvetica, sans-serif;
+        font:
+          1rem
+          Arial,
+          Helvetica,
+          sans-serif;
 
         outline: none;
 
@@ -658,11 +931,23 @@ Vous souhaitez en savoir plus sur une malle,
           box-shadow 0.2s;
       }
 
+
       textarea {
-        min-height: 150px;
+        min-height: 155px;
 
         resize: vertical;
+
+        line-height: 1.5;
       }
+
+
+      input::placeholder,
+      textarea::placeholder {
+        color: #99988f;
+
+        opacity: 1;
+      }
+
 
       input:focus,
       select:focus,
@@ -670,49 +955,102 @@ Vous souhaitez en savoir plus sur une malle,
         border-color: #7d8957;
 
         box-shadow:
-          0 0 0 3px rgba(125, 137, 87, 0.14);
+          0
+          0
+          0
+          3px
+          rgba(
+            125,
+            137,
+            87,
+            0.14
+          );
       }
+
+
+
+      /* CONSENTEMENT */
 
       .consent {
         display: flex;
+
         align-items: flex-start;
 
         gap: 10px;
 
-        margin: 2px 0 25px;
+        margin:
+          2px
+          0
+          25px;
 
         font-size: 0.78rem;
+
         font-weight: 400;
+
         line-height: 1.45;
       }
 
+
       .consent input {
         width: 17px;
+
         height: 17px;
 
         margin: 1px 0 0;
 
+        flex: 0 0 auto;
+
         accent-color: #69754a;
       }
 
+
+
+      /* BAS DU FORMULAIRE */
+
+      .form-bottom {
+        display: flex;
+
+        align-items: center;
+
+        flex-wrap: wrap;
+
+        gap: 14px;
+      }
+
+
       button {
         display: inline-flex;
+
         align-items: center;
 
         gap: 16px;
 
-        padding: 13px 19px;
+        padding:
+          13px
+          19px;
 
         border: 0;
+
         border-radius: 4px;
 
         background: #7d8957;
+
         color: white;
 
         cursor: pointer;
 
-        font: 600 0.95rem Georgia, "Times New Roman", serif;
+        font:
+          600
+          0.95rem
+          Georgia,
+          "Times New Roman",
+          serif;
+
+        transition:
+          background 0.2s,
+          transform 0.2s;
       }
+
 
       button:hover {
         background: #69754a;
@@ -720,32 +1058,42 @@ Vous souhaitez en savoir plus sur une malle,
         transform: translateY(-1px);
       }
 
+
       button span {
         font-size: 1.4rem;
+
         line-height: 0.8;
       }
 
-      .required-note {
-        display: inline-block;
 
-        margin: 0 0 0 14px;
+      .required-note {
+        margin: 0;
 
         color: #85867d;
 
-        font: 0.72rem Arial, Helvetica, sans-serif;
+        font:
+          0.72rem
+          Arial,
+          Helvetica,
+          sans-serif;
       }
 
 
-      /* FOOTER */
+
+      /* =========================
+         FOOTER
+      ========================= */
 
       footer {
         padding: 46px 5.5%;
 
         background: #303428;
+
         color: #f5f2e9;
 
         text-align: center;
       }
+
 
       .footer-brand {
         color: inherit;
@@ -755,22 +1103,46 @@ Vous souhaitez en savoir plus sur une malle,
         font-size: 1.35rem;
       }
 
-      footer p {
-        margin: 10px 0 22px;
 
-        color: rgba(255, 255, 255, 0.7);
+      footer p {
+        margin:
+          10px
+          0
+          22px;
+
+        color:
+          rgba(
+            255,
+            255,
+            255,
+            0.7
+          );
 
         font-size: 0.9rem;
       }
 
-      footer small {
-        color: rgba(255, 255, 255, 0.5);
 
-        font: 0.7rem Arial, Helvetica, sans-serif;
+      footer small {
+        color:
+          rgba(
+            255,
+            255,
+            255,
+            0.5
+          );
+
+        font:
+          0.7rem
+          Arial,
+          Helvetica,
+          sans-serif;
       }
 
 
-      /* TABLETTE */
+
+      /* =========================
+         TABLETTE
+      ========================= */
 
       @media (max-width: 900px) {
 
@@ -782,6 +1154,7 @@ Vous souhaitez en savoir plus sur une malle,
           padding-block: 20px;
         }
 
+
         nav {
           flex-wrap: wrap;
 
@@ -790,11 +1163,13 @@ Vous souhaitez en savoir plus sur une malle,
           row-gap: 12px;
         }
 
+
         .contact-section {
           grid-template-columns: 1fr;
 
           gap: 48px;
         }
+
 
         .contact-intro {
           max-width: 650px;
@@ -803,33 +1178,48 @@ Vous souhaitez en savoir plus sur une malle,
       }
 
 
-      /* MOBILE */
+
+      /* =========================
+         MOBILE
+      ========================= */
 
       @media (max-width: 620px) {
 
         nav {
-          gap: 10px 20px;
+          gap:
+            10px
+            20px;
         }
+
 
         nav a {
           font-size: 0.88rem;
         }
 
-        .contact-hero {
-          min-height: 360px;
 
-          padding: 58px 6%;
+        .contact-hero {
+          min-height: 330px;
+
+          padding:
+            50px
+            6%;
         }
+
 
         .hero-decoration {
           right: -140px;
         }
 
+
         .contact-section {
           width: 88%;
 
-          padding: 60px 0 70px;
+          padding:
+            55px
+            0
+            70px;
         }
+
 
         .field-row {
           grid-template-columns: 1fr;
@@ -837,14 +1227,18 @@ Vous souhaitez en savoir plus sur une malle,
           gap: 0;
         }
 
+
         .contact-form {
-          padding: 26px 20px;
+          padding:
+            26px
+            20px;
         }
 
-        .required-note {
-          display: block;
 
-          margin: 12px 0 0;
+        .form-bottom {
+          align-items: flex-start;
+
+          flex-direction: column;
         }
 
       }
@@ -852,4 +1246,5 @@ Vous souhaitez en savoir plus sur une malle,
     </style>
 
   </body>
+
 </html>
