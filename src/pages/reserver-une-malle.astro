@@ -58,8 +58,9 @@ const nav = [
           <p class="eyebrow">Avant de réserver</p>
           <h2>Choisissez votre semaine</h2>
           <p>
-            La location est organisée à la semaine. La malle est remise
-            le vendredi précédant la semaine réservée.
+            La location est prévue du <strong>lundi au vendredi inclus</strong>.
+            La malle est remise le vendredi précédent afin que votre équipe
+            puisse l’installer et être prête dès le lundi.
           </p>
           <p>
             Dès confirmation de la réservation, le livret pédagogique
@@ -72,7 +73,7 @@ const nav = [
       <section class="calendar-section">
         <div class="section-heading">
           <p class="eyebrow">Disponibilités</p>
-          <h2>Les prochaines semaines</h2>
+          <h2>Choisissez votre semaine de location</h2>
           <p>
             Le calendrier est indicatif. Une réservation devient définitive
             uniquement après confirmation.
@@ -115,7 +116,7 @@ const nav = [
         </div>
 
         <p class="calendar-note">
-          Cliquez sur une semaine disponible. Elle sera automatiquement
+          Cliquez sur une semaine disponible, du lundi au vendredi inclus. Elle sera automatiquement
           ajoutée à votre demande de réservation.
         </p>
       </section>
@@ -381,10 +382,10 @@ const nav = [
         }).format(date);
 
       const formatWeekLabel = (monday, friday) =>
-        `Du ${new Intl.DateTimeFormat("fr-FR", {
+        `Du lundi ${new Intl.DateTimeFormat("fr-FR", {
           day: "numeric",
           month: "long",
-        }).format(monday)} au ${new Intl.DateTimeFormat("fr-FR", {
+        }).format(monday)} au vendredi ${new Intl.DateTimeFormat("fr-FR", {
           day: "numeric",
           month: "long",
         }).format(friday)}`;
