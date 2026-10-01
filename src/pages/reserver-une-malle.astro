@@ -1,0 +1,787 @@
+---
+const nav = [
+  { label: "Les malles", href: "/les-malles" },
+  { label: "Louer une malle", href: "/louer-une-malle" },
+  { label: "Le blog", href: "/blog" },
+  { label: "Me contacter", href: "/contact" },
+];
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Consultez les disponibilités et préparez une demande de réservation pour une malle pédagogique Rencontres avec le vivant."
+    />
+    <title>Réserver une malle · Rencontres avec le vivant</title>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Accueil">
+        <span class="brand-decoration" aria-hidden="true">⌇</span>
+        <span class="brand-text">
+          <span>Rencontres</span>
+          <span>avec le vivant</span>
+        </span>
+      </a>
+
+      <nav aria-label="Navigation principale">
+        {nav.map((item) => (
+          <a href={item.href}>{item.label}</a>
+        ))}
+      </nav>
+    </header>
+
+    <main>
+      <section class="booking-hero">
+        <div class="hero-inner">
+          <p class="eyebrow light">Demande de réservation</p>
+          <h1>Réserver une malle</h1>
+          <p>
+            Choisissez une semaine, indiquez la formule souhaitée
+            et transmettez les informations utiles pour préparer votre demande.
+          </p>
+        </div>
+      </section>
+
+      <section class="booking-intro">
+        <div class="booking-intro-inner">
+          <p class="eyebrow">Avant de réserver</p>
+          <h2>Choisissez votre semaine</h2>
+          <p>
+            La location est organisée à la semaine. La malle est remise
+            le vendredi précédant la semaine réservée.
+          </p>
+          <p>
+            Dès confirmation de la réservation, le livret pédagogique
+            vous est envoyé en version numérique afin que votre équipe
+            puisse préparer les animations à l’avance.
+          </p>
+        </div>
+      </section>
+
+      <section class="calendar-section">
+        <div class="section-heading">
+          <p class="eyebrow">Disponibilités</p>
+          <h2>Les prochaines semaines</h2>
+          <p>
+            Le calendrier est indicatif. Une réservation devient définitive
+            uniquement après confirmation.
+          </p>
+        </div>
+
+        <div class="legend" aria-label="Légende du calendrier">
+          <span><i class="dot available"></i> Disponible</span>
+          <span><i class="dot pending"></i> Demande en cours</span>
+          <span><i class="dot booked"></i> Réservée</span>
+        </div>
+
+        <div id="weeks-grid" class="weeks-grid" aria-live="polite"></div>
+
+        <p class="calendar-note">
+          Vous pouvez sélectionner une semaine disponible pour la reporter
+          automatiquement dans le formulaire.
+        </p>
+      </section>
+
+      <section class="request-section" id="demande">
+        <div class="request-intro">
+          <p class="eyebrow">Votre demande</p>
+          <h2>Préparer une réservation</h2>
+          <p>
+            Cette demande ne vaut pas réservation définitive.
+            Je vérifie ensuite la disponibilité et la formule choisie
+            avant de vous confirmer la location.
+          </p>
+
+          <div class="process-note">
+            <strong>Après confirmation</strong>
+            <p>
+              Vous recevez le livret pédagogique, puis les informations
+              nécessaires au règlement et à la remise de la malle.
+            </p>
+          </div>
+        </div>
+
+        <form class="booking-form" id="booking-form">
+          <div class="field">
+            <label for="kit">Malle souhaitée</label>
+            <select id="kit" name="kit" required>
+              <option value="Les oiseaux">Les oiseaux · 3–5 ans</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="week">Semaine souhaitée <span aria-hidden="true">*</span></label>
+            <input
+              id="week"
+              name="week"
+              type="text"
+              placeholder="Sélectionnez une semaine dans le calendrier"
+              readonly
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="formula">Formule souhaitée <span aria-hidden="true">*</span></label>
+            <select id="formula" name="formula" required>
+              <option value="">Choisir une formule</option>
+              <option value="Autonome">Formule autonome</option>
+              <option value="Présentation">Formule avec présentation</option>
+              <option value="Animation">Formule avec animation</option>
+            </select>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="name">Votre nom <span aria-hidden="true">*</span></label>
+              <input id="name" name="name" type="text" autocomplete="name" required />
+            </div>
+
+            <div class="field">
+              <label for="email">Votre e-mail <span aria-hidden="true">*</span></label>
+              <input id="email" name="email" type="email" autocomplete="email" required />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="organisation">Votre structure <span aria-hidden="true">*</span></label>
+            <input
+              id="organisation"
+              name="organisation"
+              type="text"
+              autocomplete="organization"
+              required
+            />
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="children-age">Âge des enfants</label>
+              <input
+                id="children-age"
+                name="children-age"
+                type="text"
+                placeholder="Par exemple : 3–5 ans"
+              />
+            </div>
+
+            <div class="field">
+              <label for="children-number">Nombre d’enfants</label>
+              <input
+                id="children-number"
+                name="children-number"
+                type="number"
+                min="1"
+                inputmode="numeric"
+              />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="message">Précisions <span class="optional">(facultatif)</span></label>
+            <textarea
+              id="message"
+              name="message"
+              rows="5"
+              placeholder="Horaires envisagés, contexte de la structure, question particulière…"
+            ></textarea>
+          </div>
+
+          <label class="consent">
+            <input type="checkbox" required />
+            <span>
+              J’accepte que les informations renseignées soient utilisées
+              pour traiter ma demande de réservation.
+            </span>
+          </label>
+
+          <button type="submit">
+            Préparer ma demande
+            <span aria-hidden="true">→</span>
+          </button>
+
+          <p id="form-status" class="form-status" role="status"></p>
+
+          <p class="technical-note">
+            L’envoi automatique de la demande sera activé lorsque le service
+            de formulaire du site sera connecté.
+          </p>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <a class="footer-brand" href="/">Rencontres avec le vivant</a>
+      <p>Des outils pour prendre le temps de rencontrer le vivant.</p>
+      <small>© Rencontres avec le vivant</small>
+    </footer>
+
+    <script is:inline>
+      /*
+       * CALENDRIER DES DISPONIBILITÉS
+       * Pour bloquer une semaine, ajoutez sa date de lundi ci-dessous :
+       * "2026-10-12": "booked"
+       * ou "2026-10-12": "pending"
+       */
+      const availability = {
+        // "2026-10-12": "booked",
+        // "2026-10-19": "pending",
+      };
+
+      const statusLabels = {
+        available: "Disponible",
+        pending: "Demande en cours",
+        booked: "Réservée",
+      };
+
+      const grid = document.getElementById("weeks-grid");
+      const weekInput = document.getElementById("week");
+      const bookingForm = document.getElementById("booking-form");
+      const formStatus = document.getElementById("form-status");
+
+      const formatIsoDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      };
+
+      const formatShortDate = (date) =>
+        new Intl.DateTimeFormat("fr-FR", {
+          day: "numeric",
+          month: "long",
+        }).format(date);
+
+      const getNextMonday = () => {
+        const today = new Date();
+        today.setHours(12, 0, 0, 0);
+        const day = today.getDay();
+        const daysUntilMonday = day === 0 ? 1 : 8 - day;
+        const monday = new Date(today);
+        monday.setDate(today.getDate() + daysUntilMonday);
+        return monday;
+      };
+
+      const firstMonday = getNextMonday();
+
+      for (let index = 0; index < 10; index += 1) {
+        const monday = new Date(firstMonday);
+        monday.setDate(firstMonday.getDate() + index * 7);
+
+        const friday = new Date(monday);
+        friday.setDate(monday.getDate() + 4);
+
+        const iso = formatIsoDate(monday);
+        const status = availability[iso] || "available";
+
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = `week-card ${status}`;
+        card.disabled = status !== "available";
+        card.dataset.week = iso;
+
+        const dateLabel = `Du ${formatShortDate(monday)} au ${formatShortDate(friday)}`;
+
+        card.innerHTML = `
+          <span class="week-status">${statusLabels[status]}</span>
+          <strong>${dateLabel}</strong>
+          <small>Semaine de location</small>
+        `;
+
+        if (status === "available") {
+          card.addEventListener("click", () => {
+            document
+              .querySelectorAll(".week-card.selected")
+              .forEach((element) => element.classList.remove("selected"));
+
+            card.classList.add("selected");
+            weekInput.value = dateLabel;
+
+            document
+              .getElementById("demande")
+              .scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+        }
+
+        grid.appendChild(card);
+      }
+
+      bookingForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        if (!weekInput.value) {
+          formStatus.textContent =
+            "Choisissez d’abord une semaine disponible dans le calendrier.";
+          return;
+        }
+
+        formStatus.textContent =
+          "Votre demande est prête. Il reste à connecter l’envoi automatique du formulaire pour qu’elle me soit transmise.";
+      });
+    </script>
+
+    <style>
+      :global(*) { box-sizing: border-box; }
+      :global(html) { scroll-behavior: smooth; }
+      :global(body) {
+        margin: 0;
+        background: #f9f7f2;
+        color: #292b23;
+        font-family: Georgia, "Times New Roman", serif;
+      }
+
+      .site-header {
+        min-height: 94px;
+        padding: 15px 5.5%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 40px;
+        background: #f9f7f2;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        color: #29271f;
+        text-decoration: none;
+      }
+
+      .brand-decoration {
+        margin-right: 10px;
+        font-size: 2.7rem;
+        line-height: 1;
+        color: #747b51;
+        transform: rotate(-15deg);
+      }
+
+      .brand-text {
+        display: flex;
+        flex-direction: column;
+        font-size: 1.55rem;
+        line-height: 1.05;
+      }
+
+      nav {
+        display: flex;
+        align-items: center;
+        gap: clamp(20px, 3vw, 45px);
+      }
+
+      nav a {
+        color: #161713;
+        text-decoration: none;
+        font-size: .96rem;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .booking-hero {
+        min-height: 300px;
+        padding: 55px 5.5%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #596243;
+        color: #fffdf8;
+        text-align: center;
+      }
+
+      .hero-inner {
+        max-width: 760px;
+        margin: 0 auto;
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        color: #74785e;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: .73rem;
+        line-height: 1.3;
+        letter-spacing: .11em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow.light {
+        color: rgba(255, 255, 255, .72);
+      }
+
+      .booking-hero h1 {
+        margin: 4px 0 18px;
+        font-size: clamp(3.2rem, 6vw, 5.5rem);
+        line-height: .96;
+        font-weight: 500;
+      }
+
+      .booking-hero p:last-child {
+        max-width: 650px;
+        margin: 0 auto;
+        font-size: 1.08rem;
+        line-height: 1.6;
+      }
+
+      .booking-intro {
+        padding: 55px 5.5%;
+      }
+
+      .booking-intro-inner {
+        max-width: 780px;
+      }
+
+      .booking-intro h2 {
+        margin: 0 0 18px;
+        font-size: clamp(2.15rem, 3.5vw, 3rem);
+        font-weight: 500;
+      }
+
+      .booking-intro p {
+        max-width: 720px;
+        line-height: 1.7;
+      }
+
+      .calendar-section {
+        padding: 70px 5.5%;
+        background: #f1eee8;
+      }
+
+      .section-heading {
+        max-width: 760px;
+        margin: 0 auto 28px;
+        text-align: center;
+      }
+
+      .section-heading h2 {
+        margin: 0 0 14px;
+        font-size: clamp(2.2rem, 3.5vw, 3.1rem);
+        font-weight: 500;
+      }
+
+      .section-heading p:last-child {
+        margin: 0;
+        line-height: 1.6;
+      }
+
+      .legend {
+        max-width: 1000px;
+        margin: 0 auto 24px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        font: .8rem Arial, Helvetica, sans-serif;
+        color: #5f6156;
+      }
+
+      .legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+
+      .dot.available { background: #7d8957; }
+      .dot.pending { background: #c59e5d; }
+      .dot.booked { background: #9b9b92; }
+
+      .weeks-grid {
+        max-width: 1050px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .week-card {
+        padding: 22px;
+        border: 1px solid transparent;
+        border-radius: 7px;
+        background: #f9f7f2;
+        color: #292b23;
+        text-align: left;
+        cursor: pointer;
+        font-family: inherit;
+        transition: transform .15s ease, border-color .15s ease;
+      }
+
+      .week-card.available:hover {
+        transform: translateY(-2px);
+        border-color: #8d9671;
+      }
+
+      .week-card.selected {
+        border-color: #596243;
+        box-shadow: 0 0 0 2px rgba(89, 98, 67, .12);
+      }
+
+      .week-card:disabled {
+        cursor: not-allowed;
+        opacity: .62;
+      }
+
+      .week-card strong {
+        display: block;
+        margin: 8px 0 6px;
+        font-size: 1.08rem;
+        font-weight: 500;
+      }
+
+      .week-card small {
+        color: #77796e;
+        font: .74rem Arial, Helvetica, sans-serif;
+      }
+
+      .week-status {
+        display: inline-block;
+        font: 700 .68rem Arial, Helvetica, sans-serif;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        color: #687347;
+      }
+
+      .pending .week-status { color: #a27735; }
+      .booked .week-status { color: #77776f; }
+
+      .calendar-note {
+        max-width: 760px;
+        margin: 24px auto 0;
+        text-align: center;
+        color: #737469;
+        font: .8rem/1.5 Arial, Helvetica, sans-serif;
+      }
+
+      .request-section {
+        width: min(1150px, 89%);
+        margin: 0 auto;
+        padding: 78px 0 90px;
+        display: grid;
+        grid-template-columns: .85fr 1.25fr;
+        gap: clamp(50px, 7vw, 100px);
+        align-items: start;
+      }
+
+      .request-intro h2 {
+        margin: 0 0 20px;
+        font-size: clamp(2.2rem, 3.5vw, 3rem);
+        font-weight: 500;
+        line-height: 1.05;
+      }
+
+      .request-intro > p:not(.eyebrow) {
+        line-height: 1.7;
+        color: #5d5e54;
+      }
+
+      .process-note {
+        margin-top: 30px;
+        padding: 22px;
+        background: #dfe3cf;
+        border-radius: 6px;
+      }
+
+      .process-note strong {
+        display: block;
+        margin-bottom: 7px;
+      }
+
+      .process-note p {
+        margin: 0;
+        line-height: 1.55;
+      }
+
+      .booking-form {
+        padding: clamp(28px, 4vw, 46px);
+        background: #efede6;
+        border-radius: 7px;
+      }
+
+      .field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      .field {
+        margin-bottom: 22px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        color: #383a31;
+        font: 600 .84rem Arial, Helvetica, sans-serif;
+      }
+
+      .optional {
+        color: #85867d;
+        font-size: .76rem;
+        font-weight: 400;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 13px 14px;
+        border: 1px solid #cac7bd;
+        border-radius: 3px;
+        background: #fffefa;
+        color: #292b23;
+        font: 1rem Arial, Helvetica, sans-serif;
+      }
+
+      input[readonly] {
+        background: #f8f7f2;
+      }
+
+      textarea {
+        resize: vertical;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #7d8957;
+        box-shadow: 0 0 0 3px rgba(125, 137, 87, .14);
+      }
+
+      .consent {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin: 2px 0 24px;
+        font-size: .78rem;
+        font-weight: 400;
+        line-height: 1.45;
+      }
+
+      .consent input {
+        width: 17px;
+        height: 17px;
+        margin: 1px 0 0;
+        flex: 0 0 auto;
+        accent-color: #69754a;
+      }
+
+      button[type="submit"] {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        padding: 13px 19px;
+        border: 0;
+        border-radius: 4px;
+        background: #7d8957;
+        color: white;
+        cursor: pointer;
+        font: 600 .95rem Georgia, "Times New Roman", serif;
+      }
+
+      button[type="submit"]:hover {
+        background: #69754a;
+      }
+
+      .form-status {
+        margin: 16px 0 0;
+        color: #596243;
+        line-height: 1.5;
+      }
+
+      .technical-note {
+        margin: 18px 0 0;
+        padding-top: 16px;
+        border-top: 1px solid #d4d1c7;
+        color: #77786f;
+        font: .74rem/1.5 Arial, Helvetica, sans-serif;
+      }
+
+      footer {
+        padding: 46px 5.5%;
+        background: #303428;
+        color: #f5f2e9;
+        text-align: center;
+      }
+
+      .footer-brand {
+        color: inherit;
+        text-decoration: none;
+        font-size: 1.35rem;
+      }
+
+      footer p {
+        margin: 10px 0 22px;
+        color: rgba(255,255,255,.7);
+        font-size: .9rem;
+      }
+
+      footer small {
+        color: rgba(255,255,255,.5);
+        font: .7rem Arial, Helvetica, sans-serif;
+      }
+
+      @media (max-width: 900px) {
+        .site-header {
+          flex-direction: column;
+          gap: 20px;
+        }
+
+        nav {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .request-section {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 650px) {
+        .site-header {
+          padding: 16px 22px;
+        }
+
+        nav {
+          gap: 10px 18px;
+        }
+
+        nav a {
+          font-size: .86rem;
+        }
+
+        .booking-hero {
+          min-height: 270px;
+          padding: 45px 24px;
+        }
+
+        .booking-intro,
+        .calendar-section {
+          padding: 50px 24px;
+        }
+
+        .weeks-grid,
+        .field-row {
+          grid-template-columns: 1fr;
+        }
+
+        .request-section {
+          width: 88%;
+          padding: 55px 0 70px;
+        }
+
+        .booking-form {
+          padding: 26px 20px;
+        }
+      }
+    </style>
+  </body>
+</html>
