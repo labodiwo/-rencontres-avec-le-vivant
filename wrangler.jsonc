@@ -16,5 +16,19 @@
     {
       "name": "EMAIL"
     }
-  ]
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "AVAILABILITY",
+        "class_name": "AvailabilityStore"
+      }
+    ]
+  },
+  "exports": {
+    "AvailabilityStore": {
+      "type": "durable-object",
+      "storage": "sqlite"
+    }
+  }
 }
