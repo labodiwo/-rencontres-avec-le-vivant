@@ -375,12 +375,6 @@ const nav = [
         return `${year}-${month}-${day}`;
       };
 
-      const formatDay = (date) =>
-        new Intl.DateTimeFormat("fr-FR", {
-          weekday: "short",
-          day: "numeric",
-        }).format(date);
-
       const formatWeekLabel = (monday, friday) =>
         `Du lundi ${new Intl.DateTimeFormat("fr-FR", {
           day: "numeric",
@@ -454,22 +448,6 @@ const nav = [
               ? "Passée"
               : statusLabels[status];
 
-          const days = [];
-
-          for (let dayIndex = 0; dayIndex < 5; dayIndex += 1) {
-            const dayDate = new Date(weekMonday);
-            dayDate.setDate(weekMonday.getDate() + dayIndex);
-
-            const outsideMonth =
-              dayDate.getMonth() !== displayedMonth.getMonth();
-
-            days.push(
-              `<span class="calendar-day ${outsideMonth ? "outside-month" : ""}">
-                ${formatDay(dayDate)}
-              </span>`
-            );
-          }
-
           week.innerHTML = `
             <div class="week-topline">
               <div>
@@ -483,10 +461,6 @@ const nav = [
               >
                 ${iso === selectedWeekIso ? "Sélectionnée" : "Choisir"}
               </button>
-            </div>
-
-            <div class="week-days">
-              ${days.join("")}
             </div>
           `;
 
@@ -852,10 +826,6 @@ const nav = [
         border-color: #a8b88f;
       }
 
-      .calendar-week.available .calendar-day {
-        background: #f2f7ec;
-      }
-
       .calendar-week.selected {
         border-color: #596243;
         box-shadow: 0 0 0 2px rgba(89, 98, 67, .11);
@@ -924,26 +894,6 @@ const nav = [
         color: #999a92;
         background: #eceae5;
         cursor: not-allowed;
-      }
-
-      .week-days {
-        display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-        gap: 7px;
-      }
-
-      .calendar-day {
-        padding: 9px 6px;
-        border-radius: 4px;
-        background: #f1eee8;
-        text-align: center;
-        color: #45473f;
-        font: .78rem Arial, Helvetica, sans-serif;
-        text-transform: capitalize;
-      }
-
-      .calendar-day.outside-month {
-        opacity: .5;
       }
 
       .calendar-note {
@@ -1195,15 +1145,6 @@ const nav = [
 
         .week-topline {
           align-items: flex-start;
-        }
-
-        .week-days {
-          gap: 4px;
-        }
-
-        .calendar-day {
-          padding: 8px 3px;
-          font-size: .68rem;
         }
 
         .select-week {
