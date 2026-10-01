@@ -269,16 +269,7 @@ const nav = [
     </footer>
 
     <script is:inline>
-      /*
-       * CALENDRIER DES DISPONIBILITÉS
-       * Pour bloquer une semaine, ajoutez sa date de lundi ci-dessous :
-       * "2026-10-12": "booked"
-       * ou "2026-10-12": "pending"
-       */
-      const availability = {
-        // "2026-10-12": "booked",
-        // "2026-10-19": "pending",
-      };
+      let availability = {};
 
       const statusLabels = {
         available: "Disponible",
@@ -503,7 +494,22 @@ const nav = [
         renderCalendar();
       });
 
-      renderCalendar();
+      const loadAvailability = async () => {
+        try {
+          const response = await fetch("/api/availability");
+          const result = await response.json();
+
+          if (response.ok && result.ok) {
+            availability = result.availability || {};
+          }
+        } catch (error) {
+          console.error("Disponibilités indisponibles", error);
+        } finally {
+          renderCalendar();
+        }
+      };
+
+      loadAvailability();
 
       bookingForm.addEventListener("submit", async (event) => {
         event.preventDefault();
