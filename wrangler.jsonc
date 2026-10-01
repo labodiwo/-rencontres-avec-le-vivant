@@ -2,6 +2,9 @@
   "name": "rencontres-avec-le-vivant",
   "main": "./src/worker.js",
   "compatibility_date": "2026-10-01",
+  "vars": {
+    "TURNSTILE_SITE_KEY": "0x4AAAAAAFLbq9U43C7dk5EU"
+  },
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
