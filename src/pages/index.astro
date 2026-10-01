@@ -1,827 +1,609 @@
----
-const nav = [
-  { label: "Comment ça fonctionne ?", href: "#fonctionnement" },
-  { label: "Les malles", href: "#malles" },
-  { label: "Pour qui ?", href: "#pour-qui" },
-  { label: "Le blog", href: "/blog" },
-  { label: "Me contacter", href: "/contact" },
-];
----
+<style>
 
-<!doctype html>
-<html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  /* ------------------------------
+     BASE
+  ------------------------------ */
 
-    <meta
-      name="description"
-      content="Rencontres avec le vivant — des malles pédagogiques pour observer, écouter, expérimenter et s’émerveiller."
-    />
+  :global(*) {
+    box-sizing: border-box;
+  }
 
-    <title>Rencontres avec le vivant</title>
-  </head>
+  :global(html) {
+    scroll-behavior: smooth;
+  }
 
-  <body>
+  :global(body) {
+    margin: 0;
+    background: #f9f7f6;
+    color: #25271f;
+    font-family: Georgia, "Times New Roman", serif;
+  }
 
-    <!-- EN-TÊTE -->
-    <header class="site-header">
+  :global(img) {
+    max-width: 100%;
+  }
 
-      <a class="brand" href="/" aria-label="Accueil">
-        <span class="brand-decoration">⌇</span>
 
-        <span class="brand-text">
-          <span>Rencontres</span>
-          <span>avec le vivant</span>
-        </span>
-      </a>
+  /* ------------------------------
+     HEADER
+  ------------------------------ */
 
-      <nav aria-label="Navigation principale">
-        {
-          nav.map((item) => (
-            <a href={item.href}>{item.label}</a>
-          ))
-        }
-      </nav>
+  .site-header {
+    min-height: 94px;
+    padding: 15px 5.5%;
 
-    </header>
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
+    gap: 40px;
 
-    <main>
+    background: #f9f7f6;
+  }
 
-      <!-- GRANDE IMAGE D'ACCUEIL -->
-      <section class="hero">
 
-        <img
-          class="hero-image"
-          src="/images/hero.jpg"
-          alt="Enfant observant un arbre avec une loupe"
-        />
+  .brand {
+    display: flex;
+    align-items: center;
 
-        <div class="hero-overlay"></div>
+    color: #29271f;
+    text-decoration: none;
+  }
 
-        <div class="hero-content">
 
-          <h1>
-            Des outils<br />
-            pour prendre le temps<br />
-            de rencontrer le vivant
-          </h1>
+  .brand-decoration {
+    margin-right: 10px;
 
-          <p>
-            Des malles pédagogiques pensées pour éveiller la curiosité,
-            l’attention et l’émerveillement des enfants.
-          </p>
+    font-size: 2.7rem;
+    line-height: 1;
 
-          <a class="button" href="#fonctionnement">
-            En savoir plus
-            <span aria-hidden="true">→</span>
-          </a>
+    color: #747b51;
 
-        </div>
+    transform: rotate(-15deg);
+  }
 
-      </section>
 
+  .brand-text {
+    display: flex;
+    flex-direction: column;
 
-      <!-- COMMENT ÇA FONCTIONNE -->
-      <section class="approach" id="fonctionnement">
+    font-size: 1.55rem;
+    line-height: 1.05;
+  }
 
-        <div class="section-heading">
 
-          <h2>
-            Observer <span>–</span>
-            Écouter <span>–</span>
-            S’émerveiller
-          </h2>
+  nav {
+    display: flex;
+    align-items: center;
 
-          <p>
-            Des malles pédagogiques qui invitent les enfants à vivre des
-            expériences sensibles et ludiques pour découvrir le vivant par
-            l’observation, la manipulation, l’écoute et le jeu.
-          </p>
+    gap: clamp(24px, 3.7vw, 55px);
+  }
 
-        </div>
 
+  nav a {
+    color: #161713;
+    text-decoration: none;
 
-        <div class="steps">
+    font-size: 1rem;
+    font-weight: 600;
 
-          <article class="step">
+    white-space: nowrap;
 
-            <img
-              src="/images/je-decouvre.png"
-              alt=""
-              class="step-icon"
-            />
+    transition: opacity 0.2s ease;
+  }
 
-            <h3>Je découvre</h3>
 
-            <p>
-              Des histoires, des images et des éléments pour s’émerveiller.
-            </p>
+  nav a:hover {
+    opacity: 0.55;
+  }
 
-          </article>
 
+  /* ------------------------------
+     HERO
+  ------------------------------ */
 
-          <article class="step">
+  .hero {
+    position: relative;
 
-            <img
-              src="/images/j-experimente.png"
-              alt=""
-              class="step-icon"
-            />
+    min-height: 380px;
 
-            <h3>J’expérimente</h3>
+    display: flex;
+    align-items: center;
 
-            <p>
-              Manipuler, jouer, écouter, comparer, toucher, créer…
-            </p>
+    overflow: hidden;
+  }
 
-          </article>
 
+  .hero-image {
+    position: absolute;
+    inset: 0;
 
-          <article class="step">
+    width: 100%;
+    height: 100%;
 
-            <img
-              src="/images/je-poursuis-dehors.png"
-              alt=""
-              class="step-icon"
-            />
+    object-fit: cover;
+    object-position: center 60%;
+  }
 
-            <h3>Je poursuis dehors</h3>
 
-            <p>
-              Prolonger l’expérience dans la nature, au fil des saisons.
-            </p>
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
 
-          </article>
+    background:
+      linear-gradient(
+        90deg,
+        rgba(16, 21, 13, 0.80) 0%,
+        rgba(16, 21, 13, 0.60) 30%,
+        rgba(16, 21, 13, 0.18) 62%,
+        rgba(16, 21, 13, 0.03) 100%
+      );
+  }
 
-        </div>
 
-      </section>
+  .hero-content {
+    position: relative;
+    z-index: 2;
 
+    width: min(520px, 87%);
 
-      <!-- MALLE OISEAUX -->
-      <section class="malle" id="malles">
+    margin-left: 5.5%;
 
-        <div class="malle-image">
+    padding: 40px 0;
 
-          <img
-            src="/images/malle-oiseaux.jpg"
-            alt="Malle pédagogique Les oiseaux et son matériel"
-          />
+    color: #fffdf8;
+  }
 
-        </div>
 
+  .hero h1 {
+    margin: 0 0 20px;
 
-        <div class="malle-content">
+    font-size: clamp(2.2rem, 3.7vw, 3.8rem);
 
-          <p class="eyebrow">
-            Rencontres avec le vivant · Malle 01
-          </p>
+    line-height: 1.02;
 
-          <h2>Les oiseaux</h2>
+    font-weight: 500;
+  }
 
-          <p class="lead">
-            Une malle pour partir à la rencontre du monde des oiseaux
-            avec les enfants de 3 à 5 ans.
-          </p>
 
-          <p>
-            À l’intérieur, des histoires, un mini-monde à manipuler,
-            des expériences autour des chants, des œufs, des traces
-            et du mouvement… puis des invitations à poursuivre
-            les découvertes dehors.
-          </p>
+  .hero p {
+    max-width: 400px;
 
-          <p class="details">
-            Matériel inclus · Fiches d’animation · Utilisable en intérieur et dehors
-          </p>
+    margin: 0 0 26px;
 
-          <a class="button" href="/les-oiseaux">
-            Découvrir la malle
-            <span aria-hidden="true">→</span>
-          </a>
+    font-size: 1.05rem;
+    line-height: 1.45;
+  }
 
-        </div>
 
-      </section>
+  /* ------------------------------
+     BOUTONS
+  ------------------------------ */
 
+  .button {
+    display: inline-flex;
+    align-items: center;
 
-      <!-- POUR QUI -->
-      <section class="audience" id="pour-qui">
+    gap: 14px;
 
-        <div class="audience-inner">
+    padding: 11px 17px;
 
-          <p class="eyebrow">
-            Des outils pensés pour être utilisés facilement
-          </p>
+    background: #7d8957;
+    color: white;
 
-          <h2>Pour qui ?</h2>
+    border-radius: 4px;
 
-          <p>
-            Les malles s’adressent aux structures qui accompagnent
-            les jeunes enfants : accueils de loisirs, maisons de quartier,
-            médiathèques, écoles et autres lieux éducatifs.
-          </p>
+    text-decoration: none;
 
-        </div>
+    font-weight: 600;
 
-      </section>
+    transition:
+      transform 0.15s ease,
+      background 0.15s ease;
+  }
 
-    </main>
 
+  .button:hover {
+    background: #6f7b4d;
 
-    <footer>
+    transform: translateY(-1px);
+  }
 
-      <p>
-        © Rencontres avec le vivant
-      </p>
 
-    </footer>
+  .button span {
+    font-size: 1.45rem;
+    line-height: 1;
+  }
 
 
-    <style>
+  /* ------------------------------
+     DÉMARCHE
+  ------------------------------ */
 
-      /* ------------------------------
-         BASE
-      ------------------------------ */
+  .approach {
+    padding: 32px 5.5% 42px;
 
-      :global(*) {
-        box-sizing: border-box;
-      }
+    background: #f9f7f6;
 
-      :global(html) {
-        scroll-behavior: smooth;
-      }
+    text-align: center;
+  }
 
-      :global(body) {
-        margin: 0;
-        background: #f9f7f6;
-        color: #25271f;
-        font-family: Georgia, "Times New Roman", serif;
-      }
 
-      :global(img) {
-        max-width: 100%;
-      }
+  .section-heading {
+    max-width: 820px;
 
+    margin: 0 auto 30px;
+  }
 
-      /* ------------------------------
-         HEADER
-      ------------------------------ */
 
-      .site-header {
-        min-height: 94px;
-        padding: 15px 5.5%;
+  .section-heading h2 {
+    margin: 0 0 10px;
 
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+    font-size: clamp(1.8rem, 2.8vw, 2.75rem);
 
-        gap: 40px;
+    font-weight: 500;
+  }
 
-        background: #f9f7f6;
-      }
 
+  .section-heading h2 span {
+    color: #73785b;
+  }
 
-      .brand {
-        display: flex;
-        align-items: center;
 
-        color: #29271f;
-        text-decoration: none;
-      }
+  .section-heading p {
+    margin: 0;
 
+    color: #686654;
 
-      .brand-decoration {
-        margin-right: 10px;
+    line-height: 1.5;
 
-        font-size: 2.7rem;
-        line-height: 1;
+    font-size: 1rem;
+  }
 
-        color: #747b51;
 
-        transform: rotate(-15deg);
-      }
+  .steps {
+    max-width: 900px;
 
+    margin: 0 auto;
 
-      .brand-text {
-        display: flex;
-        flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
 
-        font-size: 1.55rem;
-        line-height: 1.05;
-      }
+    gap: 55px;
+  }
 
 
-      nav {
-        display: flex;
-        align-items: center;
+  .step {
+    text-align: center;
+  }
 
-        gap: clamp(24px, 3.7vw, 55px);
-      }
 
+  .step-icon {
+    display: block;
 
-      nav a {
-        color: #161713;
-        text-decoration: none;
+    width: 112px;
+    height: 112px;
 
-        font-size: 1rem;
-        font-weight: 600;
+    margin: 0 auto 13px;
 
-        white-space: nowrap;
+    object-fit: contain;
+  }
 
-        transition: opacity 0.2s ease;
-      }
 
+  .step h3 {
+    margin: 0 0 12px;
 
-      nav a:hover {
-        opacity: 0.55;
-      }
+    font-size: 1.18rem;
 
+    font-weight: 600;
+  }
 
-      /* ------------------------------
-         HERO
-      ------------------------------ */
 
-      .hero {
-        position: relative;
+  .step p {
+    max-width: 250px;
 
-        min-height: 350px;
+    margin: 0 auto;
 
-        display: flex;
-        align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
 
-        overflow: hidden;
-      }
+    font-size: 0.86rem;
 
+    line-height: 1.5;
 
-      .hero-image {
-        position: absolute;
-        inset: 0;
+    color: #33342d;
+  }
 
-        width: 100%;
-        height: 100%;
 
-        object-fit: cover;
-        object-position: center 65%;
-      }
+  /* ------------------------------
+     MALLE OISEAUX
+  ------------------------------ */
 
+  .malle {
+    display: grid;
 
-      .hero-overlay {
-        position: absolute;
-        inset: 0;
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 1.1fr);
 
-        background:
-          linear-gradient(
-            90deg,
-            rgba(16, 21, 13, 0.80) 0%,
-            rgba(16, 21, 13, 0.60) 30%,
-            rgba(16, 21, 13, 0.18) 62%,
-            rgba(16, 21, 13, 0.03) 100%
-          );
-      }
+    min-height: 365px;
 
+    background: #f1eee8;
+  }
 
-      .hero-content {
-        position: relative;
-        z-index: 2;
 
-        width: min(520px, 87%);
+  .malle-image {
+    min-height: 365px;
+  }
 
-        margin-left: 5.5%;
 
-        padding: 70px 0;
+  .malle-image img {
+    display: block;
 
-        color: #fffdf8;
-      }
+    width: 100%;
+    height: 100%;
 
+    min-height: 365px;
 
-      .hero h1 {
-        margin: 0 0 28px;
+    object-fit: cover;
+    object-position: center;
+  }
 
-        font-size: clamp(2.35rem, 4vw, 4.15rem);
 
-        line-height: 1.02;
+  .malle-content {
+    align-self: center;
 
-        font-weight: 500;
-      }
+    padding:
+      40px
+      clamp(34px, 6vw, 78px);
+  }
 
 
-      .hero p {
-        max-width: 400px;
+  .eyebrow {
+    margin: 0 0 8px;
 
-        margin: 0 0 34px;
+    font-family: Arial, Helvetica, sans-serif;
 
-        font-size: 1.08rem;
-        line-height: 1.45;
-      }
+    font-size: 0.73rem;
 
+    line-height: 1.3;
 
-      /* ------------------------------
-         BOUTONS
-      ------------------------------ */
+    letter-spacing: 0.09em;
 
-      .button {
-        display: inline-flex;
-        align-items: center;
+    text-transform: uppercase;
 
-        gap: 14px;
+    color: #74785e;
+  }
 
-        padding: 11px 17px;
 
-        background: #7d8957;
-        color: white;
+  .malle h2 {
+    margin: 0 0 18px;
 
-        border-radius: 4px;
+    font-size: clamp(2rem, 3.3vw, 3rem);
 
-        text-decoration: none;
+    font-weight: 500;
+  }
 
-        font-weight: 600;
 
-        transition:
-          transform 0.15s ease,
-          background 0.15s ease;
-      }
+  .malle p {
+    max-width: 620px;
 
+    line-height: 1.45;
+  }
 
-      .button:hover {
-        background: #6f7b4d;
 
-        transform: translateY(-1px);
-      }
+  .malle .lead {
+    font-size: 1.12rem;
+  }
 
 
-      .button span {
-        font-size: 1.45rem;
-        line-height: 1;
-      }
+  .details {
+    margin: 20px 0;
 
+    font-size: 0.88rem;
 
-      /* ------------------------------
-         DÉMARCHE
-      ------------------------------ */
+    font-weight: 600;
+  }
 
-      .approach {
-        padding: 32px 5.5% 42px;
 
-        background: #f9f7f6;
+  /* ------------------------------
+     POUR QUI
+  ------------------------------ */
 
-        text-align: center;
-      }
+  .audience {
+    padding: 80px 24px;
 
+    background: #f9f7f6;
 
-      .section-heading {
-        max-width: 820px;
+    text-align: center;
+  }
 
-        margin: 0 auto 30px;
-      }
 
+  .audience-inner {
+    max-width: 700px;
 
-      .section-heading h2 {
-        margin: 0 0 10px;
+    margin: 0 auto;
+  }
 
-        font-size: clamp(1.8rem, 2.8vw, 2.75rem);
 
-        font-weight: 500;
-      }
+  .audience h2 {
+    margin: 8px 0 18px;
 
+    font-size: clamp(2rem, 3vw, 2.8rem);
 
-      .section-heading h2 span {
-        color: #73785b;
-      }
+    font-weight: 500;
+  }
 
 
-      .section-heading p {
-        margin: 0;
+  .audience p {
+    line-height: 1.6;
+  }
 
-        color: #686654;
 
-        line-height: 1.5;
+  /* ------------------------------
+     FOOTER
+  ------------------------------ */
 
-        font-size: 1rem;
-      }
+  footer {
+    padding: 30px 5.5%;
 
+    background: #ece9e1;
 
-      .steps {
-        max-width: 900px;
+    text-align: center;
 
-        margin: 0 auto;
+    font-family: Arial, Helvetica, sans-serif;
 
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
+    font-size: 0.78rem;
 
-        gap: 55px;
-      }
+    color: #656559;
+  }
 
 
-      .step {
-        text-align: center;
-      }
+  /* ------------------------------
+     TABLETTE
+  ------------------------------ */
 
+  @media (max-width: 900px) {
 
-      .step-icon {
-        display: block;
+    .site-header {
+      align-items: flex-start;
 
-        width: 112px;
-        height: 112px;
+      flex-direction: column;
 
-        margin: 0 auto 13px;
+      gap: 14px;
+    }
 
-        object-fit: contain;
-      }
 
+    nav {
+      width: 100%;
 
-      .step h3 {
-        margin: 0 0 12px;
+      overflow-x: auto;
 
-        font-size: 1.18rem;
+      gap: 24px;
 
-        font-weight: 600;
-      }
+      padding-bottom: 5px;
+    }
 
 
-      .step p {
-        max-width: 250px;
+    nav a {
+      font-size: 0.93rem;
+    }
 
-        margin: 0 auto;
 
-        font-family: Arial, Helvetica, sans-serif;
+    .hero {
+      min-height: 420px;
+    }
 
-        font-size: 0.86rem;
 
-        line-height: 1.5;
+    .hero-content {
+      padding: 45px 0;
+    }
 
-        color: #33342d;
-      }
 
+    .steps {
+      gap: 25px;
+    }
 
-      /* ------------------------------
-         MALLE OISEAUX
-      ------------------------------ */
+  }
 
-      .malle {
-        display: grid;
 
-        grid-template-columns:
-          minmax(0, 1fr)
-          minmax(0, 1.1fr);
+  /* ------------------------------
+     MOBILE
+  ------------------------------ */
 
-        min-height: 365px;
+  @media (max-width: 700px) {
 
-        background: #f1eee8;
-      }
+    .site-header {
+      padding: 16px 22px;
+    }
 
 
-      .malle-image {
-        min-height: 365px;
-      }
+    .brand-text {
+      font-size: 1.25rem;
+    }
 
 
-      .malle-image img {
-        display: block;
+    .brand-decoration {
+      font-size: 2.2rem;
+    }
 
-        width: 100%;
-        height: 100%;
 
-        min-height: 365px;
+    .hero {
+      min-height: 460px;
+    }
 
-        object-fit: cover;
-        object-position: center;
-      }
 
+    .hero-image {
+      object-position: center 60%;
+    }
 
-      .malle-content {
-        align-self: center;
 
-        padding:
-          40px
-          clamp(34px, 6vw, 78px);
-      }
+    .hero-overlay {
+      background:
+        linear-gradient(
+          90deg,
+          rgba(15, 21, 13, 0.68),
+          rgba(15, 21, 13, 0.38)
+        );
+    }
 
 
-      .eyebrow {
-        margin: 0 0 8px;
+    .hero-content {
+      width: auto;
 
-        font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
 
-        font-size: 0.73rem;
+      padding: 45px 24px;
+    }
 
-        line-height: 1.3;
 
-        letter-spacing: 0.09em;
+    .hero h1 {
+      font-size: clamp(2rem, 9vw, 3rem);
 
-        text-transform: uppercase;
+      margin-bottom: 18px;
+    }
 
-        color: #74785e;
-      }
 
+    .hero p {
+      margin-bottom: 24px;
+    }
 
-      .malle h2 {
-        margin: 0 0 18px;
 
-        font-size: clamp(2rem, 3.3vw, 3rem);
+    .steps {
+      grid-template-columns: 1fr;
 
-        font-weight: 500;
-      }
+      max-width: 420px;
 
+      gap: 42px;
+    }
 
-      .malle p {
-        max-width: 620px;
 
-        line-height: 1.45;
-      }
+    .step-icon {
+      width: 105px;
+      height: 105px;
+    }
 
 
-      .malle .lead {
-        font-size: 1.12rem;
-      }
+    .malle {
+      grid-template-columns: 1fr;
+    }
 
 
-      .details {
-        margin: 20px 0;
+    .malle-image {
+      min-height: 300px;
+    }
 
-        font-size: 0.88rem;
 
-        font-weight: 600;
-      }
+    .malle-image img {
+      min-height: 300px;
 
+      max-height: 430px;
+    }
 
-      /* ------------------------------
-         POUR QUI
-      ------------------------------ */
 
-      .audience {
-        padding: 80px 24px;
+    .malle-content {
+      padding: 38px 24px 45px;
+    }
 
-        background: #f9f7f6;
+  }
 
-        text-align: center;
-      }
-
-
-      .audience-inner {
-        max-width: 700px;
-
-        margin: 0 auto;
-      }
-
-
-      .audience h2 {
-        margin: 8px 0 18px;
-
-        font-size: clamp(2rem, 3vw, 2.8rem);
-
-        font-weight: 500;
-      }
-
-
-      .audience p {
-        line-height: 1.6;
-      }
-
-
-      /* ------------------------------
-         FOOTER
-      ------------------------------ */
-
-      footer {
-        padding: 30px 5.5%;
-
-        background: #ece9e1;
-
-        text-align: center;
-
-        font-family: Arial, Helvetica, sans-serif;
-
-        font-size: 0.78rem;
-
-        color: #656559;
-      }
-
-
-      /* ------------------------------
-         TABLETTE
-      ------------------------------ */
-
-      @media (max-width: 900px) {
-
-        .site-header {
-          align-items: flex-start;
-
-          flex-direction: column;
-
-          gap: 14px;
-        }
-
-
-        nav {
-          width: 100%;
-
-          overflow-x: auto;
-
-          gap: 24px;
-
-          padding-bottom: 5px;
-        }
-
-
-        nav a {
-          font-size: 0.93rem;
-        }
-
-
-        .steps {
-          gap: 25px;
-        }
-
-      }
-
-
-      /* ------------------------------
-         MOBILE
-      ------------------------------ */
-
-      @media (max-width: 700px) {
-
-        .site-header {
-          padding: 16px 22px;
-        }
-
-
-        .brand-text {
-          font-size: 1.25rem;
-        }
-
-
-        .brand-decoration {
-          font-size: 2.2rem;
-        }
-
-
-        .hero {
-          min-height: 610px;
-        }
-
-
-        .hero-overlay {
-          background:
-            linear-gradient(
-              90deg,
-              rgba(15, 21, 13, 0.68),
-              rgba(15, 21, 13, 0.38)
-            );
-        }
-
-
-        .hero-content {
-          width: auto;
-
-          margin: 0;
-
-          padding: 70px 24px;
-        }
-
-
-        .steps {
-          grid-template-columns: 1fr;
-
-          max-width: 420px;
-
-          gap: 42px;
-        }
-
-
-        .step-icon {
-          width: 105px;
-          height: 105px;
-        }
-
-
-        .malle {
-          grid-template-columns: 1fr;
-        }
-
-
-        .malle-image {
-          min-height: 300px;
-        }
-
-
-        .malle-image img {
-          min-height: 300px;
-
-          max-height: 430px;
-        }
-
-
-        .malle-content {
-          padding: 38px 24px 45px;
-        }
-
-      }
-
-    </style>
-
-  </body>
-</html>
+</style>
