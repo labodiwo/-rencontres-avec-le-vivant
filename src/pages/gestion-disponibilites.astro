@@ -1,0 +1,573 @@
+---
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Gestion des disponibilités · Rencontres avec le vivant</title>
+  </head>
+
+  <body>
+    <main>
+      <section class="hero">
+        <p class="eyebrow">Espace privé</p>
+        <h1>Gestion des disponibilités</h1>
+        <p>
+          Modifiez simplement l’état d’une semaine. Les changements
+          apparaissent ensuite sur le calendrier de réservation.
+        </p>
+      </section>
+
+      <section class="admin-wrap">
+        <div id="login-card" class="login-card">
+          <h2>Accéder au calendrier</h2>
+          <p>Entrez votre mot de passe administrateur.</p>
+
+          <form id="login-form">
+            <label for="admin-password">Mot de passe</label>
+            <input
+              id="admin-password"
+              type="password"
+              autocomplete="current-password"
+              required
+            />
+            <button type="submit">Ouvrir la gestion</button>
+          </form>
+
+          <p id="login-status" class="status" role="status"></p>
+        </div>
+
+        <div id="admin-panel" class="admin-panel" hidden>
+          <div class="toolbar">
+            <button
+              type="button"
+              id="previous-month"
+              class="month-button"
+              aria-label="Mois précédent"
+            >
+              ←
+            </button>
+
+            <div>
+              <span>Mois affiché</span>
+              <strong id="current-month"></strong>
+            </div>
+
+            <button
+              type="button"
+              id="next-month"
+              class="month-button"
+              aria-label="Mois suivant"
+            >
+              →
+            </button>
+          </div>
+
+          <div class="legend">
+            <span><i class="dot available"></i> Disponible</span>
+            <span><i class="dot pending"></i> Demande en cours</span>
+            <span><i class="dot booked"></i> Réservée</span>
+          </div>
+
+          <div id="admin-weeks" class="weeks" aria-live="polite"></div>
+
+          <p id="save-status" class="status save-status" role="status"></p>
+        </div>
+      </section>
+    </main>
+
+    <script is:inline>
+      const loginForm = document.getElementById("login-form");
+      const passwordInput = document.getElementById("admin-password");
+      const loginStatus = document.getElementById("login-status");
+      const loginCard = document.getElementById("login-card");
+      const adminPanel = document.getElementById("admin-panel");
+      const weeksContainer = document.getElementById("admin-weeks");
+      const saveStatus = document.getElementById("save-status");
+      const currentMonthLabel = document.getElementById("current-month");
+      const previousMonthButton = document.getElementById("previous-month");
+      const nextMonthButton = document.getElementById("next-month");
+
+      let adminKey = "";
+      let availability = {};
+
+      const today = new Date();
+      today.setHours(12, 0, 0, 0);
+
+      let displayedMonth = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        1,
+        12
+      );
+
+      const firstAllowedMonth = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        1,
+        12
+      );
+
+      const lastAllowedMonth = new Date(
+        today.getFullYear(),
+        today.getMonth() + 11,
+        1,
+        12
+      );
+
+      const formatIsoDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      };
+
+      const formatWeekLabel = (monday, friday) =>
+        `Du lundi ${new Intl.DateTimeFormat("fr-FR", {
+          day: "numeric",
+          month: "long",
+        }).format(monday)} au vendredi ${new Intl.DateTimeFormat("fr-FR", {
+          day: "numeric",
+          month: "long",
+        }).format(friday)}`;
+
+      const getMonday = (date) => {
+        const result = new Date(date);
+        result.setHours(12, 0, 0, 0);
+        const day = result.getDay();
+        const offset = day === 0 ? -6 : 1 - day;
+        result.setDate(result.getDate() + offset);
+        return result;
+      };
+
+      const renderWeeks = () => {
+        weeksContainer.innerHTML = "";
+
+        currentMonthLabel.textContent =
+          new Intl.DateTimeFormat("fr-FR", {
+            month: "long",
+            year: "numeric",
+          }).format(displayedMonth);
+
+        previousMonthButton.disabled =
+          displayedMonth.getTime() <= firstAllowedMonth.getTime();
+
+        nextMonthButton.disabled =
+          displayedMonth.getTime() >= lastAllowedMonth.getTime();
+
+        const firstDay = new Date(
+          displayedMonth.getFullYear(),
+          displayedMonth.getMonth(),
+          1,
+          12
+        );
+
+        const monday = getMonday(firstDay);
+
+        for (let row = 0; row < 6; row += 1) {
+          const weekMonday = new Date(monday);
+          weekMonday.setDate(monday.getDate() + row * 7);
+
+          const friday = new Date(weekMonday);
+          friday.setDate(weekMonday.getDate() + 4);
+
+          const iso = formatIsoDate(weekMonday);
+          const status = availability[iso] || "available";
+
+          const card = document.createElement("article");
+          card.className = `week-card ${status}`;
+
+          card.innerHTML = `
+            <div class="week-info">
+              <strong>${formatWeekLabel(weekMonday, friday)}</strong>
+              <span class="current-status">
+                ${status === "available"
+                  ? "Disponible"
+                  : status === "pending"
+                    ? "Demande en cours"
+                    : "Réservée"}
+              </span>
+            </div>
+
+            <div class="status-actions" aria-label="Modifier le statut">
+              <button type="button" data-status="available">
+                Disponible
+              </button>
+              <button type="button" data-status="pending">
+                En attente
+              </button>
+              <button type="button" data-status="booked">
+                Réservée
+              </button>
+            </div>
+          `;
+
+          card
+            .querySelectorAll("[data-status]")
+            .forEach((button) => {
+              if (button.dataset.status === status) {
+                button.classList.add("active");
+              }
+
+              button.addEventListener("click", async () => {
+                await updateStatus(iso, button.dataset.status);
+              });
+            });
+
+          weeksContainer.appendChild(card);
+        }
+      };
+
+      const loadAvailability = async () => {
+        const response = await fetch("/api/admin/availability", {
+          headers: {
+            "x-admin-key": adminKey,
+          },
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.ok) {
+          throw new Error(result.error || "Accès impossible.");
+        }
+
+        availability = result.availability || {};
+      };
+
+      const updateStatus = async (week, status) => {
+        saveStatus.textContent = "Enregistrement…";
+
+        try {
+          const response = await fetch("/api/admin/availability", {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              "x-admin-key": adminKey,
+            },
+            body: JSON.stringify({ week, status }),
+          });
+
+          const result = await response.json();
+
+          if (!response.ok || !result.ok) {
+            throw new Error(
+              result.error || "La modification n’a pas pu être enregistrée."
+            );
+          }
+
+          availability = result.availability || {};
+          renderWeeks();
+          saveStatus.textContent = "Modification enregistrée.";
+        } catch (error) {
+          saveStatus.textContent =
+            error.message || "La modification n’a pas pu être enregistrée.";
+        }
+      };
+
+      loginForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        loginStatus.textContent = "Vérification…";
+        adminKey = passwordInput.value;
+
+        try {
+          await loadAvailability();
+          passwordInput.value = "";
+          loginCard.hidden = true;
+          adminPanel.hidden = false;
+          loginStatus.textContent = "";
+          renderWeeks();
+        } catch (error) {
+          adminKey = "";
+          loginStatus.textContent =
+            error.message || "Mot de passe incorrect.";
+        }
+      });
+
+      previousMonthButton.addEventListener("click", () => {
+        displayedMonth = new Date(
+          displayedMonth.getFullYear(),
+          displayedMonth.getMonth() - 1,
+          1,
+          12
+        );
+        renderWeeks();
+      });
+
+      nextMonthButton.addEventListener("click", () => {
+        displayedMonth = new Date(
+          displayedMonth.getFullYear(),
+          displayedMonth.getMonth() + 1,
+          1,
+          12
+        );
+        renderWeeks();
+      });
+    </script>
+
+    <style>
+      :global(*) { box-sizing: border-box; }
+
+      :global(body) {
+        margin: 0;
+        background: #f9f7f2;
+        color: #292b23;
+        font-family: Georgia, "Times New Roman", serif;
+      }
+
+      .hero {
+        padding: 70px 24px 55px;
+        background: #596243;
+        color: #fffdf8;
+        text-align: center;
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        color: rgba(255,255,255,.72);
+        font: .73rem Arial, Helvetica, sans-serif;
+        letter-spacing: .11em;
+        text-transform: uppercase;
+      }
+
+      .hero h1 {
+        margin: 0 0 15px;
+        font-size: clamp(2.5rem, 6vw, 4.5rem);
+        font-weight: 500;
+      }
+
+      .hero p:last-child {
+        max-width: 650px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      .admin-wrap {
+        width: min(980px, 90%);
+        margin: 0 auto;
+        padding: 55px 0 80px;
+      }
+
+      .login-card {
+        max-width: 520px;
+        margin: 0 auto;
+        padding: 32px;
+        border: 1px solid #dedbd2;
+        border-radius: 9px;
+        background: #fffefa;
+      }
+
+      .login-card h2 {
+        margin: 0 0 10px;
+        font-size: 1.8rem;
+        font-weight: 500;
+      }
+
+      .login-card p {
+        line-height: 1.6;
+      }
+
+      .login-card label {
+        display: block;
+        margin: 20px 0 8px;
+        font: 600 .84rem Arial, Helvetica, sans-serif;
+      }
+
+      .login-card input {
+        width: 100%;
+        min-height: 48px;
+        padding: 12px 14px;
+        border: 1px solid #cac7bd;
+        border-radius: 4px;
+        background: #fff;
+        font-size: 1rem;
+      }
+
+      .login-card button {
+        width: 100%;
+        min-height: 48px;
+        margin-top: 14px;
+        border: 0;
+        border-radius: 4px;
+        background: #7d8957;
+        color: #fff;
+        cursor: pointer;
+        font-weight: 700;
+      }
+
+      .toolbar {
+        display: grid;
+        grid-template-columns: 48px 1fr 48px;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .toolbar > div {
+        text-align: center;
+      }
+
+      .toolbar span {
+        display: block;
+        color: #85867d;
+        font: .7rem Arial, Helvetica, sans-serif;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+
+      .toolbar strong {
+        display: block;
+        margin-top: 4px;
+        font-size: 1.5rem;
+        font-weight: 500;
+        text-transform: capitalize;
+      }
+
+      .month-button {
+        width: 46px;
+        height: 46px;
+        border: 1px solid #cac7bd;
+        border-radius: 50%;
+        background: #fff;
+        color: #596243;
+        cursor: pointer;
+        font-size: 1.2rem;
+      }
+
+      .month-button:disabled {
+        opacity: .35;
+        cursor: not-allowed;
+      }
+
+      .legend {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 18px;
+        margin-bottom: 22px;
+        color: #64665c;
+        font: .8rem Arial, Helvetica, sans-serif;
+      }
+
+      .legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+
+      .dot.available { background: #5f8a3f; }
+      .dot.pending { background: #c59e5d; }
+      .dot.booked { background: #9b9b92; }
+
+      .weeks {
+        display: grid;
+        gap: 12px;
+      }
+
+      :global(.week-card) {
+        padding: 18px;
+        border: 1px solid #dedbd2;
+        border-radius: 7px;
+        background: #fffefa;
+      }
+
+      :global(.week-card.available) {
+        border-color: #a8b88f;
+        background: #e6efdd;
+      }
+
+      :global(.week-card.pending) {
+        border-color: #d3bb91;
+        background: #f7efdf;
+      }
+
+      :global(.week-card.booked) {
+        background: #f0efeb;
+      }
+
+      :global(.week-info) {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 14px;
+      }
+
+      :global(.week-info strong) {
+        font-size: 1rem;
+      }
+
+      :global(.current-status) {
+        flex: 0 0 auto;
+        font: 700 .76rem Arial, Helvetica, sans-serif;
+        text-transform: uppercase;
+      }
+
+      :global(.available .current-status) { color: #3f642c; }
+      :global(.pending .current-status) { color: #9b6a21; }
+      :global(.booked .current-status) { color: #6f7068; }
+
+      :global(.status-actions) {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      :global(.status-actions button) {
+        min-height: 44px;
+        padding: 10px;
+        border: 1px solid #c9c7bf;
+        border-radius: 5px;
+        background: #fff;
+        color: #45473f;
+        cursor: pointer;
+        font: 600 .8rem Arial, Helvetica, sans-serif;
+      }
+
+      :global(.status-actions button.active) {
+        border-color: #596243;
+        background: #596243;
+        color: #fff;
+      }
+
+      .status {
+        min-height: 22px;
+        margin: 14px 0 0;
+        color: #596243;
+        line-height: 1.5;
+      }
+
+      .save-status {
+        text-align: center;
+      }
+
+      @media (max-width: 650px) {
+        .admin-wrap {
+          width: 92%;
+          padding-top: 35px;
+        }
+
+        :global(.week-info) {
+          display: block;
+        }
+
+        :global(.current-status) {
+          display: block;
+          margin-top: 6px;
+        }
+
+        :global(.status-actions) {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </body>
+</html>
