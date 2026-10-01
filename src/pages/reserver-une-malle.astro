@@ -79,17 +79,44 @@ const nav = [
           </p>
         </div>
 
-        <div class="legend" aria-label="Légende du calendrier">
-          <span><i class="dot available"></i> Disponible</span>
-          <span><i class="dot pending"></i> Demande en cours</span>
-          <span><i class="dot booked"></i> Réservée</span>
+        <div class="calendar-box">
+          <div class="calendar-toolbar">
+            <button
+              type="button"
+              id="previous-month"
+              class="month-button"
+              aria-label="Voir le mois précédent"
+            >
+              ←
+            </button>
+
+            <div class="month-title">
+              <span>Mois affiché</span>
+              <strong id="current-month"></strong>
+            </div>
+
+            <button
+              type="button"
+              id="next-month"
+              class="month-button"
+              aria-label="Voir le mois suivant"
+            >
+              →
+            </button>
+          </div>
+
+          <div class="legend" aria-label="Légende du calendrier">
+            <span><i class="dot available"></i> Disponible</span>
+            <span><i class="dot pending"></i> Demande en cours</span>
+            <span><i class="dot booked"></i> Réservée</span>
+          </div>
+
+          <div id="weeks-grid" class="weeks-grid" aria-live="polite"></div>
         </div>
 
-        <div id="weeks-grid" class="weeks-grid" aria-live="polite"></div>
-
         <p class="calendar-note">
-          Vous pouvez sélectionner une semaine disponible pour la reporter
-          automatiquement dans le formulaire.
+          Cliquez sur une semaine disponible. Elle sera automatiquement
+          ajoutée à votre demande de réservation.
         </p>
       </section>
 
@@ -262,8 +289,36 @@ const nav = [
       const weekInput = document.getElementById("week");
       const bookingForm = document.getElementById("booking-form");
       const formStatus = document.getElementById("form-status");
+      const currentMonthLabel = document.getElementById("current-month");
+      const previousMonthButton = document.getElementById("previous-month");
+      const nextMonthButton = document.getElementById("next-month");
       let turnstileToken = "";
       let turnstileWidgetId = null;
+      let selectedWeekIso = "";
+
+      const today = new Date();
+      today.setHours(12, 0, 0, 0);
+
+      let displayedMonth = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        1,
+        12
+      );
+
+      const firstAllowedMonth = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        1,
+        12
+      );
+
+      const lastAllowedMonth = new Date(
+        today.getFullYear(),
+        today.getMonth() + 11,
+        1,
+        12
+      );
 
       const initTurnstile = async () => {
         try {
@@ -319,65 +374,161 @@ const nav = [
         return `${year}-${month}-${day}`;
       };
 
-      const formatShortDate = (date) =>
+      const formatDay = (date) =>
         new Intl.DateTimeFormat("fr-FR", {
+          weekday: "short",
           day: "numeric",
-          month: "long",
         }).format(date);
 
-      const getNextMonday = () => {
-        const today = new Date();
-        today.setHours(12, 0, 0, 0);
-        const day = today.getDay();
-        const daysUntilMonday = day === 0 ? 1 : 8 - day;
-        const monday = new Date(today);
-        monday.setDate(today.getDate() + daysUntilMonday);
-        return monday;
+      const formatWeekLabel = (monday, friday) =>
+        `Du ${new Intl.DateTimeFormat("fr-FR", {
+          day: "numeric",
+          month: "long",
+        }).format(monday)} au ${new Intl.DateTimeFormat("fr-FR", {
+          day: "numeric",
+          month: "long",
+        }).format(friday)}`;
+
+      const getMonday = (date) => {
+        const result = new Date(date);
+        result.setHours(12, 0, 0, 0);
+        const day = result.getDay();
+        const offset = day === 0 ? -6 : 1 - day;
+        result.setDate(result.getDate() + offset);
+        return result;
       };
 
-      const firstMonday = getNextMonday();
-
-      for (let index = 0; index < 10; index += 1) {
-        const monday = new Date(firstMonday);
-        monday.setDate(firstMonday.getDate() + index * 7);
-
+      const isPastWeek = (monday) => {
         const friday = new Date(monday);
         friday.setDate(monday.getDate() + 4);
+        friday.setHours(23, 59, 59, 999);
+        return friday < today;
+      };
 
-        const iso = formatIsoDate(monday);
-        const status = availability[iso] || "available";
+      const renderCalendar = () => {
+        grid.innerHTML = "";
 
-        const card = document.createElement("button");
-        card.type = "button";
-        card.className = `week-card ${status}`;
-        card.disabled = status !== "available";
-        card.dataset.week = iso;
+        currentMonthLabel.textContent =
+          new Intl.DateTimeFormat("fr-FR", {
+            month: "long",
+            year: "numeric",
+          }).format(displayedMonth);
 
-        const dateLabel = `Du ${formatShortDate(monday)} au ${formatShortDate(friday)}`;
+        previousMonthButton.disabled =
+          displayedMonth.getTime() <= firstAllowedMonth.getTime();
 
-        card.innerHTML = `
-          <span class="week-status">${statusLabels[status]}</span>
-          <strong>${dateLabel}</strong>
-          <small>Semaine de location</small>
-        `;
+        nextMonthButton.disabled =
+          displayedMonth.getTime() >= lastAllowedMonth.getTime();
 
-        if (status === "available") {
-          card.addEventListener("click", () => {
-            document
-              .querySelectorAll(".week-card.selected")
-              .forEach((element) => element.classList.remove("selected"));
+        const firstDayOfMonth = new Date(
+          displayedMonth.getFullYear(),
+          displayedMonth.getMonth(),
+          1,
+          12
+        );
 
-            card.classList.add("selected");
-            weekInput.value = dateLabel;
+        let monday = getMonday(firstDayOfMonth);
 
-            document
-              .getElementById("demande")
-              .scrollIntoView({ behavior: "smooth", block: "start" });
-          });
+        for (let row = 0; row < 6; row += 1) {
+          const weekMonday = new Date(monday);
+          const friday = new Date(weekMonday);
+          friday.setDate(weekMonday.getDate() + 4);
+
+          const iso = formatIsoDate(weekMonday);
+          let status = availability[iso] || "available";
+
+          if (isPastWeek(weekMonday)) {
+            status = "booked";
+          }
+
+          const week = document.createElement("div");
+          week.className = `calendar-week ${status}`;
+
+          if (iso === selectedWeekIso) {
+            week.classList.add("selected");
+          }
+
+          const statusText =
+            isPastWeek(weekMonday)
+              ? "Passée"
+              : statusLabels[status];
+
+          const days = [];
+
+          for (let dayIndex = 0; dayIndex < 5; dayIndex += 1) {
+            const dayDate = new Date(weekMonday);
+            dayDate.setDate(weekMonday.getDate() + dayIndex);
+
+            const outsideMonth =
+              dayDate.getMonth() !== displayedMonth.getMonth();
+
+            days.push(
+              `<span class="calendar-day ${outsideMonth ? "outside-month" : ""}">
+                ${formatDay(dayDate)}
+              </span>`
+            );
+          }
+
+          week.innerHTML = `
+            <div class="week-topline">
+              <div>
+                <strong>${formatWeekLabel(weekMonday, friday)}</strong>
+                <span class="week-status">${statusText}</span>
+              </div>
+              <button
+                type="button"
+                class="select-week"
+                ${status !== "available" ? "disabled" : ""}
+              >
+                ${iso === selectedWeekIso ? "Sélectionnée" : "Choisir"}
+              </button>
+            </div>
+
+            <div class="week-days">
+              ${days.join("")}
+            </div>
+          `;
+
+          if (status === "available") {
+            const selectButton = week.querySelector(".select-week");
+
+            selectButton.addEventListener("click", () => {
+              selectedWeekIso = iso;
+              weekInput.value = formatWeekLabel(weekMonday, friday);
+              renderCalendar();
+
+              document
+                .getElementById("demande")
+                .scrollIntoView({ behavior: "smooth", block: "start" });
+            });
+          }
+
+          grid.appendChild(week);
+          monday.setDate(monday.getDate() + 7);
         }
+      };
 
-        grid.appendChild(card);
-      }
+      previousMonthButton.addEventListener("click", () => {
+        displayedMonth = new Date(
+          displayedMonth.getFullYear(),
+          displayedMonth.getMonth() - 1,
+          1,
+          12
+        );
+        renderCalendar();
+      });
+
+      nextMonthButton.addEventListener("click", () => {
+        displayedMonth = new Date(
+          displayedMonth.getFullYear(),
+          displayedMonth.getMonth() + 1,
+          1,
+          12
+        );
+        renderCalendar();
+      });
+
+      renderCalendar();
 
       bookingForm.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -438,6 +589,8 @@ const nav = [
 
           bookingForm.reset();
           turnstileToken = "";
+          selectedWeekIso = "";
+          renderCalendar();
 
           if (
             window.turnstile &&
@@ -602,9 +755,61 @@ const nav = [
         line-height: 1.6;
       }
 
+      .calendar-box {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 24px;
+        background: #f9f7f2;
+        border-radius: 10px;
+        border: 1px solid #dedbd2;
+      }
+
+      .calendar-toolbar {
+        display: grid;
+        grid-template-columns: 48px 1fr 48px;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+
+      .month-title {
+        text-align: center;
+      }
+
+      .month-title span {
+        display: block;
+        margin-bottom: 3px;
+        color: #85867d;
+        font: .7rem Arial, Helvetica, sans-serif;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+
+      .month-title strong {
+        display: block;
+        font-size: 1.45rem;
+        font-weight: 500;
+        text-transform: capitalize;
+      }
+
+      .month-button {
+        width: 46px;
+        height: 46px;
+        border: 1px solid #cac7bd;
+        border-radius: 50%;
+        background: #fffefa;
+        color: #596243;
+        cursor: pointer;
+        font-size: 1.25rem;
+      }
+
+      .month-button:disabled {
+        opacity: .35;
+        cursor: not-allowed;
+      }
+
       .legend {
-        max-width: 1000px;
-        margin: 0 auto 24px;
+        margin: 0 0 20px;
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
@@ -630,62 +835,101 @@ const nav = [
       .dot.booked { background: #9b9b92; }
 
       .weeks-grid {
-        max-width: 1050px;
-        margin: 0 auto;
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
+        gap: 12px;
       }
 
-      .week-card {
-        padding: 22px;
-        border: 1px solid transparent;
+      .calendar-week {
+        padding: 17px 18px;
+        border: 1px solid #dedbd2;
         border-radius: 7px;
-        background: #f9f7f2;
-        color: #292b23;
-        text-align: left;
-        cursor: pointer;
-        font-family: inherit;
-        transition: transform .15s ease, border-color .15s ease;
+        background: #fffefa;
       }
 
-      .week-card.available:hover {
-        transform: translateY(-2px);
-        border-color: #8d9671;
-      }
-
-      .week-card.selected {
+      .calendar-week.selected {
         border-color: #596243;
-        box-shadow: 0 0 0 2px rgba(89, 98, 67, .12);
+        box-shadow: 0 0 0 2px rgba(89, 98, 67, .11);
       }
 
-      .week-card:disabled {
-        cursor: not-allowed;
-        opacity: .62;
+      .calendar-week.pending,
+      .calendar-week.booked {
+        background: #f2f0eb;
       }
 
-      .week-card strong {
+      .week-topline {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 13px;
+      }
+
+      .week-topline > div {
+        min-width: 0;
+      }
+
+      .week-topline strong {
         display: block;
-        margin: 8px 0 6px;
-        font-size: 1.08rem;
+        margin-bottom: 4px;
+        font-size: 1rem;
         font-weight: 500;
-      }
-
-      .week-card small {
-        color: #77796e;
-        font: .74rem Arial, Helvetica, sans-serif;
       }
 
       .week-status {
         display: inline-block;
+        color: #687347;
         font: 700 .68rem Arial, Helvetica, sans-serif;
         letter-spacing: .06em;
         text-transform: uppercase;
-        color: #687347;
       }
 
       .pending .week-status { color: #a27735; }
       .booked .week-status { color: #77776f; }
+
+      .select-week {
+        flex: 0 0 auto;
+        min-width: 105px;
+        min-height: 42px;
+        padding: 9px 14px;
+        border: 1px solid #7d8957;
+        border-radius: 4px;
+        background: #fff;
+        color: #596243;
+        cursor: pointer;
+        font: 600 .82rem Arial, Helvetica, sans-serif;
+      }
+
+      .selected .select-week {
+        background: #7d8957;
+        color: #fff;
+      }
+
+      .select-week:disabled {
+        border-color: #c8c5bc;
+        color: #999a92;
+        background: #eceae5;
+        cursor: not-allowed;
+      }
+
+      .week-days {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 7px;
+      }
+
+      .calendar-day {
+        padding: 9px 6px;
+        border-radius: 4px;
+        background: #f1eee8;
+        text-align: center;
+        color: #45473f;
+        font: .78rem Arial, Helvetica, sans-serif;
+        text-transform: capitalize;
+      }
+
+      .calendar-day.outside-month {
+        opacity: .5;
+      }
 
       .calendar-note {
         max-width: 760px;
@@ -926,9 +1170,31 @@ const nav = [
           padding: 50px 24px;
         }
 
-        .weeks-grid,
         .field-row {
           grid-template-columns: 1fr;
+        }
+
+        .calendar-box {
+          padding: 18px 14px;
+        }
+
+        .week-topline {
+          align-items: flex-start;
+        }
+
+        .week-days {
+          gap: 4px;
+        }
+
+        .calendar-day {
+          padding: 8px 3px;
+          font-size: .68rem;
+        }
+
+        .select-week {
+          min-width: 88px;
+          padding: 8px 10px;
+          font-size: .76rem;
         }
 
         .request-section {
