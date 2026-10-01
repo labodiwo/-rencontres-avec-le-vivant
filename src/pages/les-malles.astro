@@ -90,8 +90,8 @@ const nav = [
           <p class="intro-lead">
             Préparer une animation autour du vivant demande du temps :
             chercher des ressources, trouver du matériel adapté,
-            imaginer une progression, préparer les supports,
-            rassembler les objets nécessaires…
+            imaginer une progression, préparer les supports
+            et rassembler les objets nécessaires.
           </p>
 
           <p>
@@ -114,90 +114,91 @@ const nav = [
       </section>
 
 
-<!-- MATÉRIEL ET CONCEPTION -->
-<section class="material">
+      <!-- MATÉRIEL ET CONCEPTION -->
+      <section class="material">
 
-  <div class="material-inner">
+        <div class="material-inner">
 
-    <div class="material-text">
+          <div class="material-text">
 
-      <p class="eyebrow">
-        Derrière chaque malle
-      </p>
+            <p class="eyebrow">
+              Derrière chaque malle
+            </p>
 
-      <h2>
-        Du matériel, mais aussi beaucoup de conception
-      </h2>
+            <h2>
+              Du matériel, mais aussi beaucoup de conception
+            </h2>
 
-      <p>
-        Une malle rassemble de vrais objets et supports à utiliser
-        avec les enfants : livres, figurines, éléments de décor,
-        matériel sensoriel, supports d’observation, matériel sonore
-        et objets permettant d’expérimenter.
-      </p>
+            <p>
+              Une malle rassemble de vrais objets et supports à utiliser
+              avec les enfants : livres, figurines, éléments de décor,
+              matériel sensoriel, supports d’observation, matériel sonore
+              et objets permettant d’expérimenter.
+            </p>
 
-      <p>
-        Mais sa conception va bien au-delà du choix du matériel.
-        Chaque proposition demande des recherches, des essais,
-        la création des activités, la rédaction des fiches,
-        des vérifications, des ajustements et une réflexion
-        pédagogique adaptée à l’âge des enfants.
-      </p>
+            <p>
+              Mais sa conception va bien au-delà du choix du matériel.
+              Chaque proposition demande des recherches, des essais,
+              la création des activités, la rédaction des fiches,
+              des vérifications, des ajustements et une réflexion
+              pédagogique adaptée à l’âge des enfants.
+            </p>
 
-    </div>
-
-
-    <div class="value-cards">
-
-      <aside class="value-card">
-
-        <span class="value-number">+ de 300 €</span>
-
-        <h3>
-          de matériel pédagogique
-        </h3>
-
-        <p>
-          Pour la première malle, <em>Les oiseaux</em> :
-          livres, figurines, éléments de décor, matériel d’écoute,
-          objets de manipulation et supports sensoriels.
-        </p>
-
-        <small>
-          Une estimation qui ne comprend pas encore certains petits
-          achats et éléments complémentaires.
-        </small>
-
-      </aside>
+          </div>
 
 
-      <aside class="value-card">
+          <div class="value-cards">
 
-        <span class="value-number">≈ 300 h</span>
+            <aside class="value-card">
 
-        <h3>
-          de travail de conception
-        </h3>
+              <span class="value-number">+ de 300 €</span>
 
-        <p>
-          Recherche, conception pédagogique, choix du matériel,
-          création des activités et des supports, rédaction,
-          essais et ajustements.
-        </p>
+              <h3>
+                de matériel pédagogique
+              </h3>
 
-        <small>
-          Valorisé ici sur une base volontairement prudente de
-          30 € / heure, cela représente environ
-          <strong>9 000 € de travail de conception.</strong>
-        </small>
+              <p>
+                Pour la première malle, <em>Les oiseaux</em> :
+                livres, figurines, éléments de décor, matériel d’écoute,
+                objets de manipulation et supports sensoriels.
+              </p>
 
-      </aside>
+              <small>
+                Une estimation qui ne comprend pas encore certains petits
+                achats et éléments complémentaires.
+              </small>
 
-    </div>
+            </aside>
 
-  </div>
 
-</section>
+            <aside class="value-card">
+
+              <span class="value-number">≈ 300 h</span>
+
+              <h3>
+                de travail de conception
+              </h3>
+
+              <p>
+                Recherche, conception pédagogique, choix du matériel,
+                création des activités et des supports, rédaction,
+                essais et ajustements.
+              </p>
+
+              <small>
+                Valorisé ici sur une base volontairement prudente de
+                30 € / heure, cela représente environ
+                <strong>9 000 € de travail de conception.</strong>
+              </small>
+
+            </aside>
+
+          </div>
+
+        </div>
+
+      </section>
+
 
       <!-- 3 TEMPS -->
       <section class="approach">
@@ -472,6 +473,10 @@ const nav = [
 
     <style>
 
+      /* ------------------------------
+         BASE
+      ------------------------------ */
+
       :global(*) {
         box-sizing: border-box;
       }
@@ -482,8 +487,10 @@ const nav = [
 
       :global(body) {
         margin: 0;
+
         background: #f9f7f6;
         color: #25271f;
+
         font-family: Georgia, "Times New Roman", serif;
       }
 
@@ -492,10 +499,13 @@ const nav = [
       }
 
 
-      /* HEADER */
+      /* ------------------------------
+         HEADER
+      ------------------------------ */
 
       .site-header {
         min-height: 94px;
+
         padding: 15px 5.5%;
 
         display: flex;
@@ -507,13 +517,16 @@ const nav = [
         background: #f9f7f6;
       }
 
+
       .brand {
         display: flex;
         align-items: center;
 
         color: #29271f;
+
         text-decoration: none;
       }
+
 
       .brand-decoration {
         margin-right: 10px;
@@ -526,6 +539,7 @@ const nav = [
         transform: rotate(-15deg);
       }
 
+
       .brand-text {
         display: flex;
         flex-direction: column;
@@ -534,6 +548,7 @@ const nav = [
         line-height: 1.05;
       }
 
+
       nav {
         display: flex;
         align-items: center;
@@ -541,8 +556,10 @@ const nav = [
         gap: clamp(24px, 3.7vw, 55px);
       }
 
+
       nav a {
         color: #161713;
+
         text-decoration: none;
 
         font-size: 1rem;
@@ -552,7 +569,9 @@ const nav = [
       }
 
 
-      /* BANDEAU */
+      /* ------------------------------
+         BANDEAU
+      ------------------------------ */
 
       .page-hero {
         min-height: 310px;
@@ -566,9 +585,11 @@ const nav = [
         color: #fffdf8;
       }
 
+
       .page-hero-content {
         max-width: 680px;
       }
+
 
       .page-hero h1 {
         margin: 4px 0 18px;
@@ -578,6 +599,7 @@ const nav = [
 
         font-weight: 500;
       }
+
 
       .page-hero-content > p:last-child {
         max-width: 560px;
@@ -589,7 +611,9 @@ const nav = [
       }
 
 
-      /* COMMUN */
+      /* ------------------------------
+         ÉLÉMENTS COMMUNS
+      ------------------------------ */
 
       .eyebrow {
         margin: 0 0 8px;
@@ -606,9 +630,11 @@ const nav = [
         color: #74785e;
       }
 
+
       .eyebrow.light {
-        color: rgba(255,255,255,0.72);
+        color: rgba(255, 255, 255, 0.72);
       }
+
 
       .section-heading {
         max-width: 780px;
@@ -617,6 +643,7 @@ const nav = [
 
         text-align: center;
       }
+
 
       .section-heading h2,
       .intro h2,
@@ -632,11 +659,14 @@ const nav = [
       }
 
 
-      /* INTRO */
+      /* ------------------------------
+         INTRODUCTION
+      ------------------------------ */
 
       .intro {
         padding: 75px 24px;
       }
+
 
       .intro-inner {
         max-width: 780px;
@@ -646,409 +676,18 @@ const nav = [
         text-align: center;
       }
 
+
       .intro p {
         line-height: 1.65;
       }
+
 
       .intro-lead {
         font-size: 1.15rem;
       }
 
-/* MATÉRIEL ET CONCEPTION */
 
-.material {
-  padding: 75px 5.5%;
+      /* ------------------------------
+        
 
-  background: #f1eee8;
-}
 
-.material-inner {
-  max-width: 1100px;
-
-  margin: 0 auto;
-
-  display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
-
-  gap: 65px;
-
-  align-items: center;
-}
-
-.material-text p {
-  line-height: 1.65;
-}
-
-.value-cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-
-  gap: 20px;
-}
-
-.value-card {
-  padding: 32px;
-
-  background: #dfe3cf;
-
-  border-radius: 8px;
-}
-
-.value-number {
-  display: block;
-
-  margin-bottom: 10px;
-
-  font-size: clamp(2.2rem, 4vw, 3.3rem);
-  line-height: 1;
-
-  color: #596243;
-}
-
-.value-card h3 {
-  margin: 0 0 18px;
-
-  font-size: 1.2rem;
-}
-
-.value-card p {
-  line-height: 1.55;
-}
-
-.value-card small {
-  display: block;
-
-  margin-top: 20px;
-
-  font-family: Arial, Helvetica, sans-serif;
-
-  font-size: 0.75rem;
-  line-height: 1.5;
-
-  color: #5f6253;
-}
-
-.value-card small strong {
-  color: #414638;
-}
-
-
-
-      /* DÉMARCHE */
-
-      .approach {
-        padding: 75px 5.5%;
-      }
-
-      .steps {
-        max-width: 900px;
-
-        margin: 0 auto;
-
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-
-        gap: 50px;
-      }
-
-      .step {
-        text-align: center;
-      }
-
-      .step-icon {
-        width: 110px;
-        height: 110px;
-
-        margin: 0 auto 14px;
-
-        object-fit: contain;
-      }
-
-      .step h3 {
-        margin: 0 0 11px;
-
-        font-size: 1.2rem;
-      }
-
-      .step p {
-        margin: 0;
-
-        font-family: Arial, Helvetica, sans-serif;
-
-        font-size: 0.88rem;
-        line-height: 1.55;
-      }
-
-
-      /* ANIMATEUR */
-
-      .facilitator {
-        padding: 75px 5.5%;
-
-        background: #ece9e1;
-      }
-
-      .facilitator-inner {
-        max-width: 1000px;
-
-        margin: 0 auto;
-
-        display: grid;
-        grid-template-columns: 0.9fr 1.1fr;
-
-        gap: 70px;
-      }
-
-      .facilitator-text p {
-        margin-top: 0;
-
-        line-height: 1.65;
-      }
-
-      blockquote {
-        margin: 32px 0 0;
-
-        padding: 22px 25px;
-
-        border-left: 3px solid #7d8957;
-
-        font-size: 1.12rem;
-        line-height: 1.55;
-
-        font-style: italic;
-      }
-
-
-      /* FORMATS */
-
-      .formats {
-        padding: 75px 5.5%;
-      }
-
-      .format-grid {
-        max-width: 950px;
-
-        margin: 0 auto;
-
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-
-        gap: 25px;
-      }
-
-      .format-grid article {
-        padding: 30px 26px;
-
-        background: #f1eee8;
-
-        border-radius: 7px;
-      }
-
-      .format-number {
-        font-family: Arial, Helvetica, sans-serif;
-
-        color: #7d8957;
-
-        font-size: 0.75rem;
-        font-weight: 700;
-      }
-
-      .format-grid h3 {
-        margin: 12px 0;
-
-        font-size: 1.25rem;
-      }
-
-      .format-grid p {
-        margin: 0;
-
-        font-family: Arial, Helvetica, sans-serif;
-
-        font-size: 0.88rem;
-        line-height: 1.55;
-      }
-
-
-      /* PUBLICS */
-
-      .audience {
-        padding: 75px 24px;
-
-        background: #dfe3cf;
-
-        text-align: center;
-      }
-
-      .audience-inner {
-        max-width: 760px;
-
-        margin: 0 auto;
-      }
-
-      .audience p {
-        line-height: 1.65;
-      }
-
-
-      /* PREMIÈRE MALLE */
-
-      .first-malle {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-
-        background: #f1eee8;
-      }
-
-      .first-malle-image {
-        min-height: 430px;
-      }
-
-      .first-malle-image img {
-        display: block;
-
-        width: 100%;
-        height: 100%;
-
-        min-height: 430px;
-
-        object-fit: cover;
-      }
-
-      .first-malle-content {
-        align-self: center;
-
-        padding: 55px clamp(35px, 6vw, 85px);
-      }
-
-      .first-malle-content p {
-        line-height: 1.6;
-      }
-
-
-      /* BOUTON */
-
-      .button {
-        display: inline-flex;
-        align-items: center;
-
-        gap: 14px;
-
-        margin-top: 12px;
-
-        padding: 11px 17px;
-
-        background: #7d8957;
-        color: white;
-
-        border-radius: 4px;
-
-        text-decoration: none;
-
-        font-weight: 600;
-      }
-
-
-      /* FOOTER */
-
-      footer {
-        padding: 30px 5.5%;
-
-        background: #ece9e1;
-
-        text-align: center;
-
-        font-family: Arial, Helvetica, sans-serif;
-
-        font-size: 0.78rem;
-
-        color: #656559;
-      }
-
-
-      /* TABLETTE */
-
-      @media (max-width: 900px) {
-
-        .site-header {
-          align-items: flex-start;
-          flex-direction: column;
-
-          gap: 14px;
-        }
-
-        nav {
-          width: 100%;
-
-          overflow-x: auto;
-
-          gap: 24px;
-
-          padding-bottom: 5px;
-        }
-
-        .material-inner,
-        .facilitator-inner {
-          grid-template-columns: 1fr;
-
-          gap: 35px;
-        }
-
-        .steps {
-          gap: 25px;
-        }
-
-      }
-
-
-      /* MOBILE */
-
-      @media (max-width: 700px) {
-
-        .site-header {
-          padding: 16px 22px;
-        }
-
-        .brand-text {
-          font-size: 1.25rem;
-        }
-
-        .brand-decoration {
-          font-size: 2.2rem;
-        }
-
-        .page-hero {
-          min-height: 280px;
-
-          padding: 45px 24px;
-        }
-
-        .steps,
-        .format-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .steps {
-          max-width: 420px;
-
-          gap: 38px;
-        }
-
-        .first-malle {
-          grid-template-columns: 1fr;
-        }
-
-        .first-malle-image,
-        .first-malle-image img {
-          min-height: 300px;
-        }
-
-        .first-malle-content {
-          padding: 40px 24px 50px;
-        }
-
-      }
-
-    </style>
-
-  </body>
-</html>€
