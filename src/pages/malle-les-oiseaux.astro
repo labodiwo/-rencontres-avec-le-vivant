@@ -1,0 +1,1046 @@
+---
+const nav = [
+  { label: "Comment ça fonctionne ?", href: "/#fonctionnement" },
+  { label: "Les malles", href: "/#malles" },
+  { label: "Pour qui ?", href: "/#pour-qui" },
+  { label: "Le blog", href: "/blog" },
+  { label: "Me contacter", href: "/contact" },
+];
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta
+      name="description"
+      content="La malle pédagogique Les oiseaux, pensée pour les enfants de 3 à 5 ans."
+    />
+
+    <title>La malle Les oiseaux · Rencontres avec le vivant</title>
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <a class="brand" href="/" aria-label="Accueil">
+        <span class="brand-decoration">⌇</span>
+
+        <span class="brand-text">
+          <span>Rencontres</span>
+          <span>avec le vivant</span>
+        </span>
+      </a>
+
+      <nav aria-label="Navigation principale">
+        {
+          nav.map((item) => (
+            <a href={item.href}>{item.label}</a>
+          ))
+        }
+      </nav>
+
+    </header>
+
+
+    <main>
+
+      <!-- BANDEAU -->
+      <section class="page-hero">
+
+        <img
+          src="/images/malle-oiseaux.jpg"
+          alt="Malle pédagogique Les oiseaux et son matériel"
+          class="page-hero-image"
+        />
+
+        <div class="page-hero-overlay"></div>
+
+        <div class="page-hero-content">
+          <p class="eyebrow light">
+            Malle pédagogique · 3–5 ans
+          </p>
+
+          <h1>Les oiseaux</h1>
+
+          <p>
+            Une invitation à observer, écouter, manipuler
+            et s’émerveiller du monde des oiseaux.
+          </p>
+        </div>
+
+      </section>
+
+
+      <!-- INTRO -->
+      <section class="intro">
+
+        <div class="intro-inner">
+
+          <p class="eyebrow">
+            Rencontres avec le vivant · Malle 01
+          </p>
+
+          <h2>
+            Partir à la rencontre des oiseaux
+          </h2>
+
+          <p class="intro-lead">
+            Les oiseaux sont partout autour de nous, en ville comme à la campagne.
+            On peut les entendre, les observer, suivre leurs déplacements,
+            repérer leurs traces ou découvrir leurs habitats.
+          </p>
+
+          <p>
+            Cette malle a été pensée pour proposer aux enfants de 3 à 5 ans
+            des expériences simples et sensibles autour du monde des oiseaux.
+            Elle permet de découvrir, expérimenter, jouer et prolonger
+            les observations dehors.
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- LES 3 ÉTAPES -->
+      <section class="approach">
+
+        <div class="section-heading">
+
+          <h2>
+            Une malle en trois temps
+          </h2>
+
+          <p>
+            Les propositions peuvent être utilisées seules,
+            en jeu libre ou dans le cadre d’un cycle.
+          </p>
+
+        </div>
+
+
+        <div class="steps">
+
+          <article class="step">
+
+            <img
+              src="/images/je-decouvre.png"
+              alt=""
+              class="step-icon"
+            />
+
+            <h3>Je découvre</h3>
+
+            <p>
+              Des histoires, des images et des éléments
+              pour observer et éveiller la curiosité.
+            </p>
+
+          </article>
+
+
+          <article class="step">
+
+            <img
+              src="/images/j-experimente.png"
+              alt=""
+              class="step-icon"
+            />
+
+            <h3>J’expérimente</h3>
+
+            <p>
+              Manipuler, écouter, comparer, bouger,
+              créer et explorer avec ses sens.
+            </p>
+
+          </article>
+
+
+          <article class="step">
+
+            <img
+              src="/images/je-poursuis-dehors.png"
+              alt=""
+              class="step-icon"
+            />
+
+            <h3>Je poursuis dehors</h3>
+
+            <p>
+              Reprendre les découvertes dans l’environnement
+              proche et observer les oiseaux autrement.
+            </p>
+
+          </article>
+
+        </div>
+
+      </section>
+
+
+      <!-- CONTENU -->
+      <section class="contents">
+
+        <div class="contents-inner">
+
+          <div class="contents-text">
+
+            <p class="eyebrow">
+              À l’intérieur
+            </p>
+
+            <h2>
+              Une malle à manipuler
+            </h2>
+
+            <p>
+              La malle rassemble du matériel, des supports
+              et des fiches d’animation pour permettre
+              à l’adulte de proposer différentes expériences.
+            </p>
+
+          </div>
+
+
+          <div class="contents-grid">
+
+            <article>
+              <h3>Un mini-monde</h3>
+              <p>
+                Des oiseaux, des nids et différents habitats
+                pour jouer, observer et raconter.
+              </p>
+            </article>
+
+            <article>
+              <h3>Des histoires</h3>
+              <p>
+                Des albums et supports pour introduire
+                les découvertes et nourrir l’imaginaire.
+              </p>
+            </article>
+
+            <article>
+              <h3>Des expériences</h3>
+              <p>
+                Autour des chants, des œufs, des traces,
+                du vol et des déplacements.
+              </p>
+            </article>
+
+            <article>
+              <h3>Des prolongements dehors</h3>
+              <p>
+                Des invitations simples pour poursuivre
+                l’observation dans l’environnement réel.
+              </p>
+            </article>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- EXEMPLES -->
+      <section class="activities">
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            Quelques propositions
+          </p>
+
+          <h2>
+            Les enfants peuvent…
+          </h2>
+
+        </div>
+
+
+        <div class="activity-list">
+
+          <article>
+            <span>01</span>
+            <div>
+              <h3>Explorer les habitats</h3>
+              <p>
+                Manipuler le mini-monde et découvrir où les oiseaux
+                peuvent vivre, nicher ou se cacher.
+              </p>
+            </div>
+          </article>
+
+
+          <article>
+            <span>02</span>
+            <div>
+              <h3>Observer les œufs</h3>
+              <p>
+                Comparer les formes, les tailles et les couleurs
+                grâce à une activité de discrimination visuelle.
+              </p>
+            </div>
+          </article>
+
+
+          <article>
+            <span>03</span>
+            <div>
+              <h3>Écouter les oiseaux</h3>
+              <p>
+                Prendre le temps d’écouter des chants,
+                repérer leur direction et jouer avec les sons.
+              </p>
+            </div>
+          </article>
+
+
+          <article>
+            <span>04</span>
+            <div>
+              <h3>Suivre leurs traces</h3>
+              <p>
+                Observer les empreintes et comprendre
+                différentes façons de se déplacer.
+              </p>
+            </div>
+          </article>
+
+
+          <article>
+            <span>05</span>
+            <div>
+              <h3>Créer un refuge</h3>
+              <p>
+                Organiser un espace avec des éléments naturels
+                et réfléchir à ce dont un oiseau peut avoir besoin.
+              </p>
+            </div>
+          </article>
+
+        </div>
+
+      </section>
+
+
+      <!-- UTILISATION -->
+      <section class="formats">
+
+        <div class="formats-inner">
+
+          <p class="eyebrow">
+            Une utilisation souple
+          </p>
+
+          <h2>
+            Plusieurs façons d’utiliser la malle
+          </h2>
+
+
+          <div class="format-grid">
+
+            <article>
+              <h3>Jeu libre</h3>
+              <p>
+                Installer le matériel et laisser les enfants
+                explorer, manipuler et inventer.
+              </p>
+            </article>
+
+            <article>
+              <h3>Une activité</h3>
+              <p>
+                Choisir une proposition selon le groupe,
+                le temps disponible ou les observations du moment.
+              </p>
+            </article>
+
+            <article>
+              <h3>Un cycle</h3>
+              <p>
+                Enchaîner plusieurs expériences sur plusieurs jours
+                pour approfondir progressivement les découvertes.
+              </p>
+            </article>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- INFOS -->
+      <section class="practical">
+
+        <div class="practical-inner">
+
+          <p class="eyebrow">
+            En pratique
+          </p>
+
+          <h2>
+            Pour les enfants de 3 à 5 ans
+          </h2>
+
+          <div class="practical-grid">
+
+            <div>
+              <strong>Public</strong>
+              <span>3–5 ans</span>
+            </div>
+
+            <div>
+              <strong>Utilisation</strong>
+              <span>Intérieur et extérieur</span>
+            </div>
+
+            <div>
+              <strong>Format</strong>
+              <span>Jeu libre, activité ou cycle</span>
+            </div>
+
+            <div>
+              <strong>Support</strong>
+              <span>Matériel + fiches d’animation</span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- RETOUR -->
+      <section class="back">
+
+        <a class="button" href="/">
+          ← Retour à l’accueil
+        </a>
+
+      </section>
+
+    </main>
+
+
+    <footer>
+      <p>© Rencontres avec le vivant</p>
+    </footer>
+
+
+    <style>
+
+      :global(*) {
+        box-sizing: border-box;
+      }
+
+      :global(html) {
+        scroll-behavior: smooth;
+      }
+
+      :global(body) {
+        margin: 0;
+        background: #f9f7f6;
+        color: #25271f;
+        font-family: Georgia, "Times New Roman", serif;
+      }
+
+      :global(img) {
+        max-width: 100%;
+      }
+
+
+      /* HEADER */
+
+      .site-header {
+        min-height: 94px;
+        padding: 15px 5.5%;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 40px;
+
+        background: #f9f7f6;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+
+        color: #29271f;
+        text-decoration: none;
+      }
+
+      .brand-decoration {
+        margin-right: 10px;
+
+        font-size: 2.7rem;
+        line-height: 1;
+
+        color: #747b51;
+
+        transform: rotate(-15deg);
+      }
+
+      .brand-text {
+        display: flex;
+        flex-direction: column;
+
+        font-size: 1.55rem;
+        line-height: 1.05;
+      }
+
+      nav {
+        display: flex;
+        align-items: center;
+
+        gap: clamp(24px, 3.7vw, 55px);
+      }
+
+      nav a {
+        color: #161713;
+        text-decoration: none;
+
+        font-size: 1rem;
+        font-weight: 600;
+
+        white-space: nowrap;
+      }
+
+
+      /* HERO PAGE */
+
+      .page-hero {
+        position: relative;
+
+        min-height: 310px;
+
+        display: flex;
+        align-items: center;
+
+        overflow: hidden;
+      }
+
+      .page-hero-image {
+        position: absolute;
+        inset: 0;
+
+        width: 100%;
+        height: 100%;
+
+        object-fit: cover;
+        object-position: center;
+      }
+
+      .page-hero-overlay {
+        position: absolute;
+        inset: 0;
+
+        background:
+          linear-gradient(
+            90deg,
+            rgba(22, 28, 16, 0.78) 0%,
+            rgba(22, 28, 16, 0.52) 38%,
+            rgba(22, 28, 16, 0.12) 78%
+          );
+      }
+
+      .page-hero-content {
+        position: relative;
+        z-index: 2;
+
+        max-width: 580px;
+
+        margin-left: 5.5%;
+
+        padding: 45px 0;
+
+        color: white;
+      }
+
+      .page-hero h1 {
+        margin: 5px 0 15px;
+
+        font-size: clamp(2.8rem, 5vw, 4.8rem);
+
+        font-weight: 500;
+      }
+
+      .page-hero-content > p:last-child {
+        max-width: 470px;
+
+        margin: 0;
+
+        font-size: 1.08rem;
+        line-height: 1.5;
+      }
+
+
+      /* GÉNÉRAL */
+
+      .eyebrow {
+        margin: 0 0 8px;
+
+        font-family: Arial, Helvetica, sans-serif;
+
+        font-size: 0.73rem;
+
+        line-height: 1.3;
+
+        letter-spacing: 0.09em;
+
+        text-transform: uppercase;
+
+        color: #74785e;
+      }
+
+      .eyebrow.light {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .section-heading {
+        max-width: 780px;
+
+        margin: 0 auto 40px;
+
+        text-align: center;
+      }
+
+      .section-heading h2,
+      .intro h2,
+      .contents h2,
+      .formats h2,
+      .practical h2 {
+        margin: 0 0 18px;
+
+        font-size: clamp(2rem, 3vw, 2.8rem);
+
+        font-weight: 500;
+      }
+
+      .section-heading p,
+      .intro p,
+      .contents p,
+      .formats p,
+      .practical p {
+        line-height: 1.6;
+      }
+
+
+      /* INTRO */
+
+      .intro {
+        padding: 70px 24px 60px;
+
+        background: #f9f7f6;
+      }
+
+      .intro-inner {
+        max-width: 780px;
+
+        margin: 0 auto;
+
+        text-align: center;
+      }
+
+      .intro-lead {
+        font-size: 1.12rem;
+      }
+
+
+      /* 3 ÉTAPES */
+
+      .approach {
+        padding: 55px 5.5% 70px;
+
+        background: #f1eee8;
+      }
+
+      .steps {
+        max-width: 900px;
+
+        margin: 0 auto;
+
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+
+        gap: 55px;
+      }
+
+      .step {
+        text-align: center;
+      }
+
+      .step-icon {
+        display: block;
+
+        width: 105px;
+        height: 105px;
+
+        margin: 0 auto 14px;
+
+        object-fit: contain;
+      }
+
+      .step h3 {
+        margin: 0 0 10px;
+
+        font-size: 1.2rem;
+      }
+
+      .step p {
+        margin: 0 auto;
+
+        max-width: 260px;
+
+        font-family: Arial, Helvetica, sans-serif;
+
+        font-size: 0.88rem;
+
+        line-height: 1.55;
+      }
+
+
+      /* CONTENU */
+
+      .contents {
+        padding: 75px 5.5%;
+
+        background: #f9f7f6;
+      }
+
+      .contents-inner {
+        max-width: 1050px;
+
+        margin: 0 auto;
+      }
+
+      .contents-text {
+        max-width: 650px;
+
+        margin-bottom: 38px;
+      }
+
+      .contents-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 22px;
+      }
+
+      .contents-grid article {
+        padding: 26px;
+
+        background: #efede6;
+
+        border-radius: 6px;
+      }
+
+      .contents-grid h3 {
+        margin: 0 0 10px;
+
+        font-size: 1.2rem;
+      }
+
+      .contents-grid p {
+        margin: 0;
+
+        font-family: Arial, Helvetica, sans-serif;
+
+        font-size: 0.9rem;
+      }
+
+
+      /* ACTIVITÉS */
+
+      .activities {
+        padding: 75px 5.5%;
+
+        background: #ece9e1;
+      }
+
+      .activity-list {
+        max-width: 820px;
+
+        margin: 0 auto;
+      }
+
+      .activity-list article {
+        display: grid;
+
+        grid-template-columns: 55px 1fr;
+
+        gap: 20px;
+
+        padding: 24px 0;
+
+        border-bottom: 1px solid rgba(50, 50, 40, 0.14);
+      }
+
+      .activity-list article:last-child {
+        border-bottom: none;
+      }
+
+      .activity-list span {
+        font-family: Arial, Helvetica, sans-serif;
+
+        color: #7d8957;
+
+        font-size: 0.85rem;
+
+        font-weight: 700;
+      }
+
+      .activity-list h3 {
+        margin: 0 0 8px;
+
+        font-size: 1.25rem;
+      }
+
+      .activity-list p {
+        margin: 0;
+
+        font-family: Arial, Helvetica, sans-serif;
+
+        font-size: 0.92rem;
+
+        line-height: 1.55;
+      }
+
+
+      /* FORMATS */
+
+      .formats {
+        padding: 75px 5.5%;
+
+        background: #f9f7f6;
+      }
+
+      .formats-inner {
+        max-width: 950px;
+
+        margin: 0 auto;
+
+        text-align: center;
+      }
+
+      .format-grid {
+        margin-top: 35px;
+
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+
+        gap: 25px;
+      }
+
+      .format-grid article {
+        padding: 25px;
+
+        background: #f1eee8;
+
+        border-radius: 6px;
+      }
+
+      .format-grid h3 {
+        margin: 0 0 10px;
+
+        font-size: 1.15rem;
+      }
+
+      .format-grid p {
+        margin: 0;
+
+        font-family: Arial, Helvetica, sans-serif;
+
+        font-size: 0.88rem;
+      }
+
+
+      /* INFOS PRATIQUES */
+
+      .practical {
+        padding: 70px 5.5%;
+
+        background: #dfe3cf;
+      }
+
+      .practical-inner {
+        max-width: 900px;
+
+        margin: 0 auto;
+
+        text-align: center;
+      }
+
+      .practical-grid {
+        margin-top: 35px;
+
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+
+        gap: 16px;
+      }
+
+      .practical-grid div {
+        padding: 20px 14px;
+
+        background: rgba(255, 255, 255, 0.45);
+
+        border-radius: 5px;
+      }
+
+      .practical-grid strong,
+      .practical-grid span {
+        display: block;
+      }
+
+      .practical-grid strong {
+        margin-bottom: 7px;
+
+        font-size: 0.9rem;
+      }
+
+      .practical-grid span {
+        font-family: Arial, Helvetica, sans-serif;
+
+        font-size: 0.84rem;
+      }
+
+
+      /* RETOUR */
+
+      .back {
+        padding: 50px 24px;
+
+        text-align: center;
+
+        background: #f9f7f6;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+
+        padding: 11px 17px;
+
+        background: #7d8957;
+        color: white;
+
+        border-radius: 4px;
+
+        text-decoration: none;
+
+        font-weight: 600;
+      }
+
+
+      /* FOOTER */
+
+      footer {
+        padding: 30px 5.5%;
+
+        background: #ece9e1;
+
+        text-align: center;
+
+        font-family: Arial, Helvetica, sans-serif;
+
+        font-size: 0.78rem;
+
+        color: #656559;
+      }
+
+
+      /* TABLETTE */
+
+      @media (max-width: 900px) {
+
+        .site-header {
+          align-items: flex-start;
+
+          flex-direction: column;
+
+          gap: 14px;
+        }
+
+        nav {
+          width: 100%;
+
+          overflow-x: auto;
+
+          gap: 24px;
+
+          padding-bottom: 5px;
+        }
+
+        .steps {
+          gap: 25px;
+        }
+
+        .practical-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+      }
+
+
+      /* MOBILE */
+
+      @media (max-width: 700px) {
+
+        .site-header {
+          padding: 16px 22px;
+        }
+
+        .brand-text {
+          font-size: 1.25rem;
+        }
+
+        .brand-decoration {
+          font-size: 2.2rem;
+        }
+
+        .page-hero {
+          min-height: 350px;
+        }
+
+        .page-hero-content {
+          margin: 0;
+
+          padding: 50px 24px;
+        }
+
+        .steps {
+          grid-template-columns: 1fr;
+
+          max-width: 420px;
+
+          gap: 38px;
+        }
+
+        .contents-grid,
+        .format-grid,
+        .practical-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .activity-list article {
+          grid-template-columns: 42px 1fr;
+        }
+
+      }
+
+    </style>
+
+  </body>
+</html>
