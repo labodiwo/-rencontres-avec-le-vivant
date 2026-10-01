@@ -17,6 +17,11 @@ const nav = [
       content="Consultez les disponibilités et préparez une demande de réservation pour une malle pédagogique Rencontres avec le vivant."
     />
     <title>Réserver une malle · Rencontres avec le vivant</title>
+    <script
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+      async
+      defer
+    ></script>
   </head>
 
   <body>
@@ -204,6 +209,13 @@ const nav = [
             />
           </div>
 
+          <div class="captcha-block">
+            <div id="turnstile-container"></div>
+            <p class="captcha-help">
+              Vérification anti-robot sécurisée par Cloudflare Turnstile.
+            </p>
+          </div>
+
           <label class="consent">
             <input type="checkbox" required />
             <span>
@@ -250,6 +262,55 @@ const nav = [
       const weekInput = document.getElementById("week");
       const bookingForm = document.getElementById("booking-form");
       const formStatus = document.getElementById("form-status");
+      let turnstileToken = "";
+      let turnstileWidgetId = null;
+
+      const initTurnstile = async () => {
+        try {
+          const response = await fetch("/api/turnstile-config");
+          const config = await response.json();
+
+          if (!response.ok || !config.ok || !config.siteKey) {
+            throw new Error("Captcha non configuré.");
+          }
+
+          const waitForTurnstile = () =>
+            new Promise((resolve) => {
+              const check = () => {
+                if (window.turnstile) {
+                  resolve();
+                } else {
+                  setTimeout(check, 100);
+                }
+              };
+              check();
+            });
+
+          await waitForTurnstile();
+
+          turnstileWidgetId = window.turnstile.render(
+            "#turnstile-container",
+            {
+              sitekey: config.siteKey,
+              theme: "light",
+              callback: (token) => {
+                turnstileToken = token;
+              },
+              "expired-callback": () => {
+                turnstileToken = "";
+              },
+              "error-callback": () => {
+                turnstileToken = "";
+              },
+            }
+          );
+        } catch (error) {
+          formStatus.textContent =
+            "Le captcha n’est pas encore disponible. Merci de réessayer un peu plus tard.";
+        }
+      };
+
+      initTurnstile();
 
       const formatIsoDate = (date) => {
         const year = date.getFullYear();
@@ -327,6 +388,12 @@ const nav = [
           return;
         }
 
+        if (!turnstileToken) {
+          formStatus.textContent =
+            "Merci de valider la vérification anti-robot.";
+          return;
+        }
+
         const submitButton = bookingForm.querySelector('button[type="submit"]');
         const formData = new FormData(bookingForm);
 
@@ -341,6 +408,7 @@ const nav = [
           childrenNumber: formData.get("children-number"),
           message: formData.get("message"),
           website: formData.get("website"),
+          turnstileToken,
         };
 
         submitButton.disabled = true;
@@ -369,6 +437,14 @@ const nav = [
             "Votre demande a bien été envoyée. Je reviendrai vers vous pour confirmer la disponibilité et la réservation.";
 
           bookingForm.reset();
+          turnstileToken = "";
+
+          if (
+            window.turnstile &&
+            turnstileWidgetId !== null
+          ) {
+            window.turnstile.reset(turnstileWidgetId);
+          }
 
           document
             .querySelectorAll(".week-card.selected")
@@ -721,6 +797,16 @@ const nav = [
         width: 1px;
         height: 1px;
         overflow: hidden;
+      }
+
+      .captcha-block {
+        margin: 4px 0 22px;
+      }
+
+      .captcha-help {
+        margin: 8px 0 0;
+        color: #77786f;
+        font: .74rem/1.45 Arial, Helvetica, sans-serif;
       }
 
       .consent {
