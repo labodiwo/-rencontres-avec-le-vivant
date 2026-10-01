@@ -856,15 +856,45 @@ const nav = [
       }
 
       .week-status {
-        display: inline-block;
-        color: #687347;
-        font: 700 .68rem Arial, Helvetica, sans-serif;
-        letter-spacing: .06em;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font: 700 .72rem Arial, Helvetica, sans-serif;
+        letter-spacing: .05em;
         text-transform: uppercase;
       }
 
-      .pending .week-status { color: #a27735; }
-      .booked .week-status { color: #77776f; }
+      .week-status::before {
+        content: "";
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        flex: 0 0 auto;
+      }
+
+      .available .week-status {
+        color: #4f6b35;
+      }
+
+      .available .week-status::before {
+        background: #6f8a4a;
+      }
+
+      .pending .week-status {
+        color: #9b6a21;
+      }
+
+      .pending .week-status::before {
+        background: #c59e5d;
+      }
+
+      .booked .week-status {
+        color: #6f7068;
+      }
+
+      .booked .week-status::before {
+        background: #9b9b92;
+      }
 
       .select-week {
         flex: 0 0 auto;
