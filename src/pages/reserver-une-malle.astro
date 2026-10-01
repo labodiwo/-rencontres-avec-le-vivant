@@ -847,6 +847,15 @@ const nav = [
         background: #fffefa;
       }
 
+      .calendar-week.available {
+        background: #e6efdd;
+        border-color: #a8b88f;
+      }
+
+      .calendar-week.available .calendar-day {
+        background: #f2f7ec;
+      }
+
       .calendar-week.selected {
         border-color: #596243;
         box-shadow: 0 0 0 2px rgba(89, 98, 67, .11);
@@ -894,14 +903,19 @@ const nav = [
         padding: 9px 14px;
         border: 1px solid #7d8957;
         border-radius: 4px;
-        background: #fff;
-        color: #596243;
+        background: #7d8957;
+        color: #fff;
         cursor: pointer;
         font: 600 .82rem Arial, Helvetica, sans-serif;
       }
 
+      .select-week:hover {
+        background: #69754a;
+        border-color: #69754a;
+      }
+
       .selected .select-week {
-        background: #7d8957;
+        background: #596243;
         color: #fff;
       }
 
