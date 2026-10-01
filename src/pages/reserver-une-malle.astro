@@ -193,6 +193,17 @@ const nav = [
             ></textarea>
           </div>
 
+          <div class="hp-field" aria-hidden="true">
+            <label for="website">Site internet</label>
+            <input
+              id="website"
+              name="website"
+              type="text"
+              tabindex="-1"
+              autocomplete="off"
+            />
+          </div>
+
           <label class="consent">
             <input type="checkbox" required />
             <span>
@@ -202,16 +213,11 @@ const nav = [
           </label>
 
           <button type="submit">
-            Préparer ma demande
+            Envoyer ma demande de réservation
             <span aria-hidden="true">→</span>
           </button>
 
           <p id="form-status" class="form-status" role="status"></p>
-
-          <p class="technical-note">
-            L’envoi automatique de la demande sera activé lorsque le service
-            de formulaire du site sera connecté.
-          </p>
         </form>
       </section>
     </main>
@@ -312,7 +318,7 @@ const nav = [
         grid.appendChild(card);
       }
 
-      bookingForm.addEventListener("submit", (event) => {
+      bookingForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         if (!weekInput.value) {
@@ -321,8 +327,61 @@ const nav = [
           return;
         }
 
-        formStatus.textContent =
-          "Votre demande est prête. Il reste à connecter l’envoi automatique du formulaire pour qu’elle me soit transmise.";
+        const submitButton = bookingForm.querySelector('button[type="submit"]');
+        const formData = new FormData(bookingForm);
+
+        const payload = {
+          kit: formData.get("kit"),
+          week: formData.get("week"),
+          formula: formData.get("formula"),
+          name: formData.get("name"),
+          email: formData.get("email"),
+          organisation: formData.get("organisation"),
+          childrenAge: formData.get("children-age"),
+          childrenNumber: formData.get("children-number"),
+          message: formData.get("message"),
+          website: formData.get("website"),
+        };
+
+        submitButton.disabled = true;
+        submitButton.textContent = "Envoi en cours…";
+        formStatus.textContent = "";
+
+        try {
+          const response = await fetch("/api/reservation", {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          });
+
+          const result = await response.json();
+
+          if (!response.ok || !result.ok) {
+            throw new Error(
+              result.error ||
+                "La demande n’a pas pu être envoyée."
+            );
+          }
+
+          formStatus.textContent =
+            "Votre demande a bien été envoyée. Je reviendrai vers vous pour confirmer la disponibilité et la réservation.";
+
+          bookingForm.reset();
+
+          document
+            .querySelectorAll(".week-card.selected")
+            .forEach((element) => element.classList.remove("selected"));
+        } catch (error) {
+          formStatus.textContent =
+            error.message ||
+            "La demande n’a pas pu être envoyée. Merci de réessayer.";
+        } finally {
+          submitButton.disabled = false;
+          submitButton.innerHTML =
+            'Envoyer ma demande de réservation <span aria-hidden="true">→</span>';
+        }
       });
     </script>
 
@@ -656,6 +715,14 @@ const nav = [
         box-shadow: 0 0 0 3px rgba(125, 137, 87, .14);
       }
 
+      .hp-field {
+        position: absolute;
+        left: -9999px;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+      }
+
       .consent {
         display: flex;
         align-items: flex-start;
@@ -689,6 +756,11 @@ const nav = [
 
       button[type="submit"]:hover {
         background: #69754a;
+      }
+
+      button[type="submit"]:disabled {
+        opacity: .65;
+        cursor: wait;
       }
 
       .form-status {
