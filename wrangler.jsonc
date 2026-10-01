@@ -1,7 +1,17 @@
 {
   "name": "rencontres-avec-le-vivant",
-  "compatibility_date": "2026-09-30",
+  "main": "./src/worker.js",
+  "compatibility_date": "2026-10-01",
   "assets": {
-    "directory": "./dist"
-  }
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": [
+      "/api/*"
+    ]
+  },
+  "send_email": [
+    {
+      "name": "EMAIL"
+    }
+  ]
 }
