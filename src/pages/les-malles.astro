@@ -734,8 +734,13 @@ const nav = [
         align-items: center;
       }
 
-      .material-text p {
-        line-height: 1.65;
+      .material-text {
+  max-width: 520px;
+}
+
+.material-text h2 {
+  line-height: 1.05;
+}
       }
 
       .value-cards {
@@ -753,43 +758,52 @@ const nav = [
         border-radius: 8px;
       }
 
-      .value-number {
-        display: block;
+ .value-number {
+  display: block;
 
-        margin-bottom: 10px;
+  margin-bottom: 14px;
 
-        font-size: clamp(2.15rem, 4vw, 3.3rem);
-        line-height: 1;
+  font-size: clamp(2rem, 3.2vw, 2.8rem);
+  line-height: 1.05;
 
-        color: #596243;
-      }
+  color: #596243;
 
-      .value-card h3 {
-        margin: 0 0 18px;
+  white-space: nowrap;
+}
 
-        font-size: 1.2rem;
-      }
+.value-card {
+  padding: 30px 28px 32px;
 
-      .value-card p {
-        line-height: 1.55;
-      }
+  background: #dfe3cf;
 
-      .value-card small {
-        display: block;
+  border-radius: 10px;
+}
 
-        margin-top: 20px;
+.value-card h3 {
+  margin: 0 0 16px;
 
-        font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.15rem;
+  line-height: 1.25;
+}
 
-        font-size: 0.75rem;
-        line-height: 1.5;
+.value-card p {
+  margin: 0;
 
-        color: #5f6253;
-      }
+  line-height: 1.55;
+}
 
-      .value-card small strong {
-        color: #414638;
-      }
+.value-card small {
+  display: block;
+
+  margin-top: 22px;
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  font-size: 0.74rem;
+  line-height: 1.5;
+
+  color: #5f6253;
+}
 
 
       /* DÉMARCHE */
