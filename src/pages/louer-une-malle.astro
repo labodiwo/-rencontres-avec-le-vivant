@@ -10,32 +10,50 @@ const steps = [
   {
     number: "01",
     title: "Choisir une malle",
-    text: "Découvrez les différentes malles disponibles, leur contenu, l’âge conseillé et les expériences proposées.",
+    text: "Découvrez son contenu, l’âge conseillé et les expériences proposées.",
   },
   {
     number: "02",
     title: "Faire une demande",
-    text: "Indiquez la malle souhaitée, votre structure et les dates qui vous intéressent.",
+    text: "Indiquez la malle souhaitée, votre structure et la semaine qui vous intéresse.",
   },
   {
     number: "03",
-    title: "Vérifier la disponibilité",
-    text: "Je vous confirme que la malle est disponible et nous précisons ensemble les modalités de location.",
+    title: "Confirmer la réservation",
+    text: "Je vérifie la disponibilité, nous choisissons ensemble la formule adaptée et la réservation est confirmée.",
   },
   {
     number: "04",
-    title: "Confirmer et régler",
-    text: "Une fois les dates validées, la réservation est confirmée et le règlement peut être effectué.",
+    title: "Recevoir le livret",
+    text: "Dès la confirmation, vous recevez le livret pédagogique en version numérique pour préparer les animations à l’avance.",
   },
   {
     number: "05",
-    title: "Récupérer la malle",
-    text: "La malle vous est remise avec l’ensemble du matériel, les supports pédagogiques et les indications nécessaires.",
+    title: "Recevoir la malle",
+    text: "La malle physique est remise le vendredi précédant votre semaine de location, prête à être utilisée dès le début de la semaine.",
   },
   {
     number: "06",
-    title: "Restituer la malle",
-    text: "À la fin de la location, la malle est restituée complète afin qu’elle puisse poursuivre son chemin vers un autre groupe.",
+    title: "Utiliser puis restituer",
+    text: "Vous utilisez la malle selon la formule choisie, puis elle est restituée complète à la fin de la période prévue.",
+  },
+];
+
+const formulas = [
+  {
+    title: "Formule autonome",
+    subtitle: "La malle, sans intervention sur place",
+    text: "Vous recevez le livret dès la confirmation de la réservation, puis la malle le vendredi précédent. Votre équipe prépare et mène les animations en toute autonomie.",
+  },
+  {
+    title: "Formule avec présentation",
+    subtitle: "Une prise en main accompagnée",
+    text: "En plus de la location, je présente la malle à l’équipe : contenu, logique pédagogique, possibilités d’utilisation et questions pratiques. L’équipe poursuit ensuite en autonomie.",
+  },
+  {
+    title: "Formule avec animation",
+    subtitle: "Une animation menée auprès des enfants",
+    text: "La malle est louée à la structure et j’interviens également pour animer une proposition auprès des enfants. L’équipe peut ensuite poursuivre les autres expériences pendant la semaine.",
   },
 ];
 ---
@@ -166,9 +184,15 @@ const steps = [
           </p>
 
           <p>
-            Avant chaque location, la disponibilité de la malle
-            est vérifiée. La réservation est ensuite confirmée
-            avant le règlement.
+            Dès que la réservation est confirmée, le livret pédagogique
+            vous est envoyé en version numérique. Vous pouvez ainsi
+            découvrir les activités, choisir celles que vous souhaitez
+            proposer et préparer votre semaine avant l’arrivée de la malle.
+          </p>
+
+          <p>
+            La malle physique est ensuite remise le vendredi précédant
+            la semaine de location.
           </p>
 
         </div>
@@ -221,6 +245,60 @@ const steps = [
 
       </section>
 
+
+
+      <!-- FORMULES -->
+      <section class="formulas-section">
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            Choisir son accompagnement
+          </p>
+
+          <h2>
+            Trois façons de louer une malle
+          </h2>
+
+          <p class="section-intro">
+            Toutes les formules comprennent l’accès au livret pédagogique
+            dès la confirmation de la réservation et la mise à disposition
+            de la malle pour la période convenue.
+          </p>
+
+        </div>
+
+        <div class="formulas-grid">
+
+          {
+            formulas.map((formula, index) => (
+
+              <article class="formula-card">
+
+                <span class="formula-number">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+
+                <h3>
+                  {formula.title}
+                </h3>
+
+                <p class="formula-subtitle">
+                  {formula.subtitle}
+                </p>
+
+                <p>
+                  {formula.text}
+                </p>
+
+              </article>
+
+            ))
+          }
+
+        </div>
+
+      </section>
 
 
       <!-- MALLE DISPONIBLE -->
@@ -280,13 +358,18 @@ const steps = [
               </div>
 
               <div>
-                <span>Durée</span>
-                <strong>À définir</strong>
+                <span>Préparation</span>
+                <strong>Livret envoyé dès confirmation</strong>
               </div>
 
               <div>
-                <span>Tarif</span>
-                <strong>À définir</strong>
+                <span>Remise de la malle</span>
+                <strong>Le vendredi précédent</strong>
+              </div>
+
+              <div>
+                <span>Formule</span>
+                <strong>Autonome ou accompagnée</strong>
               </div>
 
               <div>
@@ -352,9 +435,10 @@ const steps = [
               <span>02</span>
 
               <p>
-                <strong>Les fiches d’animation</strong>
-                Des propositions pour guider l’animateur,
-                tout en laissant la possibilité de les adapter.
+                <strong>Le livret pédagogique en amont</strong>
+                Il est envoyé en version numérique dès la confirmation
+                de la réservation pour vous permettre de préparer
+                les animations avant l’arrivée de la malle.
               </p>
 
             </div>
@@ -411,7 +495,8 @@ const steps = [
 
             <p>
               Avant tout règlement, je vérifie avec vous
-              la disponibilité de la malle et les dates souhaitées.
+              la disponibilité de la malle, la semaine souhaitée
+              et la formule choisie.
             </p>
 
             <p>
@@ -856,6 +941,62 @@ const steps = [
         line-height: 1.6;
       }
 
+
+
+      /* FORMULES */
+
+      .formulas-section {
+        padding: 70px 5.5%;
+        background: #f9f7f2;
+      }
+
+      .section-intro {
+        max-width: 700px;
+        margin: 16px auto 0;
+        color: #5d5e54;
+        line-height: 1.65;
+      }
+
+      .formulas-grid {
+        max-width: 1120px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 22px;
+      }
+
+      .formula-card {
+        padding: 32px;
+        background: #dfe3cf;
+        border-radius: 8px;
+      }
+
+      .formula-number {
+        display: block;
+        margin-bottom: 22px;
+        color: #7c8560;
+        font-size: 1.7rem;
+      }
+
+      .formula-card h3 {
+        margin: 0 0 8px;
+        font-size: 1.45rem;
+        font-weight: 500;
+      }
+
+      .formula-subtitle {
+        margin: 0 0 16px;
+        color: #596243;
+        font-weight: 600;
+      }
+
+      .formula-card p:last-child {
+        margin: 0;
+        color: #56584d;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
 
 
       /* MALLE */
@@ -1393,6 +1534,10 @@ const steps = [
             repeat(2, minmax(0, 1fr));
         }
 
+        .formulas-grid {
+          grid-template-columns: 1fr;
+        }
+
 
         .available-inner,
         .included-inner,
@@ -1436,6 +1581,10 @@ const steps = [
 
 
         .steps-section {
+          padding: 55px 24px;
+        }
+
+        .formulas-section {
           padding: 55px 24px;
         }
 
