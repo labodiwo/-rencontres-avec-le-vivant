@@ -645,7 +645,11 @@ import SiteHeader from "../components/SiteHeader.astro";
 
         let monday = getMonday(firstDayOfMonth);
 
-        for (let row = 0; row < 6; row += 1) {
+        if (monday.getMonth() !== displayedMonth.getMonth()) {
+          monday.setDate(monday.getDate() + 7);
+        }
+
+        while (monday.getMonth() === displayedMonth.getMonth()) {
           const weekMonday = new Date(monday);
           const friday = new Date(weekMonday);
           friday.setDate(weekMonday.getDate() + 4);
