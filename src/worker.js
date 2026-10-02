@@ -500,8 +500,10 @@ export default {
 
       const data = {
         kit: clean(body.kit, 120),
-        week: clean(body.week, 160),
+        week: clean(body.week, 220),
+        duration: clean(body.duration, 40),
         formula: clean(body.formula, 120),
+        priceSummary: clean(body.priceSummary, 120),
         name: clean(body.name, 120),
         email: clean(body.email, 180),
         organisation: clean(body.organisation, 180),
@@ -513,6 +515,7 @@ export default {
       if (
         !data.kit ||
         !data.week ||
+        !data.duration ||
         !data.formula ||
         !data.name ||
         !data.email ||
@@ -549,8 +552,10 @@ export default {
         "Nouvelle demande de réservation — Rencontres avec le vivant",
         "",
         `Malle : ${data.kit}`,
-        `Semaine souhaitée : ${data.week}`,
+        `Période souhaitée : ${data.week}`,
+        `Durée : ${data.duration} semaine(s)`,
         `Formule : ${data.formula}`,
+        `Tarif estimé : ${data.priceSummary || "Non calculé"}`,
         "",
         `Nom : ${data.name}`,
         `E-mail : ${data.email}`,
