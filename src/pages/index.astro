@@ -66,7 +66,7 @@ const nav = [
           <h1>
             Des outils<br />
             pour prendre le temps<br />
-            de rencontrer le vivant
+            de <span class="hero-highlight">rencontrer le vivant</span>
           </h1>
 
           <p>
@@ -85,7 +85,6 @@ const nav = [
 
       <div class="hero-credit">
         <span>Photo : Bulat Khamitov</span>
-        <span class="living-note">Rencontrer le vivant</span>
       </div>
 
 
@@ -436,15 +435,8 @@ const nav = [
         font-size: 0.72rem;
       }
 
-      .hero-credit span:first-child::after {
-        content: "·";
-        margin-left: 10px;
-        color: #a5a69d;
-      }
-
-      .living-note {
-        color: #687347;
-        font-weight: 700;
+      .hero-highlight {
+        color: #aebd7f;
       }
 
 
