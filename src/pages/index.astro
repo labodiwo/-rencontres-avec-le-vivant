@@ -30,13 +30,14 @@ const nav = [
 
       <a class="brand" href="/" aria-label="Rencontres avec le vivant — Accueil">
         <svg class="brand-logo" viewBox="0 0 120 120" role="img" aria-hidden="true">
-          <path class="brand-circle" d="M29 94C12 70 17 35 43 19C56 11 70 9 82 12" />
-          <path class="brand-circle" d="M98 35C106 52 105 73 94 88C81 105 56 108 37 98" />
+          <path class="brand-circle" d="M34 99C17 84 12 60 20 40C29 18 52 8 77 11" />
+          <path class="brand-circle" d="M99 35C107 55 103 79 87 94C73 107 51 108 34 99" />
           <circle class="brand-dot" cx="96" cy="20" r="7" />
-          <path class="brand-leaf-large" d="M37 96C25 78 25 57 38 40C53 58 53 79 37 96Z" />
-          <path class="brand-stem" d="M37 97C49 82 57 66 61 47" />
-          <path class="brand-leaf" d="M61 48C51 42 52 31 62 24C71 33 70 43 61 48Z" />
-          <path class="brand-leaf" d="M64 68C70 57 82 56 89 62C83 72 73 76 64 68Z" />
+          <path class="brand-leaf-large" d="M36 97C25 79 25 57 40 36C57 57 56 79 36 97Z" />
+          <path class="brand-stem" d="M36 98C50 84 60 65 65 44" />
+          <path class="brand-leaf brand-leaf-top" d="M65 45C55 37 58 24 69 17C77 29 75 40 65 45Z" />
+          <path class="brand-leaf brand-leaf-side" d="M62 69C70 56 84 55 94 62C86 75 73 79 62 69Z" />
+          <path class="brand-vein" d="M36 96C41 77 43 58 40 38" />
         </svg>
 
         <span class="brand-text">
@@ -337,6 +338,13 @@ const nav = [
         fill: none;
         stroke: #4f5f42;
         stroke-width: 2.4;
+        stroke-linecap: round;
+      }
+
+      .brand-vein {
+        fill: none;
+        stroke: rgba(249, 247, 246, 0.72);
+        stroke-width: 1.6;
         stroke-linecap: round;
       }
 
