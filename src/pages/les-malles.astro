@@ -87,6 +87,74 @@ import SiteHeader from "../components/SiteHeader.astro";
       </section>
 
 
+      <!-- POURQUOI LOUER -->
+      <section class="rental-benefits">
+
+        <div class="rental-benefits-inner">
+
+          <div class="rental-benefits-heading">
+            <p class="eyebrow">
+              Une ressource qui circule
+            </p>
+
+            <h2>
+              Du matériel à disposition,
+              sans avoir à tout acheter ni à tout stocker
+            </h2>
+
+            <p>
+              Une animation ponctuelle ou un cycle ne justifient pas toujours
+              l’achat de nombreux supports qui serviront ensuite peu souvent.
+              La location permet d’accéder à un ensemble déjà constitué,
+              puis de le restituer une fois la période terminée.
+            </p>
+          </div>
+
+          <div class="rental-benefits-grid">
+
+            <article>
+              <span>01</span>
+              <h3>Pas d’achat à constituer</h3>
+              <p>
+                Livres, figurines, supports, matériel sensoriel et éléments
+                de mise en scène sont déjà réunis dans une même malle.
+              </p>
+            </article>
+
+            <article>
+              <span>02</span>
+              <h3>Pas de stockage dans la durée</h3>
+              <p>
+                La structure utilise le matériel pendant la période choisie,
+                puis le restitue : pas besoin de lui trouver une place permanente.
+              </p>
+            </article>
+
+            <article>
+              <span>03</span>
+              <h3>Moins de temps de préparation matérielle</h3>
+              <p>
+                Vous n’avez pas à rechercher chaque élément séparément
+                ni à construire vous-même tout le support d’animation.
+              </p>
+            </article>
+
+            <article>
+              <span>04</span>
+              <h3>Un ensemble pensé comme un tout</h3>
+              <p>
+                Le matériel, le livret et les propositions ont été conçus
+                pour fonctionner ensemble et pouvoir être pris en main par l’équipe.
+              </p>
+            </article>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
       <!-- MATÉRIEL ET CONCEPTION -->
       <section class="material">
 
@@ -685,6 +753,67 @@ import SiteHeader from "../components/SiteHeader.astro";
         font-size: 1.15rem;
       }
 
+
+      /* POURQUOI LOUER */
+
+      .rental-benefits {
+        padding: 70px 5.5%;
+        background: #f1eee8;
+      }
+
+      .rental-benefits-inner {
+        max-width: 1080px;
+        margin: 0 auto;
+      }
+
+      .rental-benefits-heading {
+        max-width: 760px;
+        margin-bottom: 34px;
+      }
+
+      .rental-benefits-heading h2 {
+        margin: 0 0 18px;
+        font-size: clamp(2rem, 3.5vw, 3rem);
+        line-height: 1.08;
+        font-weight: 500;
+      }
+
+      .rental-benefits-heading p:last-child {
+        margin: 0;
+        color: #5f6157;
+        line-height: 1.65;
+      }
+
+      .rental-benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .rental-benefits-grid article {
+        padding: 24px 22px;
+        background: #fffdf8;
+        border-radius: 7px;
+      }
+
+      .rental-benefits-grid span {
+        display: block;
+        margin-bottom: 16px;
+        color: #7d8957;
+        font: 700 .78rem Arial, Helvetica, sans-serif;
+      }
+
+      .rental-benefits-grid h3 {
+        margin: 0 0 10px;
+        font-size: 1.15rem;
+        font-weight: 500;
+      }
+
+      .rental-benefits-grid p {
+        margin: 0;
+        color: #5f6157;
+        font: .86rem/1.55 Arial, Helvetica, sans-serif;
+      }
 
       /* MATÉRIEL */
 
