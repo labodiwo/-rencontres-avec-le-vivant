@@ -81,11 +81,9 @@ const nav = [
       <section class="calendar-section">
         <div class="section-heading">
           <p class="eyebrow">Disponibilités</p>
-          <h2>Choisissez votre période de location</h2>
-          <p>
-            Commencez par choisir la durée, puis sélectionnez la première
-            semaine souhaitée. Le calendrier vérifie automatiquement les
-            semaines consécutives nécessaires.
+          <h2 id="calendar-heading">Choisissez votre semaine de location</h2>
+          <p id="calendar-help">
+            Sélectionnez la semaine souhaitée dans le calendrier.
           </p>
         </div>
 
@@ -140,10 +138,15 @@ const nav = [
           <div id="weeks-grid" class="weeks-grid" aria-live="polite"></div>
         </div>
 
+        <div id="selection-summary" class="selection-summary" hidden>
+          <span class="selection-kicker">Votre période</span>
+          <strong id="selection-period"></strong>
+          <span id="selection-duration"></span>
+        </div>
+
         <p class="calendar-note">
-          Cliquez sur la première semaine souhaitée. Les semaines consécutives
-          correspondant à la durée choisie seront ajoutées automatiquement à votre demande.
-          Les vacances scolaires sont indiquées uniquement comme repère et n’empêchent pas la réservation.
+          Les vacances scolaires sont indiquées uniquement comme repère
+          et n’empêchent pas la réservation.
         </p>
       </section>
 
@@ -362,6 +365,11 @@ const nav = [
       const bookingForm = document.getElementById("booking-form");
       const formStatus = document.getElementById("form-status");
       const currentMonthLabel = document.getElementById("current-month");
+      const calendarHeading = document.getElementById("calendar-heading");
+      const calendarHelp = document.getElementById("calendar-help");
+      const selectionSummary = document.getElementById("selection-summary");
+      const selectionPeriod = document.getElementById("selection-period");
+      const selectionDuration = document.getElementById("selection-duration");
       const previousMonthButton = document.getElementById("previous-month");
       const nextMonthButton = document.getElementById("next-month");
       let turnstileToken = "";
@@ -555,6 +563,26 @@ const nav = [
         return getRentalWeeks(monday).map(formatIsoDate);
       };
 
+      const updateDurationInterface = () => {
+        if (selectedDuration === 1) {
+          calendarHeading.textContent = "Choisissez votre semaine de location";
+          calendarHelp.textContent =
+            "Sélectionnez la semaine souhaitée dans le calendrier.";
+        } else if (selectedDuration === 2) {
+          calendarHeading.textContent = "Choisissez le début de vos 2 semaines";
+          calendarHelp.textContent =
+            "Cliquez sur la première semaine : la suivante sera incluse automatiquement si elle est disponible.";
+        } else {
+          calendarHeading.textContent = "Choisissez le début de vos 4 semaines";
+          calendarHelp.textContent =
+            "Cliquez sur la première semaine : les 3 semaines suivantes seront incluses automatiquement si elles sont disponibles.";
+        }
+
+        if (!selectedWeekIso) {
+          selectionSummary.hidden = true;
+        }
+      };
+
       const updatePriceSummary = () => {
         const duration = Number(durationSelect.value || selectedDuration || 1);
         const formula = formulaSelect.value;
@@ -586,6 +614,7 @@ const nav = [
         selectedWeekIso = "";
         weekInput.value = "";
         formStatus.textContent = "";
+        updateDurationInterface();
         updatePriceSummary();
         renderCalendar();
       };
@@ -657,7 +686,13 @@ const nav = [
                 class="select-week"
                 ${!rangeAvailable ? "disabled" : ""}
               >
-                ${selectedWeekIsos().includes(iso) ? "Sélectionnée" : "Choisir"}
+                ${selectedWeekIsos().includes(iso)
+                  ? "Sélectionnée"
+                  : selectedDuration === 1
+                    ? "Choisir"
+                    : selectedDuration === 2
+                      ? "Choisir 2 sem."
+                      : "Choisir 4 sem."}
               </button>
             </div>
           `;
@@ -667,7 +702,18 @@ const nav = [
 
             selectButton.addEventListener("click", () => {
               selectedWeekIso = iso;
-              weekInput.value = formatRentalPeriod(weekMonday);
+              const rentalPeriod = formatRentalPeriod(weekMonday);
+              weekInput.value = rentalPeriod;
+
+              selectionPeriod.textContent = rentalPeriod;
+              selectionDuration.textContent =
+                selectedDuration === 1
+                  ? "1 semaine · 200 € avant éventuel accompagnement"
+                  : selectedDuration === 2
+                    ? "2 semaines consécutives · 370 € avant éventuel accompagnement"
+                    : "4 semaines consécutives · 640 € avant éventuel accompagnement";
+              selectionSummary.hidden = false;
+
               renderCalendar();
 
               document
@@ -693,6 +739,7 @@ const nav = [
 
       formulaSelect.addEventListener("change", updatePriceSummary);
 
+      updateDurationInterface();
       updatePriceSummary();
 
       previousMonthButton.addEventListener("click", () => {
@@ -794,6 +841,7 @@ const nav = [
           bookingForm.reset();
           turnstileToken = "";
           selectedWeekIso = "";
+          selectionSummary.hidden = true;
           selectedDuration = 1;
           durationSelect.value = "1";
           durationButtons.forEach((button) => {
@@ -1229,9 +1277,40 @@ const nav = [
         cursor: not-allowed;
       }
 
+      .selection-summary {
+        max-width: 760px;
+        margin: 22px auto 0;
+        padding: 18px 20px;
+        border: 1px solid #b9c6a4;
+        border-radius: 8px;
+        background: #e8efdf;
+        text-align: center;
+      }
+
+      .selection-kicker {
+        display: block;
+        margin-bottom: 5px;
+        color: #687347;
+        font: 700 .7rem Arial, Helvetica, sans-serif;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+
+      .selection-summary strong {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 1.05rem;
+        font-weight: 600;
+      }
+
+      .selection-summary > span:last-child {
+        color: #626756;
+        font: .8rem Arial, Helvetica, sans-serif;
+      }
+
       .calendar-note {
         max-width: 760px;
-        margin: 24px auto 0;
+        margin: 18px auto 0;
         text-align: center;
         color: #737469;
         font: .8rem/1.5 Arial, Helvetica, sans-serif;
