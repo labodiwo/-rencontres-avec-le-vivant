@@ -1,12 +1,5 @@
 ---
-const nav = [
-  { label: "Les malles", href: "/les-malles" },
-  { label: "Louer une malle", href: "/louer-une-malle" },
-  { label: "À propos", href: "/a-propos" },
-  { label: "FAQ", href: "/faq" },
-  { label: "Le blog", href: "/blog" },
-  { label: "Me contacter", href: "/contact" },
-];
+import SiteHeader from "../components/SiteHeader.astro";
 ---
 
 <!doctype html>
@@ -24,37 +17,7 @@ const nav = [
   </head>
 
   <body>
-
-    <!-- EN-TÊTE -->
-    <header class="site-header">
-
-      <a class="brand" href="/" aria-label="Rencontres avec le vivant — Accueil">
-        <svg class="brand-logo" viewBox="0 0 120 120" role="img" aria-hidden="true">
-          <path class="brand-circle" d="M34 99C17 84 12 60 20 40C29 18 52 8 77 11" />
-          <path class="brand-circle" d="M99 35C107 55 103 79 87 94C73 107 51 108 34 99" />
-          <circle class="brand-dot" cx="96" cy="20" r="7" />
-          <path class="brand-leaf-large" d="M36 97C25 79 25 57 40 36C57 57 56 79 36 97Z" />
-          <path class="brand-stem" d="M36 98C50 84 60 65 65 44" />
-          <path class="brand-leaf brand-leaf-top" d="M65 45C55 37 58 24 69 17C77 29 75 40 65 45Z" />
-          <path class="brand-leaf brand-leaf-side" d="M62 69C70 56 84 55 94 62C86 75 73 79 62 69Z" />
-          <path class="brand-vein" d="M36 96C41 77 43 58 40 38" />
-        </svg>
-
-        <span class="brand-text">
-          <span>Rencontres</span>
-          <span>avec le vivant</span>
-        </span>
-      </a>
-
-      <nav aria-label="Navigation principale">
-        {
-          nav.map((item) => (
-            <a href={item.href}>{item.label}</a>
-          ))
-        }
-      </nav>
-
-    </header>
+    <SiteHeader />
 
 
     <main>
