@@ -1,0 +1,60 @@
+---
+const nav = [
+  { label: "Les malles", href: "/les-malles" },
+  { label: "Louer une malle", href: "/louer-une-malle" },
+  { label: "À propos", href: "/a-propos" },
+  { label: "FAQ", href: "/faq" },
+  { label: "Le blog", href: "/blog" },
+  { label: "Me contacter", href: "/contact" },
+];
+
+const faqs = [
+  ["À qui s’adressent les malles ?", "Les malles sont pensées pour les structures qui accompagnent de jeunes enfants : accueils de loisirs, maisons de quartier, médiathèques, écoles et autres lieux éducatifs. Chaque malle précise l’âge conseillé."],
+  ["Combien de temps dure une location ?", "La location est prévue du lundi au vendredi inclus. La malle est remise le vendredi précédent afin que l’équipe puisse l’installer et être prête dès le lundi."],
+  ["Quand reçoit-on le livret pédagogique ?", "Le livret numérique est envoyé dès que la réservation est confirmée. Vous pouvez ainsi découvrir les propositions et préparer la semaine avant l’arrivée de la malle."],
+  ["Faut-il suivre toutes les activités ?", "Non. Les fiches sont des propositions. Vous pouvez suivre un déroulé complet, choisir seulement certaines activités ou adapter leur ordre en fonction du groupe, du lieu et du temps disponible."],
+  ["Peut-on utiliser les malles dehors ?", "Oui. Plusieurs propositions invitent explicitement à poursuivre dehors, et de nombreuses activités peuvent également être adaptées à un usage extérieur."],
+  ["Quelle différence entre les trois formules ?", "La formule autonome comprend la malle et le livret. La formule avec présentation ajoute une prise en main avec l’équipe. La formule avec animation comprend également une animation menée auprès des enfants."],
+  ["Comment savoir si une semaine est disponible ?", "Le calendrier de réservation indique les semaines disponibles, en attente ou déjà réservées. Une demande n’est définitive qu’après confirmation."],
+  ["Quand intervient le paiement ?", "Le paiement intervient uniquement après vérification de la disponibilité et confirmation de la réservation. Aucun règlement n’est demandé au moment de la simple demande."],
+  ["Que faire si du matériel est perdu ou abîmé ?", "Il suffit de le signaler lors de la restitution. Les modalités précises concernant le matériel et la restitution seront rappelées lors de la confirmation de la location."],
+  ["Puis-je poser une question avant de réserver ?", "Bien sûr. La page « Me contacter » permet de poser une question sur le contenu, l’utilisation ou l’adaptation d’une malle avant toute demande de location."],
+];
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Questions fréquentes sur les malles pédagogiques Rencontres avec le vivant." />
+    <title>FAQ · Rencontres avec le vivant</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/"><span class="brand-decoration">⌇</span><span class="brand-text"><span>Rencontres</span><span>avec le vivant</span></span></a>
+      <nav>{nav.map((item)=><a href={item.href} aria-current={item.href==="/faq"?"page":undefined}>{item.label}</a>)}</nav>
+    </header>
+    <main>
+      <section class="hero"><div><p class="eyebrow light">Questions fréquentes</p><h1>FAQ</h1><p>Les réponses aux questions les plus courantes sur le fonctionnement, la location et l’utilisation des malles.</p></div></section>
+      <section class="faq-wrap">
+        <div class="heading"><p class="eyebrow">Avant de réserver</p><h2>Tout ce qu’il faut savoir</h2></div>
+        <div class="faq-list">
+          {faqs.map(([question,answer]) => (
+            <details>
+              <summary>{question}<span aria-hidden="true">+</span></summary>
+              <p>{answer}</p>
+            </details>
+          ))}
+        </div>
+        <div class="contact-box"><h3>Une autre question ?</h3><p>Vous pouvez me contacter directement si votre situation n’est pas abordée ici.</p><a href="/contact">Me contacter →</a></div>
+      </section>
+    </main>
+    <footer><a href="/" class="footer-brand">Rencontres avec le vivant</a><p>Des outils pour prendre le temps de rencontrer le vivant.</p><small>© Rencontres avec le vivant</small></footer>
+    <style>
+      :global(*){box-sizing:border-box}:global(body){margin:0;background:#f9f7f2;color:#292b23;font-family:Georgia,"Times New Roman",serif}.site-header{min-height:94px;padding:15px 5.5%;display:flex;align-items:center;justify-content:space-between;gap:32px}.brand{display:flex;align-items:center;color:#29271f;text-decoration:none}.brand-decoration{margin-right:10px;font-size:2.7rem;color:#747b51;transform:rotate(-15deg)}.brand-text{display:flex;flex-direction:column;font-size:1.55rem;line-height:1.05}nav{display:flex;align-items:center;gap:clamp(16px,2.2vw,34px);flex-wrap:wrap}nav a{color:#161713;text-decoration:none;font:600 .93rem Arial,Helvetica,sans-serif;white-space:nowrap}nav a:hover,nav a[aria-current="page"]{color:#687347}
+      .hero{min-height:300px;padding:55px 5.5%;display:flex;align-items:center;justify-content:center;background:#596243;color:#fffdf8;text-align:center}.hero>div{max-width:760px}.hero h1{margin:4px 0 18px;font-size:clamp(3.4rem,6vw,5.7rem);font-weight:500}.hero p:last-child{max-width:620px;margin:0 auto;line-height:1.6}.eyebrow{margin:0 0 10px;color:#74785e;font:700 .73rem Arial,Helvetica,sans-serif;letter-spacing:.11em;text-transform:uppercase}.eyebrow.light{color:rgba(255,255,255,.72)}
+      .faq-wrap{width:min(900px,88%);margin:0 auto;padding:70px 0 85px}.heading{text-align:center;margin-bottom:36px}.heading h2{margin:0;font-size:clamp(2.2rem,3.5vw,3.1rem);font-weight:500}.faq-list{display:grid;gap:12px}.faq-list details{border:1px solid #dedbd2;border-radius:7px;background:#fffefa}.faq-list summary{list-style:none;cursor:pointer;padding:20px 22px;display:flex;justify-content:space-between;align-items:center;gap:20px;font-size:1.08rem;font-weight:600}.faq-list summary::-webkit-details-marker{display:none}.faq-list summary span{color:#748055;font-size:1.35rem}.faq-list details[open] summary span{transform:rotate(45deg)}.faq-list p{margin:0;padding:0 22px 22px;color:#56584f;font: .93rem/1.7 Arial,Helvetica,sans-serif}.contact-box{margin-top:45px;padding:30px;background:#dfe3cf;border-radius:8px;text-align:center}.contact-box h3{margin:0 0 10px;font-size:1.5rem;font-weight:500}.contact-box p{margin:0 0 18px;line-height:1.6}.contact-box a{color:#596243;font-weight:700;text-decoration:none}
+      footer{padding:46px 5.5%;background:#303428;color:#f5f2e9;text-align:center}.footer-brand{color:inherit;text-decoration:none;font-size:1.35rem}footer p{color:rgba(255,255,255,.7)}footer small{color:rgba(255,255,255,.5);font-family:Arial,Helvetica,sans-serif}@media(max-width:900px){.site-header{flex-direction:column;align-items:flex-start}}@media(max-width:650px){.site-header{padding:16px 22px}.hero{padding:45px 24px;min-height:270px}.faq-wrap{width:90%;padding:50px 0 65px}}
+    </style>
+  </body>
+</html>
