@@ -90,6 +90,58 @@ export class AvailabilityStore extends DurableObject {
       return json({ ok: true, availability });
     }
 
+    if (request.method === "POST" && url.pathname === "/claim") {
+      const body = await request.json();
+      const weeks = Array.isArray(body.weeks)
+        ? [...new Set(body.weeks.map((week) => clean(week, 10)))].slice(0, 4)
+        : [];
+
+      if (
+        !weeks.length ||
+        weeks.some((week) => !/^\d{4}-\d{2}-\d{2}$/.test(week))
+      ) {
+        return json({ ok: false, error: "Période invalide." }, 400);
+      }
+
+      const unavailableWeeks = weeks.filter(
+        (week) => availability[week] === "pending" || availability[week] === "booked",
+      );
+
+      if (unavailableWeeks.length) {
+        return json(
+          {
+            ok: false,
+            error: "Cette période vient d’être réservée ou fait déjà l’objet d’une demande.",
+            unavailableWeeks,
+          },
+          409,
+        );
+      }
+
+      weeks.forEach((week) => {
+        availability[week] = "pending";
+      });
+
+      await this.ctx.storage.put("availability", availability);
+      return json({ ok: true, availability, weeks });
+    }
+
+    if (request.method === "POST" && url.pathname === "/release") {
+      const body = await request.json();
+      const weeks = Array.isArray(body.weeks)
+        ? [...new Set(body.weeks.map((week) => clean(week, 10)))].slice(0, 4)
+        : [];
+
+      weeks.forEach((week) => {
+        if (availability[week] === "pending") {
+          delete availability[week];
+        }
+      });
+
+      await this.ctx.storage.put("availability", availability);
+      return json({ ok: true, availability });
+    }
+
     return json({ ok: false, error: "Route introuvable." }, 404);
   }
 }
@@ -605,6 +657,128 @@ export default {
       return json({ ok: false, error: "Méthode non autorisée." }, 405);
     }
 
+    if (url.pathname === "/api/contact") {
+      if (request.method !== "POST") {
+        return json({ ok: false, error: "Méthode non autorisée." }, 405);
+      }
+
+      try {
+        const contentType = request.headers.get("content-type") || "";
+        if (!contentType.includes("application/json")) {
+          return json({ ok: false, error: "Format de requête invalide." }, 415);
+        }
+
+        const body = await request.json();
+
+        if (clean(body.website, 200)) {
+          return json({ ok: true });
+        }
+
+        if (!env.TURNSTILE_SECRET_KEY) {
+          return json(
+            { ok: false, error: "La vérification anti-robot n’est pas configurée." },
+            503,
+          );
+        }
+
+        const turnstileToken = clean(body.turnstileToken, 3000);
+        if (!turnstileToken) {
+          return json({ ok: false, error: "Merci de valider la vérification anti-robot." }, 400);
+        }
+
+        const verificationResponse = await fetch(
+          "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+          {
+            method: "POST",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+              secret: env.TURNSTILE_SECRET_KEY,
+              response: turnstileToken,
+            }),
+          },
+        );
+
+        const verification = await verificationResponse.json();
+
+        if (!verification.success) {
+          return json(
+            { ok: false, error: "La vérification anti-robot a échoué. Merci de réessayer." },
+            400,
+          );
+        }
+
+        const data = {
+          name: clean(body.name, 120),
+          email: clean(body.email, 180),
+          organisation: clean(body.organisation, 180),
+          age: clean(body.age, 120),
+          subject: clean(body.subject, 160),
+          message: cleanMultiline(body.message, 5000),
+        };
+
+        if (!data.name || !data.email || !data.message) {
+          return json(
+            { ok: false, error: "Merci de compléter les champs obligatoires." },
+            400,
+          );
+        }
+
+        if (!isEmail(data.email)) {
+          return json(
+            { ok: false, error: "L’adresse e-mail indiquée n’est pas valide." },
+            400,
+          );
+        }
+
+        if (!env.BOOKING_TO) {
+          return json(
+            { ok: false, error: "Le service de contact n’est pas encore configuré." },
+            503,
+          );
+        }
+
+        const lines = [
+          "Nouveau message — Rencontres avec le vivant",
+          "",
+          `Nom : ${data.name}`,
+          `E-mail : ${data.email}`,
+          `Structure : ${data.organisation || "Non renseignée"}`,
+          `Âge des enfants : ${data.age || "Non renseigné"}`,
+          `Sujet : ${data.subject || "Autre"}`,
+          "",
+          "Message :",
+          data.message,
+          "",
+          `Message envoyé depuis ${url.origin}/contact`,
+        ];
+
+        await env.EMAIL.send({
+          to: env.BOOKING_TO,
+          from: {
+            email: "reservations@labodiwo.com",
+            name: "Rencontres avec le vivant",
+          },
+          replyTo: {
+            email: data.email,
+            name: data.name,
+          },
+          subject: `Contact — ${data.subject || "Nouveau message"}`,
+          text: lines.join("\n"),
+        });
+
+        return json({ ok: true });
+      } catch (error) {
+        console.error("Erreur contact", error);
+        return json(
+          {
+            ok: false,
+            error: "Le message n’a pas pu être envoyé. Merci de réessayer dans quelques instants.",
+          },
+          500,
+        );
+      }
+    }
+
     if (
       url.pathname.startsWith("/blog/") &&
       url.pathname !== "/blog/" &&
@@ -693,6 +867,7 @@ export default {
       if (
         !data.kit ||
         !data.week ||
+        !data.weekIso ||
         !data.duration ||
         !data.formula ||
         !data.name ||
@@ -726,6 +901,46 @@ export default {
         );
       }
 
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(data.weekIso)) {
+        return json({ ok: false, error: "La période sélectionnée est invalide." }, 400);
+      }
+
+      const duration = Math.max(1, Math.min(4, Number(data.duration) || 1));
+      const start = new Date(data.weekIso + "T12:00:00");
+
+      if (Number.isNaN(start.getTime())) {
+        return json({ ok: false, error: "La période sélectionnée est invalide." }, 400);
+      }
+
+      const requestedWeeks = [];
+      for (let index = 0; index < duration; index += 1) {
+        const date = new Date(start);
+        date.setDate(start.getDate() + index * 7);
+        requestedWeeks.push(date.toISOString().slice(0, 10));
+      }
+
+      const availabilityStub = getAvailabilityStub(env);
+      const claimResponse = await availabilityStub.fetch(
+        new Request("https://availability.internal/claim", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ weeks: requestedWeeks }),
+        }),
+      );
+      const claimResult = await claimResponse.json();
+
+      if (!claimResponse.ok || !claimResult.ok) {
+        return json(
+          {
+            ok: false,
+            error:
+              claimResult.error ||
+              "Cette période n’est plus disponible. Merci d’en choisir une autre.",
+          },
+          claimResponse.status === 409 ? 409 : 400,
+        );
+      }
+
       const lines = [
         "Nouvelle demande de réservation — Rencontres avec le vivant",
         "",
@@ -747,19 +962,30 @@ export default {
         `Demande envoyée depuis ${url.origin}/reserver-une-malle`,
       ];
 
-      await env.EMAIL.send({
-        to: env.BOOKING_TO,
-        from: {
-          email: "reservations@labodiwo.com",
-          name: "Rencontres avec le vivant",
-        },
-        replyTo: {
-          email: data.email,
-          name: data.name,
-        },
-        subject: `Demande de réservation — ${data.week}`,
-        text: lines.join("\n"),
-      });
+      try {
+        await env.EMAIL.send({
+          to: env.BOOKING_TO,
+          from: {
+            email: "reservations@labodiwo.com",
+            name: "Rencontres avec le vivant",
+          },
+          replyTo: {
+            email: data.email,
+            name: data.name,
+          },
+          subject: `Demande de réservation — ${data.week}`,
+          text: lines.join("\n"),
+        });
+      } catch (error) {
+        await availabilityStub.fetch(
+          new Request("https://availability.internal/release", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ weeks: requestedWeeks }),
+          }),
+        );
+        throw error;
+      }
 
       const reservationResponse = await getReservationsStub(env).fetch(
         new Request("https://reservations.internal/reservations", {
@@ -774,29 +1000,6 @@ export default {
       );
 
       const reservationResult = await reservationResponse.json();
-
-      if (data.weekIso) {
-        const duration = Math.max(1, Math.min(4, Number(data.duration) || 1));
-        const start = new Date(data.weekIso + "T12:00:00");
-
-        if (!Number.isNaN(start.getTime())) {
-          const availabilityStub = getAvailabilityStub(env);
-
-          for (let index = 0; index < duration; index += 1) {
-            const date = new Date(start);
-            date.setDate(start.getDate() + index * 7);
-            const iso = date.toISOString().slice(0, 10);
-
-            await availabilityStub.fetch(
-              new Request("https://availability.internal/availability", {
-                method: "POST",
-                headers: { "content-type": "application/json" },
-                body: JSON.stringify({ week: iso, status: "pending" }),
-              }),
-            );
-          }
-        }
-      }
 
       return json({
         ok: true,
