@@ -797,6 +797,7 @@ import SiteHeader from "../components/SiteHeader.astro";
         const payload = {
           kit: formData.get("kit"),
           week: formData.get("week"),
+          weekIso: selectedWeekIso,
           duration: formData.get("duration"),
           formula: formData.get("formula"),
           priceSummary: formData.get("price-summary"),
