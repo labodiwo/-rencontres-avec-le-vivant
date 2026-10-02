@@ -529,9 +529,12 @@
 
         const monday = getMonday(firstDay);
 
-        for (let row = 0; row < 6; row += 1) {
+        if (monday.getMonth() !== displayedMonth.getMonth()) {
+          monday.setDate(monday.getDate() + 7);
+        }
+
+        while (monday.getMonth() === displayedMonth.getMonth()) {
           const weekMonday = new Date(monday);
-          weekMonday.setDate(monday.getDate() + row * 7);
 
           const friday = new Date(weekMonday);
           friday.setDate(weekMonday.getDate() + 4);
@@ -569,6 +572,7 @@
           });
 
           weeksContainer.appendChild(card);
+          monday.setDate(monday.getDate() + 7);
         }
       };
 
