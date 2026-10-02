@@ -2,933 +2,120 @@
 const nav = [
   { label: "Les malles", href: "/les-malles" },
   { label: "Louer une malle", href: "/louer-une-malle" },
-  { label: "Pour qui ?", href: "/#pour-qui" },
+  { label: "À propos", href: "/a-propos" },
+  { label: "FAQ", href: "/faq" },
   { label: "Le blog", href: "/blog" },
   { label: "Me contacter", href: "/contact" },
 ];
-
-const articles = [
-  {
-    category: "Coulisses",
-    title: "Pourquoi créer une malle pédagogique ?",
-    excerpt:
-      "Le point de départ de Rencontres avec le vivant : réunir dans un même outil du matériel, des supports et des propositions pensées pour les animateurs et les enfants.",
-    href: "/blog/pourquoi-creer-une-malle-pedagogique",
-  },
-  {
-    category: "Pédagogie",
-    title: "Pourquoi les oiseaux sont-ils adaptés aux 3–5 ans ?",
-    excerpt:
-      "Ils sont partout autour de nous, faciles à observer et pourtant difficiles à approcher. Une belle porte d’entrée pour éveiller l’attention au vivant.",
-    href: "/blog/pourquoi-les-oiseaux-3-5-ans",
-  },
-  {
-    category: "Réflexion",
-    title: "C’est quoi, être animateur ?",
-    excerpt:
-      "Observer, proposer, laisser de la place, rebondir sur les questions des enfants : une réflexion sur la posture de l’animateur.",
-    href: "/blog/cest-quoi-etre-animateur",
-  },
-  {
-    category: "Éducation au vivant",
-    title: "Faire découvrir le vivant sans forcément avoir accès à la nature",
-    excerpt:
-      "Le vivant ne commence pas à la porte d’une forêt. Il est aussi présent dans les quartiers, les cours, les rues et les espaces du quotidien.",
-    href: "/blog/decouvrir-le-vivant-sans-acces-nature",
-  },
-  {
-    category: "Oiseaux",
-    title: "Écouter les oiseaux : apprendre à porter attention",
-    excerpt:
-      "Écouter un chant, chercher sa direction, attendre, se taire : l’écoute peut devenir une véritable expérience de rencontre avec le vivant.",
-    href: "/blog/ecouter-les-oiseaux",
-  },
-  {
-    category: "Coulisses",
-    title: "Les coulisses de la malle Les oiseaux",
-    excerpt:
-      "Choix des figurines, création du mini-monde, sélection des livres, essais d’activités : les étapes derrière la conception de la première malle.",
-    href: "/blog/coulisses-malle-les-oiseaux",
-  },
-];
-
-const featuredArticle = articles[0];
-const otherArticles = articles.slice(1);
 ---
 
 <!doctype html>
 <html lang="fr">
-
   <head>
     <meta charset="UTF-8" />
-
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1"
-    />
-
-    <meta
-      name="description"
-      content="Le blog de Rencontres avec le vivant : réflexions pédagogiques, coulisses des malles et ressources autour de l'éducation au vivant."
-    />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Le blog de Rencontres avec le vivant : pédagogie, coulisses des malles et éducation au vivant." />
     <title>Le blog · Rencontres avec le vivant</title>
   </head>
-
-
   <body>
-
-    <!-- EN-TÊTE -->
     <header class="site-header">
-
-      <a
-        class="brand"
-        href="/"
-        aria-label="Accueil"
-      >
-
-        <span
-          class="brand-decoration"
-          aria-hidden="true"
-        >
-          ⌇
-        </span>
-
-        <span class="brand-text">
-          <span>Rencontres</span>
-          <span>avec le vivant</span>
-        </span>
-
-      </a>
-
-
-      <nav aria-label="Navigation principale">
-
-        {
-          nav.map((item) => (
-            <a
-              href={item.href}
-              aria-current={
-                item.href === "/blog"
-                  ? "page"
-                  : undefined
-              }
-            >
-              {item.label}
-            </a>
-          ))
-        }
-
-      </nav>
-
+      <a class="brand" href="/"><span class="brand-decoration">⌇</span><span class="brand-text"><span>Rencontres</span><span>avec le vivant</span></span></a>
+      <nav>{nav.map((item)=><a href={item.href} aria-current={item.href==="/blog"?"page":undefined}>{item.label}</a>)}</nav>
     </header>
 
-
     <main>
-
-
-      <!-- BANDEAU -->
-      <section class="blog-hero">
-
-        <div class="blog-hero-content">
-
-          <p class="eyebrow light">
-            Réflexions, pédagogie et coulisses
-          </p>
-
-          <h1>
-            Le blog
-          </h1>
-
-          <p>
-            Des articles pour partager les réflexions,
-            les recherches et les choix qui nourrissent
-            les malles pédagogiques et la rencontre avec le vivant.
-          </p>
-
+      <section class="hero">
+        <div>
+          <p class="eyebrow light">Réflexions, pédagogie et coulisses</p>
+          <h1>Le blog</h1>
+          <p>Des articles pour partager les recherches, les choix pédagogiques et les coulisses de Rencontres avec le vivant.</p>
         </div>
-
       </section>
 
-
-      <!-- INTRODUCTION -->
-      <section class="blog-intro">
-
-        <div class="blog-intro-inner">
-
-          <p class="eyebrow">
-            Prendre le temps de réfléchir
-          </p>
-
-          <h2>
-            Derrière les malles, une démarche
-          </h2>
-
-          <p>
-            Ce blog est un espace pour aller un peu plus loin :
-            parler de pédagogie, de posture d’animateur,
-            d’éducation à l’environnement, mais aussi montrer
-            les recherches, les essais et les questionnements
-            qui accompagnent la création des malles.
-          </p>
-
-        </div>
-
+      <section class="intro">
+        <p class="eyebrow">Prendre le temps de réfléchir</p>
+        <h2>Derrière les malles, une démarche</h2>
+        <p>Ce blog est un espace pour parler de pédagogie, de posture d’animateur, d’éducation à l’environnement, mais aussi des recherches et des essais qui accompagnent la création des malles.</p>
       </section>
 
-
-      <!-- ARTICLE À LA UNE -->
-      <section class="featured-section">
-
-        <div class="featured-inner">
-
-          <div class="featured-visual">
-
-            <span class="featured-number">
-              01
-            </span>
-
-            <p>
-              Observer · expérimenter · transmettre
-            </p>
-
-          </div>
-
-
-          <article class="featured-content">
-
-            <p class="article-category">
-              {featuredArticle.category}
-            </p>
-
-            <h2>
-              {featuredArticle.title}
-            </h2>
-
-            <p class="featured-excerpt">
-              {featuredArticle.excerpt}
-            </p>
-
-            <a
-              class="article-link"
-              href={featuredArticle.href}
-            >
-              Lire l’article
-              <span aria-hidden="true">→</span>
-            </a>
-
-          </article>
-
-        </div>
-
-      </section>
-
-
-      <!-- ARTICLES -->
       <section class="articles-section">
-
-        <div class="section-heading">
-
-          <p class="eyebrow">
-            À lire
-          </p>
-
-          <h2>
-            Les derniers articles
-          </h2>
-
+        <div class="heading">
+          <p class="eyebrow">À lire</p>
+          <h2>Les derniers articles</h2>
         </div>
-
-
-        <div class="articles-grid">
-
-          {
-            otherArticles.map((article, index) => (
-
-              <article class="article-card">
-
-                <div class="article-top">
-
-                  <span class="card-number">
-                    {String(index + 2).padStart(2, "0")}
-                  </span>
-
-                  <p class="article-category">
-                    {article.category}
-                  </p>
-
-                </div>
-
-                <h3>
-                  {article.title}
-                </h3>
-
-                <p class="article-excerpt">
-                  {article.excerpt}
-                </p>
-
-                <a
-                  class="article-link"
-                  href={article.href}
-                >
-                  Lire l’article
-                  <span aria-hidden="true">→</span>
-                </a>
-
-              </article>
-
-            ))
-          }
-
-        </div>
-
+        <div id="blog-status" class="loading">Chargement des articles…</div>
+        <div id="articles-grid" class="articles-grid" hidden></div>
       </section>
-
-
-      <!-- ENCADRÉ FINAL -->
-      <section class="blog-note">
-
-        <div class="blog-note-inner">
-
-          <p class="eyebrow">
-            Un blog en construction
-          </p>
-
-          <h2>
-            Des contenus qui grandiront avec le projet
-          </h2>
-
-          <p>
-            Les articles suivront l’évolution des malles,
-            les expérimentations menées sur le terrain
-            et les réflexions qui émergent au fil de leur conception.
-          </p>
-
-        </div>
-
-      </section>
-
-
     </main>
 
+    <footer><a href="/" class="footer-brand">Rencontres avec le vivant</a><p>Des outils pour prendre le temps de rencontrer le vivant.</p><small>© Rencontres avec le vivant</small></footer>
 
-    <!-- FOOTER -->
-    <footer>
+    <script is:inline>
+      const grid = document.getElementById("articles-grid");
+      const status = document.getElementById("blog-status");
 
-      <a
-        class="footer-brand"
-        href="/"
-      >
-        Rencontres avec le vivant
-      </a>
+      const escapeHtml = (value) =>
+        String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
 
-      <p>
-        Des outils pour prendre le temps
-        de rencontrer le vivant.
-      </p>
+      const formatDate = (value) => {
+        if (!value) return "";
+        const date = new Date(value + "T12:00:00");
+        return new Intl.DateTimeFormat("fr-FR", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        }).format(date);
+      };
 
-      <small>
-        © Rencontres avec le vivant
-      </small>
+      const loadPosts = async () => {
+        try {
+          const response = await fetch("/api/blog");
+          const result = await response.json();
 
-    </footer>
+          if (!response.ok || !result.ok) {
+            throw new Error("Impossible de charger les articles.");
+          }
 
+          const posts = result.posts || [];
 
+          if (!posts.length) {
+            status.textContent = "Les premiers articles seront bientôt publiés.";
+            return;
+          }
+
+          status.hidden = true;
+          grid.hidden = false;
+          grid.innerHTML = posts.map((post) => `
+            <article class="article-card">
+              <div class="article-meta">
+                <span>${escapeHtml(post.category || "Article")}</span>
+                <time>${escapeHtml(formatDate(post.date))}</time>
+              </div>
+              <h3>${escapeHtml(post.title)}</h3>
+              <p>${escapeHtml(post.excerpt)}</p>
+              <a href="/blog/${encodeURIComponent(post.slug)}">Lire l’article →</a>
+            </article>
+          `).join("");
+        } catch (error) {
+          status.textContent = "Les articles ne sont pas disponibles pour le moment.";
+        }
+      };
+
+      loadPosts();
+    </script>
 
     <style>
-
-      /* =========================
-         BASE
-      ========================= */
-
-      :global(*) {
-        box-sizing: border-box;
-      }
-
-      :global(html) {
-        scroll-behavior: smooth;
-      }
-
-      :global(body) {
-        margin: 0;
-
-        background: #f9f7f2;
-        color: #292b23;
-
-        font-family:
-          Georgia,
-          "Times New Roman",
-          serif;
-      }
-
-
-      /* =========================
-         HEADER
-      ========================= */
-
-      .site-header {
-        min-height: 94px;
-
-        padding: 15px 5.5%;
-
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        gap: 40px;
-
-        background: #f9f7f2;
-      }
-
-      .brand {
-        display: flex;
-        align-items: center;
-
-        color: #29271f;
-
-        text-decoration: none;
-      }
-
-      .brand-decoration {
-        margin-right: 10px;
-
-        font-size: 2.7rem;
-        line-height: 1;
-
-        color: #747b51;
-
-        transform: rotate(-15deg);
-      }
-
-      .brand-text {
-        display: flex;
-        flex-direction: column;
-
-        font-size: 1.55rem;
-        line-height: 1.05;
-      }
-
-      nav {
-        display: flex;
-        align-items: center;
-
-        gap: clamp(24px, 3.7vw, 55px);
-      }
-
-      nav a {
-        color: #161713;
-
-        text-decoration: none;
-
-        font-size: 1rem;
-        font-weight: 600;
-
-        white-space: nowrap;
-      }
-
-      nav a:hover,
-      nav a[aria-current="page"] {
-        color: #687347;
-      }
-
-
-      /* =========================
-         COMMUN
-      ========================= */
-
-      .eyebrow {
-        margin: 0 0 10px;
-
-        color: #74785e;
-
-        font-family:
-          Arial,
-          Helvetica,
-          sans-serif;
-
-        font-size: 0.73rem;
-        line-height: 1.3;
-
-        letter-spacing: 0.11em;
-
-        text-transform: uppercase;
-      }
-
-      .eyebrow.light {
-        color: rgba(255, 255, 255, 0.72);
-      }
-
-
-      /* =========================
-         BANDEAU
-      ========================= */
-
-      .blog-hero {
-        min-height: 320px;
-
-        padding: 55px 5.5%;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        background: #596243;
-        color: #fffdf8;
-
-        text-align: center;
-      }
-
-      .blog-hero-content {
-        max-width: 760px;
-
-        margin: 0 auto;
-      }
-
-      .blog-hero h1 {
-        margin: 4px 0 18px;
-
-        font-size: clamp(3.4rem, 6vw, 5.7rem);
-        line-height: 0.96;
-
-        font-weight: 500;
-      }
-
-      .blog-hero-content > p:last-child {
-        max-width: 620px;
-
-        margin: 0 auto;
-
-        font-size: 1.08rem;
-        line-height: 1.6;
-      }
-
-
-      /* =========================
-         INTRODUCTION
-      ========================= */
-
-      .blog-intro {
-        padding: 55px 5.5%;
-      }
-
-      .blog-intro-inner {
-        max-width: 780px;
-      }
-
-      .blog-intro h2 {
-        max-width: 700px;
-
-        margin: 0 0 20px;
-
-        font-size: clamp(2.2rem, 3.5vw, 3.2rem);
-        line-height: 1.05;
-
-        font-weight: 500;
-      }
-
-      .blog-intro p:last-child {
-        max-width: 720px;
-
-        margin: 0;
-
-        color: #55574d;
-
-        font-size: 1.05rem;
-        line-height: 1.7;
-      }
-
-
-      /* =========================
-         ARTICLE À LA UNE
-      ========================= */
-
-      .featured-section {
-        padding: 30px 5.5% 75px;
-      }
-
-      .featured-inner {
-        max-width: 1120px;
-
-        margin: 0 auto;
-
-        display: grid;
-
-        grid-template-columns:
-          0.9fr
-          1.1fr;
-
-        background: #ece9e1;
-
-        border-radius: 8px;
-
-        overflow: hidden;
-      }
-
-      .featured-visual {
-        min-height: 400px;
-
-        padding: 45px;
-
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-
-        background: #dfe3cf;
-
-        color: #596243;
-      }
-
-      .featured-number {
-        font-size: clamp(4.5rem, 8vw, 7rem);
-
-        line-height: 1;
-
-        opacity: 0.55;
-      }
-
-      .featured-visual p {
-        max-width: 250px;
-
-        margin: 0;
-
-        font-family:
-          Arial,
-          Helvetica,
-          sans-serif;
-
-        font-size: 0.8rem;
-        line-height: 1.5;
-
-        letter-spacing: 0.08em;
-
-        text-transform: uppercase;
-      }
-
-      .featured-content {
-        padding: clamp(38px, 6vw, 70px);
-
-        align-self: center;
-      }
-
-      .article-category {
-        margin: 0 0 14px;
-
-        color: #737958;
-
-        font-family:
-          Arial,
-          Helvetica,
-          sans-serif;
-
-        font-size: 0.72rem;
-        font-weight: 700;
-
-        letter-spacing: 0.09em;
-
-        text-transform: uppercase;
-      }
-
-      .featured-content h2 {
-        margin: 0 0 22px;
-
-        font-size: clamp(2.2rem, 4vw, 3.5rem);
-        line-height: 1.02;
-
-        font-weight: 500;
-      }
-
-      .featured-excerpt {
-        margin: 0 0 28px;
-
-        color: #55574d;
-
-        line-height: 1.65;
-      }
-
-      .article-link {
-        display: inline-flex;
-        align-items: center;
-
-        gap: 12px;
-
-        color: #596243;
-
-        font-weight: 600;
-
-        text-decoration: none;
-      }
-
-      .article-link:hover {
-        text-decoration: underline;
-      }
-
-
-      /* =========================
-         ARTICLES
-      ========================= */
-
-      .articles-section {
-        padding: 75px 5.5%;
-
-        background: #f1eee8;
-      }
-
-      .section-heading {
-        max-width: 800px;
-
-        margin: 0 auto 45px;
-
-        text-align: center;
-      }
-
-      .section-heading h2 {
-        margin: 0;
-
-        font-size: clamp(2.2rem, 3.5vw, 3.2rem);
-
-        font-weight: 500;
-      }
-
-      .articles-grid {
-        max-width: 1120px;
-
-        margin: 0 auto;
-
-        display: grid;
-
-        grid-template-columns:
-          repeat(2, minmax(0, 1fr));
-
-        gap: 25px;
-      }
-
-      .article-card {
-        padding: 32px;
-
-        display: flex;
-        flex-direction: column;
-
-        background: #f9f7f2;
-
-        border-radius: 7px;
-      }
-
-      .article-top {
-        display: flex;
-
-        align-items: center;
-        justify-content: space-between;
-
-        gap: 20px;
-
-        margin-bottom: 22px;
-      }
-
-      .card-number {
-        color: #9aa083;
-
-        font-size: 1.8rem;
-        line-height: 1;
-      }
-
-      .article-card .article-category {
-        margin: 0;
-
-        text-align: right;
-      }
-
-      .article-card h3 {
-        margin: 0 0 18px;
-
-        font-size: 1.55rem;
-        line-height: 1.15;
-
-        font-weight: 500;
-      }
-
-      .article-excerpt {
-        margin: 0 0 28px;
-
-        color: #5b5c52;
-
-        font-family:
-          Arial,
-          Helvetica,
-          sans-serif;
-
-        font-size: 0.9rem;
-        line-height: 1.6;
-      }
-
-      .article-card .article-link {
-        margin-top: auto;
-      }
-
-
-      /* =========================
-         NOTE FINALE
-      ========================= */
-
-      .blog-note {
-        padding: 70px 24px;
-
-        background: #dfe3cf;
-
-        text-align: center;
-      }
-
-      .blog-note-inner {
-        max-width: 720px;
-
-        margin: 0 auto;
-      }
-
-      .blog-note h2 {
-        margin: 0 0 18px;
-
-        font-size: clamp(2rem, 3.2vw, 2.9rem);
-
-        font-weight: 500;
-      }
-
-      .blog-note p:last-child {
-        margin: 0;
-
-        line-height: 1.7;
-      }
-
-
-      /* =========================
-         FOOTER
-      ========================= */
-
-      footer {
-        padding: 46px 5.5%;
-
-        background: #303428;
-        color: #f5f2e9;
-
-        text-align: center;
-      }
-
-      .footer-brand {
-        color: inherit;
-
-        text-decoration: none;
-
-        font-size: 1.35rem;
-      }
-
-      footer p {
-        margin: 10px 0 22px;
-
-        color: rgba(255, 255, 255, 0.7);
-
-        font-size: 0.9rem;
-      }
-
-      footer small {
-        color: rgba(255, 255, 255, 0.5);
-
-        font:
-          0.7rem
-          Arial,
-          Helvetica,
-          sans-serif;
-      }
-
-
-      /* =========================
-         TABLETTE
-      ========================= */
-
-      @media (max-width: 900px) {
-
-        .site-header {
-          flex-direction: column;
-
-          gap: 20px;
-
-          padding-block: 20px;
-        }
-
-        nav {
-          flex-wrap: wrap;
-
-          justify-content: center;
-
-          row-gap: 12px;
-        }
-
-        .featured-inner {
-          grid-template-columns: 1fr;
-        }
-
-        .featured-visual {
-          min-height: 230px;
-        }
-
-      }
-
-
-      /* =========================
-         MOBILE
-      ========================= */
-
-      @media (max-width: 700px) {
-
-        .site-header {
-          padding: 16px 22px;
-        }
-
-        nav {
-          gap: 10px 20px;
-        }
-
-        nav a {
-          font-size: 0.88rem;
-        }
-
-        .blog-hero {
-          min-height: 280px;
-
-          padding: 45px 24px;
-        }
-
-        .blog-intro {
-          padding: 45px 24px;
-        }
-
-        .featured-section {
-          padding: 20px 24px 55px;
-        }
-
-        .featured-visual {
-          min-height: 190px;
-
-          padding: 30px;
-        }
-
-        .featured-content {
-          padding: 32px 26px 38px;
-        }
-
-        .articles-section {
-          padding: 55px 24px;
-        }
-
-        .articles-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .article-card {
-          padding: 27px 24px;
-        }
-
-      }
-
+      :global(*){box-sizing:border-box}:global(body){margin:0;background:#f9f7f2;color:#292b23;font-family:Georgia,"Times New Roman",serif}.site-header{min-height:94px;padding:15px 5.5%;display:flex;align-items:center;justify-content:space-between;gap:32px}.brand{display:flex;align-items:center;color:#29271f;text-decoration:none}.brand-decoration{margin-right:10px;font-size:2.7rem;color:#747b51;transform:rotate(-15deg)}.brand-text{display:flex;flex-direction:column;font-size:1.55rem;line-height:1.05}nav{display:flex;align-items:center;gap:clamp(16px,2.2vw,34px);flex-wrap:wrap}nav a{color:#161713;text-decoration:none;font:600 .93rem Arial,Helvetica,sans-serif;white-space:nowrap}nav a:hover,nav a[aria-current="page"]{color:#687347}
+      .hero{min-height:320px;padding:55px 5.5%;display:flex;align-items:center;justify-content:center;background:#596243;color:#fffdf8;text-align:center}.hero>div{max-width:760px}.hero h1{margin:4px 0 18px;font-size:clamp(3.4rem,6vw,5.7rem);font-weight:500;line-height:.96}.hero p:last-child{max-width:620px;margin:0 auto;line-height:1.6}.eyebrow{margin:0 0 10px;color:#74785e;font:700 .73rem Arial,Helvetica,sans-serif;letter-spacing:.11em;text-transform:uppercase}.eyebrow.light{color:rgba(255,255,255,.72)}
+      .intro{padding:60px 5.5%;max-width:850px}.intro h2{margin:0 0 18px;font-size:clamp(2.2rem,3.5vw,3.1rem);font-weight:500}.intro p:last-child{color:#55574d;line-height:1.7;font-size:1.04rem}
+      .articles-section{padding:70px 5.5% 85px;background:#f1eee8}.heading{text-align:center;margin-bottom:35px}.heading h2{margin:0;font-size:clamp(2.2rem,3.5vw,3.1rem);font-weight:500}.loading{text-align:center;color:#6f7167;font: .9rem Arial,Helvetica,sans-serif}.articles-grid{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+      :global(.article-card){padding:30px;background:#fffefa;border-radius:8px;display:flex;flex-direction:column}:global(.article-meta){display:flex;justify-content:space-between;gap:15px;margin-bottom:18px;color:#737958;font:700 .72rem Arial,Helvetica,sans-serif;text-transform:uppercase;letter-spacing:.06em}:global(.article-card h3){margin:0 0 16px;font-size:1.55rem;font-weight:500;line-height:1.18}:global(.article-card p){margin:0 0 24px;color:#5b5c52;font: .92rem/1.65 Arial,Helvetica,sans-serif}:global(.article-card a){margin-top:auto;color:#596243;text-decoration:none;font-weight:700}
+      footer{padding:46px 5.5%;background:#303428;color:#f5f2e9;text-align:center}.footer-brand{color:inherit;text-decoration:none;font-size:1.35rem}footer p{color:rgba(255,255,255,.7)}footer small{color:rgba(255,255,255,.5);font-family:Arial,Helvetica,sans-serif}@media(max-width:900px){.site-header{flex-direction:column;align-items:flex-start}.articles-grid{grid-template-columns:1fr}}@media(max-width:650px){.site-header{padding:16px 22px}.hero{min-height:280px;padding:45px 24px}.intro{padding:45px 24px}.articles-section{padding:55px 24px}}
     </style>
-
   </body>
-
 </html>
