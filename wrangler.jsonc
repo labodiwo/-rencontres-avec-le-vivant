@@ -22,11 +22,19 @@
       {
         "name": "AVAILABILITY",
         "class_name": "AvailabilityStore"
+      },
+      {
+        "name": "BLOG",
+        "class_name": "BlogStore"
       }
     ]
   },
   "exports": {
     "AvailabilityStore": {
+      "type": "durable-object",
+      "storage": "sqlite"
+    },
+    "BlogStore": {
       "type": "durable-object",
       "storage": "sqlite"
     }
