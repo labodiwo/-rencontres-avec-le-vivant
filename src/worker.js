@@ -55,6 +55,11 @@ const getBlogStub = (env) => {
   return env.BLOG.get(id);
 };
 
+const getReservationsStub = (env) => {
+  const id = env.RESERVATIONS.idFromName("reservations");
+  return env.RESERVATIONS.get(id);
+};
+
 export class AvailabilityStore extends DurableObject {
   async fetch(request) {
     const url = new URL(request.url);
@@ -262,6 +267,88 @@ export class BlogStore extends DurableObject {
   }
 }
 
+
+export class ReservationsStore extends DurableObject {
+  async fetch(request) {
+    const url = new URL(request.url);
+    const reservations =
+      (await this.ctx.storage.get("reservations")) || {};
+
+    const sorted = () =>
+      Object.values(reservations).sort((a, b) => {
+        const weekCompare = String(a.weekIso || "9999").localeCompare(
+          String(b.weekIso || "9999"),
+        );
+        if (weekCompare !== 0) return weekCompare;
+        return String(b.createdAt || "").localeCompare(String(a.createdAt || ""));
+      });
+
+    if (request.method === "GET" && url.pathname === "/reservations") {
+      return json({ ok: true, reservations: sorted() });
+    }
+
+    if (request.method === "POST" && url.pathname === "/reservations") {
+      const body = await request.json();
+      const incomingId = clean(body.id, 80);
+      const id = incomingId || crypto.randomUUID();
+      const previous = reservations[id] || {};
+      const now = new Date().toISOString();
+
+      const reservation = {
+        id,
+        kit: clean(body.kit || previous.kit, 120),
+        week: clean(body.week || previous.week, 220),
+        weekIso: clean(body.weekIso || previous.weekIso, 10),
+        duration: clean(body.duration || previous.duration || "1", 10),
+        formula: clean(body.formula || previous.formula, 120),
+        priceSummary: clean(body.priceSummary || previous.priceSummary, 120),
+        name: clean(body.name || previous.name, 120),
+        email: clean(body.email || previous.email, 180),
+        organisation: clean(body.organisation || previous.organisation, 180),
+        childrenAge: clean(body.childrenAge || previous.childrenAge, 120),
+        childrenNumber: clean(body.childrenNumber || previous.childrenNumber, 40),
+        message: cleanMultiline(body.message ?? previous.message, 2500),
+        status: clean(body.status || previous.status || "new", 30),
+        adminNotes: cleanMultiline(body.adminNotes ?? previous.adminNotes, 3000),
+        createdAt: previous.createdAt || now,
+        updatedAt: now,
+      };
+
+      if (
+        !["new", "pending", "confirmed", "paid", "completed", "cancelled"].includes(
+          reservation.status,
+        )
+      ) {
+        return json({ ok: false, error: "Statut invalide." }, 400);
+      }
+
+      if (reservation.weekIso && !/^\d{4}-\d{2}-\d{2}$/.test(reservation.weekIso)) {
+        return json({ ok: false, error: "Date de début invalide." }, 400);
+      }
+
+      reservations[id] = reservation;
+      await this.ctx.storage.put("reservations", reservations);
+
+      return json({ ok: true, reservation, reservations: sorted() });
+    }
+
+    if (request.method === "DELETE" && url.pathname === "/reservations") {
+      const body = await request.json();
+      const id = clean(body.id, 80);
+
+      if (!id || !reservations[id]) {
+        return json({ ok: false, error: "Réservation introuvable." }, 404);
+      }
+
+      delete reservations[id];
+      await this.ctx.storage.put("reservations", reservations);
+      return json({ ok: true, reservations: sorted() });
+    }
+
+    return json({ ok: false, error: "Route introuvable." }, 404);
+  }
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -428,6 +515,76 @@ export default {
       return json({ ok: false, error: "Méthode non autorisée." }, 405);
     }
 
+    if (url.pathname === "/api/admin/reservations") {
+      if (!env.ADMIN_KEY) {
+        return json(
+          { ok: false, error: "L’accès administrateur n’est pas encore configuré." },
+          503,
+        );
+      }
+
+      const providedKey = request.headers.get("x-admin-key") || "";
+      if (!safeEqual(providedKey, env.ADMIN_KEY)) {
+        return json({ ok: false, error: "Mot de passe incorrect." }, 401);
+      }
+
+      const stub = getReservationsStub(env);
+
+      if (request.method === "GET") {
+        return stub.fetch("https://reservations.internal/reservations");
+      }
+
+      if (request.method === "POST" || request.method === "DELETE") {
+        const contentType = request.headers.get("content-type") || "";
+        if (!contentType.includes("application/json")) {
+          return json({ ok: false, error: "Format de requête invalide." }, 415);
+        }
+
+        const payload = await request.json();
+
+        if (request.method === "POST" && payload.weekIso) {
+          const status = clean(payload.status, 30);
+          const duration = Math.max(1, Math.min(4, Number(payload.duration) || 1));
+          const start = new Date(payload.weekIso + "T12:00:00");
+
+          if (!Number.isNaN(start.getTime())) {
+            const availabilityStatus =
+              status === "confirmed" || status === "paid" || status === "completed"
+                ? "booked"
+                : status === "cancelled"
+                  ? "available"
+                  : "pending";
+
+            const availabilityStub = getAvailabilityStub(env);
+
+            for (let index = 0; index < duration; index += 1) {
+              const date = new Date(start);
+              date.setDate(start.getDate() + index * 7);
+              const iso = date.toISOString().slice(0, 10);
+
+              await availabilityStub.fetch(
+                new Request("https://availability.internal/availability", {
+                  method: "POST",
+                  headers: { "content-type": "application/json" },
+                  body: JSON.stringify({ week: iso, status: availabilityStatus }),
+                }),
+              );
+            }
+          }
+        }
+
+        return stub.fetch(
+          new Request("https://reservations.internal/reservations", {
+            method: request.method,
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(payload),
+          }),
+        );
+      }
+
+      return json({ ok: false, error: "Méthode non autorisée." }, 405);
+    }
+
     if (
       url.pathname.startsWith("/blog/") &&
       url.pathname !== "/blog/" &&
@@ -501,6 +658,7 @@ export default {
       const data = {
         kit: clean(body.kit, 120),
         week: clean(body.week, 220),
+        weekIso: clean(body.weekIso, 10),
         duration: clean(body.duration, 40),
         formula: clean(body.formula, 120),
         priceSummary: clean(body.priceSummary, 120),
@@ -583,7 +741,47 @@ export default {
         text: lines.join("\n"),
       });
 
-      return json({ ok: true });
+      const reservationResponse = await getReservationsStub(env).fetch(
+        new Request("https://reservations.internal/reservations", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            ...data,
+            status: "new",
+            adminNotes: "",
+          }),
+        }),
+      );
+
+      const reservationResult = await reservationResponse.json();
+
+      if (data.weekIso) {
+        const duration = Math.max(1, Math.min(4, Number(data.duration) || 1));
+        const start = new Date(data.weekIso + "T12:00:00");
+
+        if (!Number.isNaN(start.getTime())) {
+          const availabilityStub = getAvailabilityStub(env);
+
+          for (let index = 0; index < duration; index += 1) {
+            const date = new Date(start);
+            date.setDate(start.getDate() + index * 7);
+            const iso = date.toISOString().slice(0, 10);
+
+            await availabilityStub.fetch(
+              new Request("https://availability.internal/availability", {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify({ week: iso, status: "pending" }),
+              }),
+            );
+          }
+        }
+      }
+
+      return json({
+        ok: true,
+        reservationId: reservationResult.reservation?.id || "",
+      });
     } catch (error) {
       console.error("Erreur réservation", error);
       return json(
