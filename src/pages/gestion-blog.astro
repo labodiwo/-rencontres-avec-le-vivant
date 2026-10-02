@@ -148,6 +148,55 @@
         status: document.getElementById("status-select"),
       };
 
+      const AUTOSAVE_KEY = "labodiwo-blog-draft-v1";
+      let autosaveTimer;
+
+      const saveLocalDraft = () => {
+        const draft = {
+          slug: fields.slug.value,
+          title: fields.title.value,
+          category: fields.category.value,
+          date: fields.date.value,
+          excerpt: fields.excerpt.value,
+          content: fields.content.value,
+          status: fields.status.value,
+          coverCaption: coverCaptionInput.value,
+          savedAt: new Date().toISOString(),
+        };
+        localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(draft));
+      };
+
+      const scheduleLocalDraftSave = () => {
+        clearTimeout(autosaveTimer);
+        autosaveTimer = setTimeout(saveLocalDraft, 250);
+      };
+
+      const restoreLocalDraft = () => {
+        try {
+          const raw = localStorage.getItem(AUTOSAVE_KEY);
+          if (!raw) return false;
+          const draft = JSON.parse(raw);
+          if (!draft || (!draft.title && !draft.excerpt && !draft.content)) return false;
+
+          fields.slug.value = draft.slug || "";
+          fields.title.value = draft.title || "";
+          fields.category.value = draft.category || "";
+          fields.date.value = draft.date || today();
+          fields.excerpt.value = draft.excerpt || "";
+          fields.content.value = draft.content || "";
+          fields.status.value = draft.status || "draft";
+          coverCaptionInput.value = draft.coverCaption || "";
+          saveStatus.textContent = "Brouillon automatique restauré sur cet appareil.";
+          return true;
+        } catch {
+          return false;
+        }
+      };
+
+      const clearLocalDraft = () => {
+        localStorage.removeItem(AUTOSAVE_KEY);
+      };
+
       const today = () => {
         const now = new Date();
         const y = now.getFullYear();
@@ -468,6 +517,7 @@
           loginCard.hidden = true;
           panel.hidden = false;
           resetForm();
+          restoreLocalDraft();
         } catch (error) {
           adminKey = "";
           loginStatus.textContent = error.message || "Mot de passe incorrect.";
@@ -538,6 +588,7 @@
           }
 
           posts = result.posts || [];
+          clearLocalDraft();
           resetForm();
           renderPosts();
           saveStatus.textContent = "Article enregistré.";
@@ -547,7 +598,13 @@
         }
       });
 
-      cancelEdit.addEventListener("click", resetForm);
+      form.addEventListener("input", scheduleLocalDraftSave);
+      form.addEventListener("change", scheduleLocalDraftSave);
+
+      cancelEdit.addEventListener("click", () => {
+        clearLocalDraft();
+        resetForm();
+      });
       newPostButton.addEventListener("click", () => {
         resetForm();
         form.scrollIntoView({ behavior: "smooth", block: "start" });
