@@ -1,12 +1,5 @@
 ---
-const nav = [
-  { label: "Les malles", href: "/les-malles" },
-  { label: "Louer une malle", href: "/louer-une-malle" },
-  { label: "À propos", href: "/a-propos" },
-  { label: "FAQ", href: "/faq" },
-  { label: "Le blog", href: "/blog" },
-  { label: "Me contacter", href: "/contact" },
-];
+import SiteHeader from "../components/SiteHeader.astro";
 ---
 
 <!doctype html>
@@ -17,10 +10,7 @@ const nav = [
     <title>Article · Rencontres avec le vivant</title>
   </head>
   <body>
-    <header class="site-header">
-      <a class="brand" href="/"><span class="brand-decoration">⌇</span><span class="brand-text"><span>Rencontres</span><span>avec le vivant</span></span></a>
-      <nav>{nav.map((item)=><a href={item.href}>{item.label}</a>)}</nav>
-    </header>
+    <SiteHeader />
     <main>
       <article class="article">
         <a class="back" href="/blog">← Retour au blog</a>
