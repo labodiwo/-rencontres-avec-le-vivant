@@ -1,5 +1,6 @@
 ---
 import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
 
 const steps = [
   {
@@ -663,6 +664,25 @@ const formulas = [
 
 
 
+      <!-- CONDITIONS -->
+      <section class="conditions-teaser">
+        <div class="conditions-teaser-inner">
+          <div>
+            <p class="eyebrow">Avant de réserver</p>
+            <h2>Un cadre clair pour la location</h2>
+            <p>
+              Retrouvez les règles de réservation, d’annulation, de restitution,
+              de sécurité et les modalités en cas de perte ou de casse.
+            </p>
+          </div>
+          <a class="text-link conditions-link" href="/conditions-location">
+            Lire les conditions de location
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </section>
+
+
       <!-- APPEL À L'ACTION -->
       <section class="cta">
 
@@ -700,25 +720,7 @@ const formulas = [
 
 
     <!-- FOOTER -->
-    <footer>
-
-      <a
-        class="footer-brand"
-        href="/"
-      >
-        Rencontres avec le vivant
-      </a>
-
-      <p>
-        Des outils pour prendre le temps
-        de rencontrer le vivant.
-      </p>
-
-      <small>
-        © Rencontres avec le vivant
-      </small>
-
-    </footer>
+    <SiteFooter />
 
 
 
@@ -1664,6 +1666,39 @@ const formulas = [
         line-height: 1.7;
       }
 
+
+
+      /* CONDITIONS */
+
+      .conditions-teaser {
+        padding: 55px 5.5%;
+        background: #f3f0e9;
+      }
+
+      .conditions-teaser-inner {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 35px;
+      }
+
+      .conditions-teaser h2 {
+        margin: 0 0 12px;
+        font-size: clamp(1.9rem, 3vw, 2.5rem);
+        font-weight: 500;
+      }
+
+      .conditions-teaser p:not(.eyebrow) {
+        max-width: 650px;
+        margin: 0;
+        line-height: 1.6;
+      }
+
+      .conditions-link {
+        flex: 0 0 auto;
+      }
 
 
       /* CTA */
