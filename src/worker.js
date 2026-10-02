@@ -326,6 +326,18 @@ export class ReservationsStore extends DurableObject {
     const reservations =
       (await this.ctx.storage.get("reservations")) || {};
 
+    let migratedLegacyStatuses = false;
+    Object.values(reservations).forEach((reservation) => {
+      if (reservation.status === "pending") {
+        reservation.status = "new";
+        migratedLegacyStatuses = true;
+      }
+    });
+
+    if (migratedLegacyStatuses) {
+      await this.ctx.storage.put("reservations", reservations);
+    }
+
     const sorted = () =>
       Object.values(reservations).sort((a, b) => {
         const weekCompare = String(a.weekIso || "9999").localeCompare(
@@ -367,7 +379,7 @@ export class ReservationsStore extends DurableObject {
       };
 
       if (
-        !["new", "pending", "confirmed", "paid", "completed", "cancelled"].includes(
+        !["new", "confirmed", "paid", "completed", "cancelled"].includes(
           reservation.status,
         )
       ) {
