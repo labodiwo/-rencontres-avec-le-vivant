@@ -26,6 +26,10 @@
       {
         "name": "BLOG",
         "class_name": "BlogStore"
+      },
+      {
+        "name": "RESERVATIONS",
+        "class_name": "ReservationsStore"
       }
     ]
   },
@@ -35,6 +39,10 @@
       "storage": "sqlite"
     },
     "BlogStore": {
+      "type": "durable-object",
+      "storage": "sqlite"
+    },
+    "ReservationsStore": {
       "type": "durable-object",
       "storage": "sqlite"
     }
