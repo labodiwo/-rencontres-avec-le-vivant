@@ -69,6 +69,13 @@ export class AvailabilityStore extends DurableObject {
       const body = await request.json();
       const week = clean(body.week, 10);
       const status = clean(body.status, 20);
+      const coverImageId = clean(body.coverImageId, 80);
+      const galleryImageIds = Array.isArray(body.galleryImageIds)
+        ? body.galleryImageIds
+            .map((value) => clean(value, 80))
+            .filter(Boolean)
+            .slice(0, 6)
+        : [];
 
       if (!/^\d{4}-\d{2}-\d{2}$/.test(week)) {
         return json({ ok: false, error: "Semaine invalide." }, 400);
@@ -103,6 +110,48 @@ export class BlogStore extends DurableObject {
 
     if (request.method === "GET" && url.pathname === "/posts") {
       return json({ ok: true, posts: sortedPosts() });
+    }
+
+    if (request.method === "POST" && url.pathname === "/images") {
+      const contentType = clean(request.headers.get("content-type"), 100);
+
+      if (!["image/jpeg", "image/png", "image/webp"].includes(contentType)) {
+        return json({ ok: false, error: "Format d’image non accepté." }, 415);
+      }
+
+      const bytes = await request.arrayBuffer();
+
+      if (!bytes.byteLength || bytes.byteLength > 1600000) {
+        return json(
+          { ok: false, error: "L’image est trop volumineuse après compression." },
+          413,
+        );
+      }
+
+      const imageId = crypto.randomUUID();
+
+      await this.ctx.storage.put(`image:${imageId}`, {
+        type: contentType,
+        bytes,
+      });
+
+      return json({ ok: true, imageId });
+    }
+
+    if (request.method === "GET" && url.pathname.startsWith("/images/")) {
+      const imageId = decodeURIComponent(url.pathname.slice("/images/".length));
+      const stored = await this.ctx.storage.get(`image:${imageId}`);
+
+      if (!stored?.bytes || !stored?.type) {
+        return new Response("Image introuvable.", { status: 404 });
+      }
+
+      return new Response(stored.bytes, {
+        headers: {
+          "content-type": stored.type,
+          "cache-control": "public, max-age=86400",
+        },
+      });
     }
 
     if (request.method === "GET" && url.pathname.startsWith("/posts/")) {
@@ -164,6 +213,8 @@ export class BlogStore extends DurableObject {
         excerpt,
         content,
         status,
+        coverImageId,
+        galleryImageIds,
         createdAt: previous.createdAt || now,
         updatedAt: now,
       };
@@ -178,6 +229,16 @@ export class BlogStore extends DurableObject {
 
       if (!slug || !posts[slug]) {
         return json({ ok: false, error: "Article introuvable." }, 404);
+      }
+
+      const post = posts[slug];
+
+      if (post.coverImageId) {
+        await this.ctx.storage.delete(`image:${post.coverImageId}`);
+      }
+
+      for (const imageId of post.galleryImageIds || []) {
+        await this.ctx.storage.delete(`image:${imageId}`);
       }
 
       delete posts[slug];
@@ -259,6 +320,20 @@ export default {
       return json({ ok: true, posts: published });
     }
 
+    if (url.pathname.startsWith("/api/blog-image/")) {
+      if (request.method !== "GET") {
+        return json({ ok: false, error: "Méthode non autorisée." }, 405);
+      }
+
+      const imageId = decodeURIComponent(
+        url.pathname.slice("/api/blog-image/".length),
+      );
+
+      return getBlogStub(env).fetch(
+        "https://blog.internal/images/" + encodeURIComponent(imageId),
+      );
+    }
+
     if (url.pathname.startsWith("/api/blog/")) {
       if (request.method !== "GET") {
         return json({ ok: false, error: "Méthode non autorisée." }, 405);
@@ -274,6 +349,34 @@ export default {
       }
 
       return json({ ok: true, post: result.post });
+    }
+
+    if (url.pathname === "/api/admin/blog-image") {
+      if (!env.ADMIN_KEY) {
+        return json(
+          { ok: false, error: "L’accès administrateur n’est pas encore configuré." },
+          503,
+        );
+      }
+
+      const providedKey = request.headers.get("x-admin-key") || "";
+      if (!safeEqual(providedKey, env.ADMIN_KEY)) {
+        return json({ ok: false, error: "Mot de passe incorrect." }, 401);
+      }
+
+      if (request.method !== "POST") {
+        return json({ ok: false, error: "Méthode non autorisée." }, 405);
+      }
+
+      const contentType = request.headers.get("content-type") || "";
+
+      return getBlogStub(env).fetch(
+        new Request("https://blog.internal/images", {
+          method: "POST",
+          headers: { "content-type": contentType },
+          body: await request.arrayBuffer(),
+        }),
+      );
     }
 
     if (url.pathname === "/api/admin/blog") {
