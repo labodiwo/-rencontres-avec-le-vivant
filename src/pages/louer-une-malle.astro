@@ -17,7 +17,7 @@ const steps = [
   {
     number: "02",
     title: "Faire une demande",
-    text: "Indiquez la malle souhaitée, votre structure et la semaine de location qui vous intéresse, du lundi au vendredi inclus.",
+    text: "Indiquez la malle souhaitée, votre structure et la durée de location qui vous intéresse : 1 semaine, 2 semaines ou 4 semaines consécutives.",
   },
   {
     number: "03",
@@ -32,7 +32,7 @@ const steps = [
   {
     number: "05",
     title: "Recevoir la malle",
-    text: "La malle physique est remise le vendredi précédant votre semaine de location, afin qu’elle soit prête à être utilisée dès le lundi.",
+    text: "La malle physique est remise le vendredi précédant le début de la location, afin qu’elle soit prête à être utilisée dès le lundi.",
   },
   {
     number: "06",
@@ -46,16 +46,19 @@ const formulas = [
     title: "Formule autonome",
     subtitle: "La malle, sans intervention sur place",
     text: "Vous recevez le livret dès la confirmation de la réservation, puis la malle le vendredi précédent. Votre équipe prépare et mène les animations en toute autonomie.",
+    price: "Inclus dans le tarif de location",
   },
   {
     title: "Formule avec présentation",
     subtitle: "Une prise en main accompagnée",
     text: "En plus de la location, je présente la malle à l’équipe : contenu, logique pédagogique, possibilités d’utilisation et questions pratiques. L’équipe poursuit ensuite en autonomie.",
+    price: "+ 60 €",
   },
   {
     title: "Formule avec animation",
     subtitle: "Une animation menée auprès des enfants",
-    text: "La malle est louée à la structure et j’interviens également pour animer une proposition auprès des enfants. L’équipe peut ensuite poursuivre les autres expériences pendant la semaine.",
+    text: "La malle est louée à la structure et j’interviens également pour animer une proposition auprès des enfants. L’équipe peut ensuite poursuivre les autres expériences pendant la période de location.",
+    price: "+ 140 €",
   },
 ];
 ---
@@ -193,10 +196,130 @@ const formulas = [
           </p>
 
           <p>
-            La location est prévue du <strong>lundi au vendredi inclus</strong>.
-            La malle physique est remise le vendredi précédent afin que
-            votre équipe puisse l’installer et être prête dès le lundi.
+            Trois durées sont proposées : <strong>1 semaine, 2 semaines
+            ou 4 semaines consécutives</strong>. La malle physique est remise
+            le vendredi précédant le début de la location afin que votre
+            équipe puisse l’installer et être prête dès le lundi.
           </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- TARIFS -->
+      <section class="pricing-section">
+
+        <div class="pricing-heading">
+
+          <p class="eyebrow">
+            Tarifs de location
+          </p>
+
+          <h2>
+            Choisir la durée qui convient à votre structure
+          </h2>
+
+          <p>
+            Le tarif comprend la malle complète et l’envoi du livret
+            pédagogique dès la confirmation de la réservation.
+          </p>
+
+        </div>
+
+
+        <div class="duration-grid">
+
+          <article class="duration-card featured">
+
+            <p class="duration-label">
+              1 semaine
+            </p>
+
+            <p class="duration-price">
+              200 €
+            </p>
+
+            <p>
+              Pour découvrir la malle et construire une semaine
+              d’animations autour du thème.
+            </p>
+
+          </article>
+
+
+          <article class="duration-card">
+
+            <p class="duration-label">
+              2 semaines consécutives
+            </p>
+
+            <p class="duration-price">
+              370 €
+            </p>
+
+            <p>
+              Pour prendre davantage de temps et faire vivre
+              plusieurs propositions au même groupe.
+            </p>
+
+          </article>
+
+
+          <article class="duration-card">
+
+            <p class="duration-label">
+              4 semaines consécutives
+            </p>
+
+            <p class="duration-price">
+              640 €
+            </p>
+
+            <p>
+              Pour installer la malle dans la durée et l’utiliser
+              avec plusieurs groupes ou sur un cycle plus long.
+            </p>
+
+          </article>
+
+        </div>
+
+
+        <div class="intervention-prices">
+
+          <div>
+            <span>Sans intervention</span>
+            <strong>Inclus</strong>
+          </div>
+
+          <div>
+            <span>Présentation de la malle à l’équipe</span>
+            <strong>+ 60 €</strong>
+          </div>
+
+          <div>
+            <span>Animation menée auprès des enfants</span>
+            <strong>+ 140 €</strong>
+          </div>
+
+        </div>
+
+
+        <div class="pricing-cta">
+
+          <p>
+            Choisissez ensuite vos dates et la formule souhaitée
+            dans le calendrier de réservation.
+          </p>
+
+          <a
+            class="primary-button"
+            href="/reserver-une-malle"
+          >
+            Voir les disponibilités et réserver
+            <span aria-hidden="true">→</span>
+          </a>
 
         </div>
 
@@ -290,6 +413,10 @@ const formulas = [
                   {formula.subtitle}
                 </p>
 
+                <p class="formula-price">
+                  {formula.price}
+                </p>
+
                 <p>
                   {formula.text}
                 </p>
@@ -366,8 +493,8 @@ const formulas = [
               </div>
 
               <div>
-                <span>Période de location</span>
-                <strong>Du lundi au vendredi inclus</strong>
+                <span>Durées proposées</span>
+                <strong>1, 2 ou 4 semaines consécutives</strong>
               </div>
 
               <div>
@@ -376,8 +503,13 @@ const formulas = [
               </div>
 
               <div>
+                <span>Tarif</span>
+                <strong>À partir de 200 €</strong>
+              </div>
+
+              <div>
                 <span>Formule</span>
-                <strong>Autonome ou accompagnée</strong>
+                <strong>Autonome, présentation ou animation</strong>
               </div>
 
               <div>
@@ -864,6 +996,132 @@ const formulas = [
 
 
 
+      /* TARIFS */
+
+      .pricing-section {
+        padding: 68px 5.5% 72px;
+        background: #dfe3cf;
+      }
+
+
+      .pricing-heading {
+        max-width: 780px;
+        margin: 0 auto 34px;
+        text-align: center;
+      }
+
+
+      .pricing-heading h2 {
+        margin: 0 0 14px;
+        font-size: clamp(2.2rem, 3.8vw, 3.35rem);
+        line-height: 1.05;
+        font-weight: 500;
+      }
+
+
+      .pricing-heading > p:last-child {
+        max-width: 650px;
+        margin: 0 auto;
+        color: #55594a;
+        line-height: 1.65;
+      }
+
+
+      .duration-grid {
+        max-width: 1080px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+
+      .duration-card {
+        padding: 30px;
+        background: #f9f7f2;
+        border: 1px solid rgba(89, 98, 67, 0.16);
+        border-radius: 9px;
+      }
+
+
+      .duration-card.featured {
+        border: 2px solid #7d8957;
+      }
+
+
+      .duration-label {
+        margin: 0 0 12px;
+        color: #596243;
+        font: 700 0.8rem Arial, Helvetica, sans-serif;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+
+      .duration-price {
+        margin: 0 0 16px;
+        color: #3f4731;
+        font-size: clamp(2.5rem, 4vw, 3.5rem);
+        line-height: 1;
+        font-weight: 500;
+      }
+
+
+      .duration-card > p:last-child {
+        margin: 0;
+        color: #606157;
+        font: 0.9rem/1.6 Arial, Helvetica, sans-serif;
+      }
+
+
+      .intervention-prices {
+        max-width: 860px;
+        margin: 26px auto 0;
+        padding: 6px 24px;
+        background: rgba(249, 247, 242, 0.72);
+        border-radius: 8px;
+      }
+
+
+      .intervention-prices div {
+        padding: 15px 0;
+        display: flex;
+        justify-content: space-between;
+        gap: 25px;
+        border-bottom: 1px solid rgba(89, 98, 67, 0.16);
+      }
+
+
+      .intervention-prices div:last-child {
+        border-bottom: 0;
+      }
+
+
+      .intervention-prices span {
+        font-family: Arial, Helvetica, sans-serif;
+        color: #55594a;
+      }
+
+
+      .intervention-prices strong {
+        color: #596243;
+        white-space: nowrap;
+      }
+
+
+      .pricing-cta {
+        max-width: 760px;
+        margin: 28px auto 0;
+        text-align: center;
+      }
+
+
+      .pricing-cta p {
+        margin: 0 0 18px;
+        line-height: 1.6;
+      }
+
+
       /* ÉTAPES */
 
       .steps-section {
@@ -993,9 +1251,15 @@ const formulas = [
       }
 
       .formula-subtitle {
-        margin: 0 0 16px;
+        margin: 0 0 10px;
         color: #596243;
         font-weight: 600;
+      }
+
+      .formula-price {
+        margin: 0 0 16px;
+        color: #3f4731;
+        font: 700 1.12rem Arial, Helvetica, sans-serif;
       }
 
       .formula-card p:last-child {
@@ -1542,7 +1806,8 @@ const formulas = [
             repeat(2, minmax(0, 1fr));
         }
 
-        .formulas-grid {
+        .formulas-grid,
+        .duration-grid {
           grid-template-columns: 1fr;
         }
 
@@ -1592,8 +1857,18 @@ const formulas = [
           padding: 55px 24px;
         }
 
-        .formulas-section {
+        .formulas-section,
+        .pricing-section {
           padding: 55px 24px;
+        }
+
+        .intervention-prices {
+          padding: 5px 18px;
+        }
+
+        .intervention-prices div {
+          flex-direction: column;
+          gap: 5px;
         }
 
 
