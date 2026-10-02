@@ -129,6 +129,7 @@ const nav = [
             <span><i class="dot available"></i> Disponible</span>
             <span><i class="dot pending"></i> Demande en cours</span>
             <span><i class="dot booked"></i> Réservée</span>
+            <span><i class="dot school-holiday"></i> Vacances scolaires · Académie de Nantes</span>
           </div>
 
           <div id="weeks-grid" class="weeks-grid" aria-live="polite"></div>
@@ -137,6 +138,7 @@ const nav = [
         <p class="calendar-note">
           Cliquez sur la première semaine souhaitée. Les semaines consécutives
           correspondant à la durée choisie seront ajoutées automatiquement à votre demande.
+          Les vacances scolaires sont indiquées uniquement comme repère et n’empêchent pas la réservation.
         </p>
       </section>
 
@@ -318,6 +320,34 @@ const nav = [
         booked: "Réservée",
       };
 
+      const schoolHolidays = [
+        {
+          name: "Vacances de la Toussaint",
+          start: "2026-10-17",
+          end: "2026-11-02",
+        },
+        {
+          name: "Vacances de Noël",
+          start: "2026-12-19",
+          end: "2027-01-04",
+        },
+        {
+          name: "Vacances d’hiver",
+          start: "2027-02-20",
+          end: "2027-03-08",
+        },
+        {
+          name: "Vacances de printemps",
+          start: "2027-04-17",
+          end: "2027-05-03",
+        },
+        {
+          name: "Vacances d’été",
+          start: "2027-07-03",
+          end: "2027-09-02",
+        },
+      ];
+
       const grid = document.getElementById("weeks-grid");
       const weekInput = document.getElementById("week");
       const durationSelect = document.getElementById("duration");
@@ -448,6 +478,24 @@ const nav = [
         friday.setDate(monday.getDate() + 4);
         friday.setHours(23, 59, 59, 999);
         return friday < today;
+      };
+
+      const parseLocalDate = (value) => {
+        const [year, month, day] = value.split("-").map(Number);
+        return new Date(year, month - 1, day, 12);
+      };
+
+      const getSchoolHolidayForWeek = (monday) => {
+        const friday = new Date(monday);
+        friday.setDate(monday.getDate() + 4);
+        friday.setHours(12, 0, 0, 0);
+
+        return schoolHolidays.find((holiday) => {
+          const start = parseLocalDate(holiday.start);
+          const end = parseLocalDate(holiday.end);
+
+          return monday < end && friday >= start;
+        });
       };
 
       const getRentalWeeks = (startMonday, duration = selectedDuration) => {
@@ -586,11 +634,18 @@ const nav = [
                 ? "Période indisponible"
                 : statusLabels[status];
 
+          const schoolHoliday = getSchoolHolidayForWeek(weekMonday);
+
           week.innerHTML = `
             <div class="week-topline">
               <div>
                 <strong>${formatWeekLabel(weekMonday, friday)}</strong>
                 <span class="week-status">${statusText}</span>
+                ${schoolHoliday ? `
+                  <span class="school-holiday-label">
+                    ${schoolHoliday.name} · Académie de Nantes
+                  </span>
+                ` : ""}
               </div>
               <button
                 type="button"
@@ -1023,6 +1078,7 @@ const nav = [
       .dot.available { background: #7d8957; }
       .dot.pending { background: #c59e5d; }
       .dot.booked { background: #9b9b92; }
+      .dot.school-holiday { background: #8a7897; }
 
       .weeks-grid {
         display: grid;
@@ -1085,6 +1141,18 @@ const nav = [
         height: 10px;
         border-radius: 50%;
         flex: 0 0 auto;
+      }
+
+      :global(.school-holiday-label) {
+        display: block;
+        width: fit-content;
+        margin-top: 8px;
+        padding: 5px 8px;
+        border-radius: 999px;
+        background: #eee8f2;
+        color: #665672;
+        font: 700 .7rem Arial, Helvetica, sans-serif;
+        letter-spacing: .01em;
       }
 
       :global(.calendar-week.available .week-status) {
