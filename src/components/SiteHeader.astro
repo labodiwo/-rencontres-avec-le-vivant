@@ -15,14 +15,20 @@ const isActive = (href) => pathname === href || (href === "/blog" && pathname ==
 <header class="site-header">
   <a class="brand" href="/" aria-label="Rencontres avec le vivant — Accueil">
     <svg class="brand-logo" viewBox="0 0 120 120" role="img" aria-hidden="true">
-      <path class="brand-circle" d="M36 98C18 84 13 61 20 41C28 20 50 9 76 11" />
-      <path class="brand-circle" d="M99 35C107 55 103 78 88 93C74 106 53 109 36 98" />
-      <circle class="brand-dot" cx="96" cy="20" r="7" />
-      <path class="brand-leaf-large" d="M35 98C26 82 26 59 39 38C52 55 54 77 35 98Z" />
-      <path class="brand-stem" d="M35 98C47 83 57 65 62 46" />
-      <path class="brand-leaf" d="M62 47C53 39 56 27 67 20C75 31 72 42 62 47Z" />
-      <path class="brand-leaf" d="M60 68C68 57 81 56 90 62C83 74 70 77 60 68Z" />
-      <path class="brand-vein" d="M35 97C39 78 41 58 39 39" />
+      <path class="brand-circle" d="M38 101C20 86 15 61 23 39C32 17 54 7 80 10" />
+      <path class="brand-circle" d="M100 34C109 56 104 81 87 96C73 108 53 110 38 101" />
+      <circle class="brand-dot" cx="99" cy="20" r="7" />
+
+      <path class="brand-leaf-large" d="M38 101C24 84 24 58 35 35C38 53 49 65 63 75C73 82 78 91 79 98C64 104 50 105 38 101Z" />
+      <path class="brand-leaf-vein" d="M39 99C47 85 53 73 57 60" />
+      <path class="brand-leaf-vein soft" d="M47 86C40 81 36 75 33 68" />
+      <path class="brand-leaf-vein soft" d="M53 76C47 70 43 63 40 56" />
+
+      <path class="brand-stem" d="M76 99C76 80 76 61 73 43" />
+      <path class="brand-leaf" d="M73 48C62 39 63 25 72 15C83 27 83 40 73 48Z" />
+      <path class="brand-leaf" d="M76 70C84 58 96 56 104 60C98 73 87 78 76 70Z" />
+      <path class="brand-leaf-vein small" d="M73 45L72 23" />
+      <path class="brand-leaf-vein small" d="M78 68L98 61" />
     </svg>
 
     <span class="brand-text">
@@ -54,10 +60,12 @@ const isActive = (href) => pathname === href || (href === "/blog" && pathname ==
   .brand-logo { width:66px; height:66px; flex:0 0 auto; margin-right:11px; overflow:visible; }
   .brand-circle { fill:none; stroke:#5a4a3f; stroke-width:3.2; stroke-linecap:round; }
   .brand-dot { fill:#d69b3e; }
-  .brand-leaf-large { fill:#7a8f6b; }
-  .brand-leaf { fill:#657954; }
-  .brand-stem { fill:none; stroke:#4f5f42; stroke-width:2.4; stroke-linecap:round; }
-  .brand-vein { fill:none; stroke:rgba(249,247,246,.72); stroke-width:1.6; stroke-linecap:round; }
+  .brand-leaf-large { fill:#7f8d60; }
+  .brand-leaf { fill:#768456; }
+  .brand-stem { fill:none; stroke:#5f6d42; stroke-width:2.5; stroke-linecap:round; }
+  .brand-leaf-vein { fill:none; stroke:#66734c; stroke-width:2; stroke-linecap:round; opacity:.8; }
+  .brand-leaf-vein.soft { stroke:#aab38e; stroke-width:1.5; opacity:.75; }
+  .brand-leaf-vein.small { stroke:#5f6d42; stroke-width:1.6; opacity:.9; }
   .brand-text { display:flex; flex-direction:column; color:#5a4a3f; font-family:Georgia,"Times New Roman",serif; font-size:1.55rem; line-height:1.05; }
   .brand-text span:last-child { margin-top:4px; color:#657954; font-family:Arial,Helvetica,sans-serif; font-size:.72rem; letter-spacing:.16em; }
   nav { display:flex; align-items:center; gap:clamp(16px,2.2vw,34px); flex-wrap:wrap; justify-content:flex-end; }
