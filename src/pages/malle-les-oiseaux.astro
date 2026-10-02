@@ -79,6 +79,23 @@ import SiteHeader from "../components/SiteHeader.astro";
 
       </section>
 
+      <!-- RÉSERVATION -->
+      <section class="reservation-cta reservation-cta-top">
+        <div class="reservation-cta-inner">
+          <div>
+            <p class="eyebrow">Louer cette malle</p>
+            <h2>La malle « Les oiseaux » vous intéresse ?</h2>
+            <p>
+              Consultez les semaines disponibles et choisissez la formule
+              qui correspond à votre structure.
+            </p>
+          </div>
+          <a class="button reservation-button" href="/reserver-une-malle">
+            Voir les disponibilités et réserver
+          </a>
+        </div>
+      </section>
+
 
       <!-- LES 3 ÉTAPES -->
       <section class="approach">
@@ -393,13 +410,28 @@ import SiteHeader from "../components/SiteHeader.astro";
       </section>
 
 
+      <!-- RÉSERVATION -->
+      <section class="reservation-cta reservation-cta-bottom">
+        <div class="reservation-cta-inner">
+          <div>
+            <p class="eyebrow light">Prêt à organiser une semaine autour des oiseaux ?</p>
+            <h2>Consulter les disponibilités</h2>
+            <p>
+              Choisissez votre semaine et envoyez votre demande de réservation.
+              La réservation sera ensuite confirmée avec vous.
+            </p>
+          </div>
+          <a class="button reservation-button light-button" href="/reserver-une-malle">
+            Réserver la malle « Les oiseaux »
+          </a>
+        </div>
+      </section>
+
       <!-- RETOUR -->
       <section class="back">
-
-        <a class="button" href="/">
+        <a class="back-link" href="/">
           ← Retour à l’accueil
         </a>
-
       </section>
 
     </main>
@@ -891,6 +923,58 @@ import SiteHeader from "../components/SiteHeader.astro";
       }
 
 
+      /* RÉSERVATION */
+
+      .reservation-cta {
+        padding: 42px 5.5%;
+      }
+
+      .reservation-cta-top {
+        background: #f1eee8;
+      }
+
+      .reservation-cta-bottom {
+        background: #596243;
+        color: #fffdf8;
+      }
+
+      .reservation-cta-inner {
+        max-width: 980px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 40px;
+      }
+
+      .reservation-cta-inner > div {
+        max-width: 650px;
+      }
+
+      .reservation-cta h2 {
+        margin: 0 0 10px;
+        font-size: clamp(1.8rem, 3vw, 2.5rem);
+        font-weight: 500;
+      }
+
+      .reservation-cta p:last-child {
+        margin: 0;
+        line-height: 1.6;
+      }
+
+      .reservation-button {
+        flex: 0 0 auto;
+        justify-content: center;
+        min-width: 245px;
+        text-align: center;
+      }
+
+      .light-button {
+        background: #f7f3e9;
+        color: #4d5737;
+      }
+
+
       /* RETOUR */
 
       .back {
@@ -915,6 +999,16 @@ import SiteHeader from "../components/SiteHeader.astro";
         text-decoration: none;
 
         font-weight: 600;
+      }
+
+      .back-link {
+        color: #596243;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .back-link:hover {
+        text-decoration: underline;
       }
 
 
@@ -965,6 +1059,16 @@ import SiteHeader from "../components/SiteHeader.astro";
           grid-template-columns: repeat(2, 1fr);
         }
 
+        .reservation-cta-inner {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 24px;
+        }
+
+        .reservation-button {
+          min-width: 0;
+        }
+
       }
 
 
@@ -1010,6 +1114,14 @@ import SiteHeader from "../components/SiteHeader.astro";
 
         .activity-list article {
           grid-template-columns: 42px 1fr;
+        }
+
+        .reservation-cta {
+          padding: 38px 24px;
+        }
+
+        .reservation-button {
+          width: 100%;
         }
 
       }
