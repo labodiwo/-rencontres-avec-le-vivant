@@ -142,6 +142,9 @@ const nav = [
           <span class="selection-kicker">Votre période</span>
           <strong id="selection-period"></strong>
           <span id="selection-duration"></span>
+          <button id="clear-selection" type="button" class="clear-selection">
+            Effacer ma sélection
+          </button>
         </div>
 
         <p class="calendar-note">
@@ -370,6 +373,7 @@ const nav = [
       const selectionSummary = document.getElementById("selection-summary");
       const selectionPeriod = document.getElementById("selection-period");
       const selectionDuration = document.getElementById("selection-duration");
+      const clearSelectionButton = document.getElementById("clear-selection");
       const previousMonthButton = document.getElementById("previous-month");
       const nextMonthButton = document.getElementById("next-month");
       let turnstileToken = "";
@@ -604,7 +608,21 @@ const nav = [
         selectedDuration = Number(duration);
         durationSelect.value = String(selectedDuration);
 
-        durationButtons.forEach((button) => {
+        clearSelectionButton.addEventListener("click", () => {
+        selectedWeekIso = "";
+        weekInput.value = "";
+        selectionPeriod.textContent = "";
+        selectionDuration.textContent = "";
+        selectionSummary.hidden = true;
+        formStatus.textContent = "";
+        renderCalendar();
+
+        document
+          .querySelector(".calendar-section")
+          .scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      durationButtons.forEach((button) => {
           button.classList.toggle(
             "selected",
             Number(button.dataset.duration) === selectedDuration,
@@ -1303,9 +1321,24 @@ const nav = [
         font-weight: 600;
       }
 
-      .selection-summary > span:last-child {
+      .selection-summary > span:last-of-type {
         color: #626756;
         font: .8rem Arial, Helvetica, sans-serif;
+      }
+
+      .clear-selection {
+        margin-top: 14px;
+        padding: 8px 12px;
+        border: 1px solid #aeb89d;
+        border-radius: 4px;
+        background: transparent;
+        color: #596243;
+        cursor: pointer;
+        font: 700 .78rem Arial, Helvetica, sans-serif;
+      }
+
+      .clear-selection:hover {
+        background: #f7f9f3;
       }
 
       .calendar-note {
