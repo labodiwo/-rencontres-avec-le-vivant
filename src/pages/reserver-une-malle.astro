@@ -740,6 +740,21 @@ import SiteHeader from "../components/SiteHeader.astro";
 
       formulaSelect.addEventListener("change", updatePriceSummary);
 
+      const durationFromUrl = Number(
+        new URLSearchParams(window.location.search).get("duration")
+      );
+
+      if ([1, 2, 4].includes(durationFromUrl)) {
+        selectedDuration = durationFromUrl;
+        durationSelect.value = String(durationFromUrl);
+        durationButtons.forEach((button) => {
+          button.classList.toggle(
+            "selected",
+            Number(button.dataset.duration) === durationFromUrl,
+          );
+        });
+      }
+
       updateDurationInterface();
       updatePriceSummary();
 
