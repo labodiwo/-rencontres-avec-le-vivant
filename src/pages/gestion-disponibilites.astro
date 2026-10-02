@@ -7,23 +7,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
-    <title>Gestion des disponibilités · Rencontres avec le vivant</title>
+    <title>Gestion des réservations · Rencontres avec le vivant</title>
   </head>
 
   <body>
     <main>
       <section class="hero">
         <p class="eyebrow">Espace privé</p>
-        <h1>Gestion des disponibilités</h1>
+        <h1>Gestion des réservations</h1>
         <p>
-          Modifiez simplement l’état d’une semaine. Les changements
-          apparaissent ensuite sur le calendrier de réservation.
+          Retrouvez votre planning, les demandes reçues et les disponibilités
+          de la malle au même endroit.
         </p>
       </section>
 
       <section class="admin-wrap">
         <div id="login-card" class="login-card">
-          <h2>Accéder au calendrier</h2>
+          <h2>Accéder à la gestion</h2>
           <p>Entrez votre mot de passe administrateur.</p>
 
           <form id="login-form">
@@ -40,41 +40,89 @@
           <p id="login-status" class="status" role="status"></p>
         </div>
 
-        <div id="admin-panel" class="admin-panel" hidden>
-          <div class="toolbar">
-            <button
-              type="button"
-              id="previous-month"
-              class="month-button"
-              aria-label="Mois précédent"
-            >
-              ←
+        <div id="admin-panel" hidden>
+          <div class="tabs" role="tablist" aria-label="Gestion des réservations">
+            <button type="button" class="tab active" data-tab="planning">Planning</button>
+            <button type="button" class="tab" data-tab="requests">
+              Demandes <span id="new-count" class="count" hidden></span>
             </button>
+            <button type="button" class="tab" data-tab="availability">Disponibilités</button>
+          </div>
 
-            <div>
-              <span>Mois affiché</span>
-              <strong id="current-month"></strong>
+          <section id="tab-planning" class="tab-panel">
+            <div class="section-heading">
+              <p class="section-eyebrow">Organisation</p>
+              <h2>Planning des locations</h2>
+              <p>
+                Les demandes et réservations apparaissent ici dans l’ordre des
+                prochaines semaines.
+              </p>
+            </div>
+            <div id="planning-list" class="planning-list"></div>
+          </section>
+
+          <section id="tab-requests" class="tab-panel" hidden>
+            <div class="section-heading">
+              <p class="section-eyebrow">Suivi</p>
+              <h2>Demandes et réservations</h2>
+              <p>
+                Modifiez le statut d’une demande, notez vos informations de
+                suivi et retrouvez les coordonnées de la structure.
+              </p>
             </div>
 
-            <button
-              type="button"
-              id="next-month"
-              class="month-button"
-              aria-label="Mois suivant"
-            >
-              →
-            </button>
-          </div>
+            <div class="filters">
+              <button type="button" class="filter active" data-filter="active">À traiter</button>
+              <button type="button" class="filter" data-filter="all">Toutes</button>
+              <button type="button" class="filter" data-filter="completed">Terminées</button>
+            </div>
 
-          <div class="legend">
-            <span><i class="dot available"></i> Disponible</span>
-            <span><i class="dot pending"></i> Demande en cours</span>
-            <span><i class="dot booked"></i> Réservée</span>
-          </div>
+            <div id="requests-list" class="requests-list"></div>
+          </section>
 
-          <div id="admin-weeks" class="weeks" aria-live="polite"></div>
+          <section id="tab-availability" class="tab-panel" hidden>
+            <div class="section-heading">
+              <p class="section-eyebrow">Calendrier public</p>
+              <h2>Disponibilités</h2>
+              <p>
+                Ces états sont ceux affichés sur le module de réservation.
+              </p>
+            </div>
 
-          <p id="save-status" class="status save-status" role="status"></p>
+            <div class="toolbar">
+              <button
+                type="button"
+                id="previous-month"
+                class="month-button"
+                aria-label="Mois précédent"
+              >
+                ←
+              </button>
+
+              <div>
+                <span>Mois affiché</span>
+                <strong id="current-month"></strong>
+              </div>
+
+              <button
+                type="button"
+                id="next-month"
+                class="month-button"
+                aria-label="Mois suivant"
+              >
+                →
+              </button>
+            </div>
+
+            <div class="legend">
+              <span><i class="dot available"></i> Disponible</span>
+              <span><i class="dot pending"></i> Demande en cours</span>
+              <span><i class="dot booked"></i> Réservée</span>
+            </div>
+
+            <div id="admin-weeks" class="weeks" aria-live="polite"></div>
+            <p id="save-status" class="status save-status" role="status"></p>
+          </section>
         </div>
       </section>
     </main>
@@ -90,9 +138,14 @@
       const currentMonthLabel = document.getElementById("current-month");
       const previousMonthButton = document.getElementById("previous-month");
       const nextMonthButton = document.getElementById("next-month");
+      const planningList = document.getElementById("planning-list");
+      const requestsList = document.getElementById("requests-list");
+      const newCount = document.getElementById("new-count");
 
       let adminKey = "";
       let availability = {};
+      let reservations = [];
+      let currentFilter = "active";
 
       const today = new Date();
       today.setHours(12, 0, 0, 0);
@@ -118,6 +171,23 @@
         12
       );
 
+      const statusLabels = {
+        new: "Nouvelle demande",
+        pending: "À confirmer",
+        confirmed: "Confirmée",
+        paid: "Payée",
+        completed: "Terminée",
+        cancelled: "Annulée",
+      };
+
+      const escapeHtml = (value) =>
+        String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+
       const formatIsoDate = (date) => {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -141,6 +211,279 @@
         const offset = day === 0 ? -6 : 1 - day;
         result.setDate(result.getDate() + offset);
         return result;
+      };
+
+      const formatDateShort = (iso) => {
+        if (!iso) return "Date non renseignée";
+        const date = new Date(iso + "T12:00:00");
+        if (Number.isNaN(date.getTime())) return iso;
+        return new Intl.DateTimeFormat("fr-FR", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        }).format(date);
+      };
+
+      const deliveryDate = (reservation) => {
+        if (!reservation.weekIso) return "";
+        const date = new Date(reservation.weekIso + "T12:00:00");
+        date.setDate(date.getDate() - 3);
+        return formatDateShort(formatIsoDate(date));
+      };
+
+      const renderPlanning = () => {
+        const upcoming = reservations
+          .filter((item) => !["cancelled", "completed"].includes(item.status))
+          .filter((item) => {
+            if (!item.weekIso) return true;
+            const end = new Date(item.weekIso + "T12:00:00");
+            end.setDate(end.getDate() + Math.max(1, Number(item.duration) || 1) * 7);
+            return end >= today;
+          })
+          .sort((a, b) =>
+            String(a.weekIso || "9999").localeCompare(String(b.weekIso || "9999"))
+          );
+
+        if (!upcoming.length) {
+          planningList.innerHTML =
+            '<div class="empty-card">Aucune location à venir pour le moment.</div>';
+          return;
+        }
+
+        planningList.innerHTML = upcoming.map((item) => `
+          <article class="planning-card">
+            <div class="planning-date">
+              <span>Début</span>
+              <strong>${escapeHtml(formatDateShort(item.weekIso))}</strong>
+              ${item.weekIso ? `<small>Remise prévue : vendredi ${escapeHtml(deliveryDate(item))}</small>` : ""}
+            </div>
+
+            <div class="planning-main">
+              <div class="planning-top">
+                <div>
+                  <span class="reservation-status status-${escapeHtml(item.status)}">
+                    ${escapeHtml(statusLabels[item.status] || item.status)}
+                  </span>
+                  <h3>${escapeHtml(item.organisation || item.name)}</h3>
+                </div>
+                <button type="button" class="small-button" data-open-request="${escapeHtml(item.id)}">
+                  Voir la fiche
+                </button>
+              </div>
+
+              <div class="planning-details">
+                <span><strong>Malle :</strong> ${escapeHtml(item.kit)}</span>
+                <span><strong>Période :</strong> ${escapeHtml(item.week)}</span>
+                <span><strong>Formule :</strong> ${escapeHtml(item.formula)}</span>
+                <span><strong>Tarif :</strong> ${escapeHtml(item.priceSummary || "—")}</span>
+              </div>
+            </div>
+          </article>
+        `).join("");
+
+        planningList.querySelectorAll("[data-open-request]").forEach((button) => {
+          button.addEventListener("click", () => {
+            showTab("requests");
+            currentFilter = "all";
+            document.querySelectorAll(".filter").forEach((filter) => {
+              filter.classList.toggle("active", filter.dataset.filter === "all");
+            });
+            renderRequests();
+            const card = document.querySelector(
+              `[data-request-id="${CSS.escape(button.dataset.openRequest)}"]`
+            );
+            if (card) card.scrollIntoView({ behavior: "smooth", block: "center" });
+          });
+        });
+      };
+
+      const requestMatchesFilter = (item) => {
+        if (currentFilter === "all") return true;
+        if (currentFilter === "completed") {
+          return ["completed", "cancelled"].includes(item.status);
+        }
+        return !["completed", "cancelled"].includes(item.status);
+      };
+
+      const renderRequests = () => {
+        const filtered = reservations.filter(requestMatchesFilter);
+
+        if (!filtered.length) {
+          requestsList.innerHTML =
+            '<div class="empty-card">Aucune demande dans cette catégorie.</div>';
+          return;
+        }
+
+        requestsList.innerHTML = filtered.map((item) => `
+          <article class="request-card" data-request-id="${escapeHtml(item.id)}">
+            <div class="request-head">
+              <div>
+                <span class="reservation-status status-${escapeHtml(item.status)}">
+                  ${escapeHtml(statusLabels[item.status] || item.status)}
+                </span>
+                <h3>${escapeHtml(item.organisation || "Structure non renseignée")}</h3>
+                <p>${escapeHtml(item.name)} · <a href="mailto:${escapeHtml(item.email)}">${escapeHtml(item.email)}</a></p>
+              </div>
+              <div class="request-date">
+                <small>Période souhaitée</small>
+                <strong>${escapeHtml(item.week || "—")}</strong>
+              </div>
+            </div>
+
+            <div class="request-grid">
+              <div><span>Malle</span><strong>${escapeHtml(item.kit || "—")}</strong></div>
+              <div><span>Durée</span><strong>${escapeHtml(item.duration || "1")} semaine(s)</strong></div>
+              <div><span>Formule</span><strong>${escapeHtml(item.formula || "—")}</strong></div>
+              <div><span>Tarif</span><strong>${escapeHtml(item.priceSummary || "—")}</strong></div>
+              <div><span>Âge des enfants</span><strong>${escapeHtml(item.childrenAge || "—")}</strong></div>
+              <div><span>Nombre d’enfants</span><strong>${escapeHtml(item.childrenNumber || "—")}</strong></div>
+            </div>
+
+            ${item.message ? `
+              <div class="customer-message">
+                <span>Message de la structure</span>
+                <p>${escapeHtml(item.message)}</p>
+              </div>
+            ` : ""}
+
+            <div class="management-grid">
+              <div>
+                <label for="status-${escapeHtml(item.id)}">Statut</label>
+                <select id="status-${escapeHtml(item.id)}" data-status-select="${escapeHtml(item.id)}">
+                  ${Object.entries(statusLabels).map(([value, label]) =>
+                    `<option value="${value}" ${item.status === value ? "selected" : ""}>${label}</option>`
+                  ).join("")}
+                </select>
+              </div>
+
+              <div class="notes-field">
+                <label for="notes-${escapeHtml(item.id)}">Mes notes</label>
+                <textarea
+                  id="notes-${escapeHtml(item.id)}"
+                  rows="3"
+                  data-notes="${escapeHtml(item.id)}"
+                  placeholder="Ex. paiement à relancer, horaire de remise, contact…"
+                >${escapeHtml(item.adminNotes || "")}</textarea>
+              </div>
+            </div>
+
+            <div class="request-actions">
+              <button type="button" data-save-request="${escapeHtml(item.id)}">
+                Enregistrer les modifications
+              </button>
+              <button type="button" class="delete-button" data-delete-request="${escapeHtml(item.id)}">
+                Supprimer
+              </button>
+              <span class="inline-status" data-inline-status="${escapeHtml(item.id)}"></span>
+            </div>
+          </article>
+        `).join("");
+
+        requestsList.querySelectorAll("[data-save-request]").forEach((button) => {
+          button.addEventListener("click", () => saveReservation(button.dataset.saveRequest));
+        });
+
+        requestsList.querySelectorAll("[data-delete-request]").forEach((button) => {
+          button.addEventListener("click", () => deleteReservation(button.dataset.deleteRequest));
+        });
+      };
+
+      const updateNewCount = () => {
+        const count = reservations.filter((item) => item.status === "new").length;
+        newCount.hidden = count === 0;
+        newCount.textContent = count ? String(count) : "";
+      };
+
+      const loadReservations = async () => {
+        const response = await fetch("/api/admin/reservations", {
+          headers: { "x-admin-key": adminKey },
+        });
+        const result = await response.json();
+
+        if (!response.ok || !result.ok) {
+          throw new Error(result.error || "Impossible de charger les réservations.");
+        }
+
+        reservations = result.reservations || [];
+        updateNewCount();
+        renderPlanning();
+        renderRequests();
+      };
+
+      const saveReservation = async (id) => {
+        const item = reservations.find((reservation) => reservation.id === id);
+        if (!item) return;
+
+        const statusSelect = document.querySelector(
+          `[data-status-select="${CSS.escape(id)}"]`
+        );
+        const notesField = document.querySelector(
+          `[data-notes="${CSS.escape(id)}"]`
+        );
+        const inlineStatus = document.querySelector(
+          `[data-inline-status="${CSS.escape(id)}"]`
+        );
+
+        inlineStatus.textContent = "Enregistrement…";
+
+        try {
+          const response = await fetch("/api/admin/reservations", {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              "x-admin-key": adminKey,
+            },
+            body: JSON.stringify({
+              ...item,
+              status: statusSelect.value,
+              adminNotes: notesField.value,
+            }),
+          });
+
+          const result = await response.json();
+
+          if (!response.ok || !result.ok) {
+            throw new Error(result.error || "Modification impossible.");
+          }
+
+          reservations = result.reservations || [];
+          await loadAvailability();
+          updateNewCount();
+          renderPlanning();
+          renderRequests();
+        } catch (error) {
+          inlineStatus.textContent = error.message || "Modification impossible.";
+        }
+      };
+
+      const deleteReservation = async (id) => {
+        if (!confirm("Supprimer définitivement cette réservation de votre gestion ?")) {
+          return;
+        }
+
+        try {
+          const response = await fetch("/api/admin/reservations", {
+            method: "DELETE",
+            headers: {
+              "content-type": "application/json",
+              "x-admin-key": adminKey,
+            },
+            body: JSON.stringify({ id }),
+          });
+
+          const result = await response.json();
+
+          if (!response.ok || !result.ok) {
+            throw new Error(result.error || "Suppression impossible.");
+          }
+
+          reservations = result.reservations || [];
+          updateNewCount();
+          renderPlanning();
+          renderRequests();
+        } catch (error) {
+          alert(error.message || "Suppression impossible.");
+        }
       };
 
       const renderWeeks = () => {
@@ -193,29 +536,18 @@
             </div>
 
             <div class="status-actions" aria-label="Modifier le statut">
-              <button type="button" data-status="available">
-                Disponible
-              </button>
-              <button type="button" data-status="pending">
-                En attente
-              </button>
-              <button type="button" data-status="booked">
-                Réservée
-              </button>
+              <button type="button" data-status="available">Disponible</button>
+              <button type="button" data-status="pending">En attente</button>
+              <button type="button" data-status="booked">Réservée</button>
             </div>
           `;
 
-          card
-            .querySelectorAll("[data-status]")
-            .forEach((button) => {
-              if (button.dataset.status === status) {
-                button.classList.add("active");
-              }
-
-              button.addEventListener("click", async () => {
-                await updateStatus(iso, button.dataset.status);
-              });
+          card.querySelectorAll("[data-status]").forEach((button) => {
+            if (button.dataset.status === status) button.classList.add("active");
+            button.addEventListener("click", async () => {
+              await updateStatus(iso, button.dataset.status);
             });
+          });
 
           weeksContainer.appendChild(card);
         }
@@ -223,11 +555,8 @@
 
       const loadAvailability = async () => {
         const response = await fetch("/api/admin/availability", {
-          headers: {
-            "x-admin-key": adminKey,
-          },
+          headers: { "x-admin-key": adminKey },
         });
-
         const result = await response.json();
 
         if (!response.ok || !result.ok) {
@@ -235,6 +564,7 @@
         }
 
         availability = result.availability || {};
+        renderWeeks();
       };
 
       const updateStatus = async (week, status) => {
@@ -253,9 +583,7 @@
           const result = await response.json();
 
           if (!response.ok || !result.ok) {
-            throw new Error(
-              result.error || "La modification n’a pas pu être enregistrée."
-            );
+            throw new Error(result.error || "La modification n’a pas pu être enregistrée.");
           }
 
           availability = result.availability || {};
@@ -267,22 +595,45 @@
         }
       };
 
+      const showTab = (name) => {
+        document.querySelectorAll(".tab").forEach((button) => {
+          button.classList.toggle("active", button.dataset.tab === name);
+        });
+
+        document.querySelectorAll(".tab-panel").forEach((panel) => {
+          panel.hidden = panel.id !== `tab-${name}`;
+        });
+      };
+
+      document.querySelectorAll(".tab").forEach((button) => {
+        button.addEventListener("click", () => showTab(button.dataset.tab));
+      });
+
+      document.querySelectorAll(".filter").forEach((button) => {
+        button.addEventListener("click", () => {
+          currentFilter = button.dataset.filter;
+          document.querySelectorAll(".filter").forEach((filter) => {
+            filter.classList.toggle("active", filter === button);
+          });
+          renderRequests();
+        });
+      });
+
       loginForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         loginStatus.textContent = "Vérification…";
         adminKey = passwordInput.value;
 
         try {
-          await loadAvailability();
+          await Promise.all([loadAvailability(), loadReservations()]);
           passwordInput.value = "";
           loginCard.hidden = true;
           adminPanel.hidden = false;
           loginStatus.textContent = "";
-          renderWeeks();
+          showTab("planning");
         } catch (error) {
           adminKey = "";
-          loginStatus.textContent =
-            error.message || "Mot de passe incorrect.";
+          loginStatus.textContent = error.message || "Mot de passe incorrect.";
         }
       });
 
@@ -309,265 +660,42 @@
 
     <style>
       :global(*) { box-sizing: border-box; }
-
-      :global(body) {
-        margin: 0;
-        background: #f9f7f2;
-        color: #292b23;
-        font-family: Georgia, "Times New Roman", serif;
-      }
-
-      .hero {
-        padding: 70px 24px 55px;
-        background: #596243;
-        color: #fffdf8;
-        text-align: center;
-      }
-
-      .eyebrow {
-        margin: 0 0 10px;
-        color: rgba(255,255,255,.72);
-        font: .73rem Arial, Helvetica, sans-serif;
-        letter-spacing: .11em;
-        text-transform: uppercase;
-      }
-
-      .hero h1 {
-        margin: 0 0 15px;
-        font-size: clamp(2.5rem, 6vw, 4.5rem);
-        font-weight: 500;
-      }
-
-      .hero p:last-child {
-        max-width: 650px;
-        margin: 0 auto;
-        line-height: 1.6;
-      }
-
-      .admin-wrap {
-        width: min(980px, 90%);
-        margin: 0 auto;
-        padding: 55px 0 80px;
-      }
-
-      .login-card {
-        max-width: 520px;
-        margin: 0 auto;
-        padding: 32px;
-        border: 1px solid #dedbd2;
-        border-radius: 9px;
-        background: #fffefa;
-      }
-
-      .login-card h2 {
-        margin: 0 0 10px;
-        font-size: 1.8rem;
-        font-weight: 500;
-      }
-
-      .login-card p {
-        line-height: 1.6;
-      }
-
-      .login-card label {
-        display: block;
-        margin: 20px 0 8px;
-        font: 600 .84rem Arial, Helvetica, sans-serif;
-      }
-
-      .login-card input {
-        width: 100%;
-        min-height: 48px;
-        padding: 12px 14px;
-        border: 1px solid #cac7bd;
-        border-radius: 4px;
-        background: #fff;
-        font-size: 1rem;
-      }
-
-      .login-card button {
-        width: 100%;
-        min-height: 48px;
-        margin-top: 14px;
-        border: 0;
-        border-radius: 4px;
-        background: #7d8957;
-        color: #fff;
-        cursor: pointer;
-        font-weight: 700;
-      }
-
-      .toolbar {
-        display: grid;
-        grid-template-columns: 48px 1fr 48px;
-        align-items: center;
-        gap: 16px;
-        margin-bottom: 18px;
-      }
-
-      .toolbar > div {
-        text-align: center;
-      }
-
-      .toolbar span {
-        display: block;
-        color: #85867d;
-        font: .7rem Arial, Helvetica, sans-serif;
-        letter-spacing: .08em;
-        text-transform: uppercase;
-      }
-
-      .toolbar strong {
-        display: block;
-        margin-top: 4px;
-        font-size: 1.5rem;
-        font-weight: 500;
-        text-transform: capitalize;
-      }
-
-      .month-button {
-        width: 46px;
-        height: 46px;
-        border: 1px solid #cac7bd;
-        border-radius: 50%;
-        background: #fff;
-        color: #596243;
-        cursor: pointer;
-        font-size: 1.2rem;
-      }
-
-      .month-button:disabled {
-        opacity: .35;
-        cursor: not-allowed;
-      }
-
-      .legend {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 18px;
-        margin-bottom: 22px;
-        color: #64665c;
-        font: .8rem Arial, Helvetica, sans-serif;
-      }
-
-      .legend span {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-      }
-
-      .dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-      }
-
-      .dot.available { background: #5f8a3f; }
-      .dot.pending { background: #c59e5d; }
-      .dot.booked { background: #9b9b92; }
-
-      .weeks {
-        display: grid;
-        gap: 12px;
-      }
-
-      :global(.week-card) {
-        padding: 18px;
-        border: 1px solid #dedbd2;
-        border-radius: 7px;
-        background: #fffefa;
-      }
-
-      :global(.week-card.available) {
-        border-color: #a8b88f;
-        background: #e6efdd;
-      }
-
-      :global(.week-card.pending) {
-        border-color: #d3bb91;
-        background: #f7efdf;
-      }
-
-      :global(.week-card.booked) {
-        background: #f0efeb;
-      }
-
-      :global(.week-info) {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 16px;
-        margin-bottom: 14px;
-      }
-
-      :global(.week-info strong) {
-        font-size: 1rem;
-      }
-
-      :global(.current-status) {
-        flex: 0 0 auto;
-        font: 700 .76rem Arial, Helvetica, sans-serif;
-        text-transform: uppercase;
-      }
-
-      :global(.available .current-status) { color: #3f642c; }
-      :global(.pending .current-status) { color: #9b6a21; }
-      :global(.booked .current-status) { color: #6f7068; }
-
-      :global(.status-actions) {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 8px;
-      }
-
-      :global(.status-actions button) {
-        min-height: 44px;
-        padding: 10px;
-        border: 1px solid #c9c7bf;
-        border-radius: 5px;
-        background: #fff;
-        color: #45473f;
-        cursor: pointer;
-        font: 600 .8rem Arial, Helvetica, sans-serif;
-      }
-
-      :global(.status-actions button.active) {
-        border-color: #596243;
-        background: #596243;
-        color: #fff;
-      }
-
-      .status {
-        min-height: 22px;
-        margin: 14px 0 0;
-        color: #596243;
-        line-height: 1.5;
-      }
-
-      .save-status {
-        text-align: center;
-      }
-
-      @media (max-width: 650px) {
-        .admin-wrap {
-          width: 92%;
-          padding-top: 35px;
-        }
-
-        :global(.week-info) {
-          display: block;
-        }
-
-        :global(.current-status) {
-          display: block;
-          margin-top: 6px;
-        }
-
-        :global(.status-actions) {
-          grid-template-columns: 1fr;
-        }
-      }
+      :global(body) { margin:0;background:#f9f7f2;color:#292b23;font-family:Georgia,"Times New Roman",serif; }
+      button,input,select,textarea { font: inherit; }
+      .hero{padding:70px 24px 55px;background:#596243;color:#fffdf8;text-align:center}
+      .eyebrow{margin:0 0 10px;color:rgba(255,255,255,.72);font:.73rem Arial,Helvetica,sans-serif;letter-spacing:.11em;text-transform:uppercase}
+      .hero h1{margin:0 0 15px;font-size:clamp(2.5rem,6vw,4.5rem);font-weight:500}
+      .hero p:last-child{max-width:680px;margin:0 auto;line-height:1.6}
+      .admin-wrap{width:min(1100px,92%);margin:0 auto;padding:45px 0 80px}
+      .login-card{max-width:520px;margin:0 auto;padding:32px;border:1px solid #dedbd2;border-radius:9px;background:#fffefa}
+      .login-card h2{margin:0 0 10px;font-size:1.8rem;font-weight:500}
+      .login-card p{line-height:1.6}.login-card label{display:block;margin:20px 0 8px;font:600 .84rem Arial,Helvetica,sans-serif}
+      .login-card input{width:100%;min-height:48px;padding:12px 14px;border:1px solid #cac7bd;border-radius:4px;background:#fff;font-size:1rem}
+      .login-card button,.request-actions button,.small-button{min-height:44px;padding:10px 16px;border:0;border-radius:4px;background:#7d8957;color:#fff;cursor:pointer;font-weight:700}
+      .login-card button{width:100%;margin-top:14px}
+      .tabs{display:flex;gap:8px;padding:7px;background:#ece9e1;border-radius:8px;margin-bottom:38px;overflow-x:auto}
+      .tab{position:relative;flex:1;min-width:150px;padding:13px 16px;border:0;border-radius:6px;background:transparent;color:#505249;cursor:pointer;font-weight:700}
+      .tab.active{background:#fffefa;color:#4c5737;box-shadow:0 1px 5px rgba(40,40,30,.08)}
+      .count{display:inline-flex;align-items:center;justify-content:center;min-width:21px;height:21px;margin-left:6px;padding:0 6px;border-radius:11px;background:#9b6a21;color:white;font-size:.72rem}
+      .section-heading{max-width:720px;margin:0 auto 28px;text-align:center}.section-heading h2{margin:0 0 10px;font-size:clamp(2rem,3.5vw,2.8rem);font-weight:500}.section-heading p:last-child{margin:0;color:#67695f;line-height:1.6}.section-eyebrow{margin:0 0 8px;color:#74785e;font:700 .72rem Arial,Helvetica,sans-serif;letter-spacing:.09em;text-transform:uppercase}
+      .planning-list,.requests-list{display:grid;gap:15px}
+      .planning-card{display:grid;grid-template-columns:210px 1fr;border:1px solid #dedbd2;border-radius:8px;background:#fffefa;overflow:hidden}
+      .planning-date{padding:22px;background:#eef0e3}.planning-date span,.planning-date small{display:block;font-family:Arial,Helvetica,sans-serif}.planning-date span{margin-bottom:7px;color:#74785e;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em}.planning-date strong{display:block;font-size:1.05rem;line-height:1.35}.planning-date small{margin-top:12px;color:#67695f;font-size:.75rem;line-height:1.45}
+      .planning-main{padding:22px}.planning-top{display:flex;justify-content:space-between;gap:20px;align-items:flex-start}.planning-top h3{margin:7px 0 0;font-size:1.35rem;font-weight:500}.small-button{min-height:38px!important;padding:8px 12px!important;font-size:.78rem}
+      .planning-details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 20px;margin-top:18px;color:#5c5e55;font:.83rem/1.45 Arial,Helvetica,sans-serif}
+      .reservation-status{display:inline-block;padding:5px 8px;border-radius:12px;font:700 .67rem Arial,Helvetica,sans-serif;text-transform:uppercase;letter-spacing:.04em}.status-new{background:#f5e4c7;color:#895b16}.status-pending{background:#f7efdf;color:#8a6329}.status-confirmed{background:#e6efdd;color:#45652f}.status-paid{background:#dfe8d4;color:#375923}.status-completed{background:#e8e8e3;color:#66685f}.status-cancelled{background:#efe4e2;color:#865b54}
+      .empty-card{padding:38px;text-align:center;border:1px dashed #cac7bd;border-radius:8px;color:#74766c}
+      .filters{display:flex;justify-content:center;gap:8px;margin-bottom:20px;flex-wrap:wrap}.filter{padding:9px 14px;border:1px solid #cac7bd;border-radius:20px;background:#fff;color:#55574e;cursor:pointer}.filter.active{border-color:#596243;background:#596243;color:#fff}
+      .request-card{padding:24px;border:1px solid #dedbd2;border-radius:8px;background:#fffefa}.request-head{display:flex;justify-content:space-between;gap:25px;padding-bottom:18px;border-bottom:1px solid #e2dfd6}.request-head h3{margin:8px 0 5px;font-size:1.45rem;font-weight:500}.request-head p{margin:0;color:#66685f;font:.82rem Arial,Helvetica,sans-serif}.request-head a{color:#596243}.request-date{text-align:right;max-width:320px}.request-date small{display:block;margin-bottom:5px;color:#85867d;font:.68rem Arial,Helvetica,sans-serif;text-transform:uppercase}.request-date strong{font-size:.9rem;line-height:1.4}
+      .request-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}.request-grid div{padding:12px;background:#f3f1eb;border-radius:5px}.request-grid span,.request-grid strong{display:block}.request-grid span{margin-bottom:5px;color:#85867d;font:.67rem Arial,Helvetica,sans-serif;text-transform:uppercase}.request-grid strong{font-size:.88rem}
+      .customer-message{margin:18px 0;padding:15px 17px;border-left:3px solid #b6bd9a;background:#f6f5ef}.customer-message span{font:700 .7rem Arial,Helvetica,sans-serif;text-transform:uppercase;color:#74785e}.customer-message p{margin:7px 0 0;white-space:pre-wrap;line-height:1.55}
+      .management-grid{display:grid;grid-template-columns:240px 1fr;gap:18px;margin-top:20px}.management-grid label{display:block;margin-bottom:7px;font:700 .78rem Arial,Helvetica,sans-serif}.management-grid select,.management-grid textarea{width:100%;padding:11px 12px;border:1px solid #cac7bd;border-radius:4px;background:#fff}.management-grid textarea{resize:vertical}
+      .request-actions{display:flex;align-items:center;gap:10px;margin-top:15px;flex-wrap:wrap}.delete-button{background:#8b665e!important}.inline-status{color:#596243;font:.8rem Arial,Helvetica,sans-serif}
+      .toolbar{display:grid;grid-template-columns:48px 1fr 48px;align-items:center;gap:16px;margin-bottom:18px}.toolbar>div{text-align:center}.toolbar span{display:block;color:#85867d;font:.7rem Arial,Helvetica,sans-serif;letter-spacing:.08em;text-transform:uppercase}.toolbar strong{display:block;margin-top:4px;font-size:1.5rem;font-weight:500;text-transform:capitalize}.month-button{width:46px;height:46px;border:1px solid #cac7bd;border-radius:50%;background:#fff;color:#596243;cursor:pointer;font-size:1.2rem}.month-button:disabled{opacity:.35;cursor:not-allowed}
+      .legend{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;margin-bottom:22px;color:#64665c;font:.8rem Arial,Helvetica,sans-serif}.legend span{display:inline-flex;align-items:center;gap:7px}.dot{width:10px;height:10px;border-radius:50%}.dot.available{background:#5f8a3f}.dot.pending{background:#c59e5d}.dot.booked{background:#9b9b92}.weeks{display:grid;gap:12px}
+      :global(.week-card){padding:18px;border:1px solid #dedbd2;border-radius:7px;background:#fffefa}:global(.week-card.available){border-color:#a8b88f;background:#e6efdd}:global(.week-card.pending){border-color:#d3bb91;background:#f7efdf}:global(.week-card.booked){background:#f0efeb}:global(.week-info){display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:14px}:global(.week-info strong){font-size:1rem}:global(.current-status){flex:0 0 auto;font:700 .76rem Arial,Helvetica,sans-serif;text-transform:uppercase}:global(.available .current-status){color:#3f642c}:global(.pending .current-status){color:#9b6a21}:global(.booked .current-status){color:#6f7068}:global(.status-actions){display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}:global(.status-actions button){min-height:44px;padding:10px;border:1px solid #c9c7bf;border-radius:5px;background:#fff;color:#45473f;cursor:pointer;font:600 .8rem Arial,Helvetica,sans-serif}:global(.status-actions button.active){border-color:#596243;background:#596243;color:#fff}
+      .status{min-height:22px;margin:14px 0 0;color:#596243;line-height:1.5}.save-status{text-align:center}
+      @media(max-width:760px){.admin-wrap{width:94%;padding-top:30px}.planning-card{grid-template-columns:1fr}.planning-date{padding:16px 20px}.planning-main{padding:20px}.planning-top,.request-head{flex-direction:column}.request-date{text-align:left;max-width:none}.planning-details,.request-grid{grid-template-columns:1fr}.management-grid{grid-template-columns:1fr}.tabs{margin-bottom:28px}.tab{min-width:135px}:global(.week-info){display:block}:global(.current-status){display:block;margin-top:6px}:global(.status-actions){grid-template-columns:1fr}}
     </style>
   </body>
 </html>
