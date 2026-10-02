@@ -83,6 +83,11 @@ const nav = [
 
       </section>
 
+      <div class="hero-credit">
+        <span>Photo : Bulat Khamitov</span>
+        <span class="living-note">Rencontrer le vivant</span>
+      </div>
+
 
       <!-- COMMENT ÇA FONCTIONNE -->
       <section class="approach" id="fonctionnement">
@@ -416,6 +421,30 @@ const nav = [
 
         font-size: 1.05rem;
         line-height: 1.45;
+      }
+
+
+      .hero-credit {
+        padding: 9px 5.5% 8px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
+        background: #f9f7f6;
+        color: #85867d;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 0.72rem;
+      }
+
+      .hero-credit span:first-child::after {
+        content: "·";
+        margin-left: 10px;
+        color: #a5a69d;
+      }
+
+      .living-note {
+        color: #687347;
+        font-weight: 700;
       }
 
 
@@ -808,6 +837,12 @@ const nav = [
 
         .hero p {
           margin-bottom: 24px;
+        }
+
+        .hero-credit {
+          padding: 9px 22px 8px;
+          justify-content: flex-start;
+          flex-wrap: wrap;
         }
 
 
