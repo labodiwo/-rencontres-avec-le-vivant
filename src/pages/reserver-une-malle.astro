@@ -49,8 +49,8 @@ const nav = [
           <p class="eyebrow light">Demande de réservation</p>
           <h1>Réserver une malle</h1>
           <p>
-            Choisissez une semaine, indiquez la formule souhaitée
-            et transmettez les informations utiles pour préparer votre demande.
+            Choisissez la durée, les dates et la formule souhaitées,
+            puis transmettez les informations utiles pour préparer votre demande.
           </p>
         </div>
       </section>
@@ -58,11 +58,12 @@ const nav = [
       <section class="booking-intro">
         <div class="booking-intro-inner">
           <p class="eyebrow">Avant de réserver</p>
-          <h2>Choisissez votre semaine</h2>
+          <h2>Choisissez la durée de votre location</h2>
           <p>
-            La location est prévue du <strong>lundi au vendredi inclus</strong>.
-            La malle est remise le vendredi précédent afin que votre équipe
-            puisse l’installer et être prête dès le lundi.
+            Vous pouvez louer la malle pendant <strong>1 semaine, 2 semaines
+            ou 4 semaines consécutives</strong>. La malle est remise le vendredi
+            précédant le début de la location afin que votre équipe puisse
+            l’installer et être prête dès le lundi.
           </p>
           <p>
             Dès confirmation de la réservation, le livret pédagogique
@@ -75,11 +76,27 @@ const nav = [
       <section class="calendar-section">
         <div class="section-heading">
           <p class="eyebrow">Disponibilités</p>
-          <h2>Choisissez votre semaine de location</h2>
+          <h2>Choisissez votre période de location</h2>
           <p>
-            Le calendrier est indicatif. Une réservation devient définitive
-            uniquement après confirmation.
+            Commencez par choisir la durée, puis sélectionnez la première
+            semaine souhaitée. Le calendrier vérifie automatiquement les
+            semaines consécutives nécessaires.
           </p>
+        </div>
+
+        <div class="duration-choice" aria-label="Durée de location">
+          <button type="button" class="duration-option selected" data-duration="1" data-price="200">
+            <span>1 semaine</span>
+            <strong>200 €</strong>
+          </button>
+          <button type="button" class="duration-option" data-duration="2" data-price="370">
+            <span>2 semaines</span>
+            <strong>370 €</strong>
+          </button>
+          <button type="button" class="duration-option" data-duration="4" data-price="640">
+            <span>4 semaines</span>
+            <strong>640 €</strong>
+          </button>
         </div>
 
         <div class="calendar-box">
@@ -118,8 +135,8 @@ const nav = [
         </div>
 
         <p class="calendar-note">
-          Cliquez sur une semaine disponible, du lundi au vendredi inclus. Elle sera automatiquement
-          ajoutée à votre demande de réservation.
+          Cliquez sur la première semaine souhaitée. Les semaines consécutives
+          correspondant à la durée choisie seront ajoutées automatiquement à votre demande.
         </p>
       </section>
 
@@ -150,13 +167,35 @@ const nav = [
             </select>
           </div>
 
+          <div class="field-row">
+            <div class="field">
+              <label for="duration">Durée <span aria-hidden="true">*</span></label>
+              <select id="duration" name="duration" required>
+                <option value="1">1 semaine · 200 €</option>
+                <option value="2">2 semaines · 370 €</option>
+                <option value="4">4 semaines · 640 €</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="price-summary">Tarif estimé</label>
+              <input
+                id="price-summary"
+                name="price-summary"
+                type="text"
+                value="200 € · formule autonome"
+                readonly
+              />
+            </div>
+          </div>
+
           <div class="field">
-            <label for="week">Semaine souhaitée <span aria-hidden="true">*</span></label>
+            <label for="week">Période souhaitée <span aria-hidden="true">*</span></label>
             <input
               id="week"
               name="week"
               type="text"
-              placeholder="Sélectionnez une semaine dans le calendrier"
+              placeholder="Sélectionnez votre période dans le calendrier"
               readonly
               required
             />
@@ -166,9 +205,9 @@ const nav = [
             <label for="formula">Formule souhaitée <span aria-hidden="true">*</span></label>
             <select id="formula" name="formula" required>
               <option value="">Choisir une formule</option>
-              <option value="Autonome">Formule autonome</option>
-              <option value="Présentation">Formule avec présentation</option>
-              <option value="Animation">Formule avec animation</option>
+              <option value="Autonome">Formule autonome · inclus</option>
+              <option value="Présentation">Avec présentation à l’équipe · + 60 €</option>
+              <option value="Animation">Avec animation enfants · + 140 €</option>
             </select>
           </div>
 
@@ -281,6 +320,10 @@ const nav = [
 
       const grid = document.getElementById("weeks-grid");
       const weekInput = document.getElementById("week");
+      const durationSelect = document.getElementById("duration");
+      const formulaSelect = document.getElementById("formula");
+      const priceSummaryInput = document.getElementById("price-summary");
+      const durationButtons = document.querySelectorAll(".duration-option");
       const bookingForm = document.getElementById("booking-form");
       const formStatus = document.getElementById("form-status");
       const currentMonthLabel = document.getElementById("current-month");
@@ -289,6 +332,20 @@ const nav = [
       let turnstileToken = "";
       let turnstileWidgetId = null;
       let selectedWeekIso = "";
+      let selectedDuration = 1;
+
+      const basePrices = {
+        1: 200,
+        2: 370,
+        4: 640,
+      };
+
+      const formulaSupplements = {
+        "": 0,
+        Autonome: 0,
+        Présentation: 60,
+        Animation: 140,
+      };
 
       const today = new Date();
       today.setHours(12, 0, 0, 0);
@@ -393,6 +450,93 @@ const nav = [
         return friday < today;
       };
 
+      const getRentalWeeks = (startMonday, duration = selectedDuration) => {
+        const weeks = [];
+
+        for (let index = 0; index < duration; index += 1) {
+          const monday = new Date(startMonday);
+          monday.setDate(startMonday.getDate() + index * 7);
+          monday.setHours(12, 0, 0, 0);
+          weeks.push(monday);
+        }
+
+        return weeks;
+      };
+
+      const getWeekStatus = (monday) => {
+        if (isPastWeek(monday)) return "booked";
+        return availability[formatIsoDate(monday)] || "available";
+      };
+
+      const isRangeAvailable = (startMonday) =>
+        getRentalWeeks(startMonday).every(
+          (monday) => getWeekStatus(monday) === "available",
+        );
+
+      const formatRentalPeriod = (startMonday) => {
+        const weeks = getRentalWeeks(startMonday);
+        const firstMonday = weeks[0];
+        const lastFriday = new Date(weeks[weeks.length - 1]);
+        lastFriday.setDate(lastFriday.getDate() + 4);
+
+        if (weeks.length === 1) {
+          return formatWeekLabel(firstMonday, lastFriday);
+        }
+
+        return `Du lundi ${new Intl.DateTimeFormat("fr-FR", {
+          day: "numeric",
+          month: "long",
+        }).format(firstMonday)} au vendredi ${new Intl.DateTimeFormat("fr-FR", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        }).format(lastFriday)} · ${weeks.length} semaines`;
+      };
+
+      const selectedWeekIsos = () => {
+        if (!selectedWeekIso) return [];
+
+        const [year, month, day] = selectedWeekIso.split("-").map(Number);
+        const monday = new Date(year, month - 1, day, 12);
+
+        return getRentalWeeks(monday).map(formatIsoDate);
+      };
+
+      const updatePriceSummary = () => {
+        const duration = Number(durationSelect.value || selectedDuration || 1);
+        const formula = formulaSelect.value;
+        const base = basePrices[duration] || 0;
+        const supplement = formulaSupplements[formula] || 0;
+        const total = base + supplement;
+
+        const formulaLabel =
+          formula === "Présentation"
+            ? "avec présentation"
+            : formula === "Animation"
+              ? "avec animation"
+              : "formule autonome";
+
+        priceSummaryInput.value = `${total} € · ${formulaLabel}`;
+      };
+
+      const setDuration = (duration) => {
+        selectedDuration = Number(duration);
+        durationSelect.value = String(selectedDuration);
+
+        durationButtons.forEach((button) => {
+          button.classList.toggle(
+            "selected",
+            Number(button.dataset.duration) === selectedDuration,
+          );
+        });
+
+        selectedWeekIso = "";
+        weekInput.value = "";
+        formStatus.textContent = "";
+        updatePriceSummary();
+        renderCalendar();
+      };
+
       const renderCalendar = () => {
         grid.innerHTML = "";
 
@@ -423,23 +567,24 @@ const nav = [
           friday.setDate(weekMonday.getDate() + 4);
 
           const iso = formatIsoDate(weekMonday);
-          let status = availability[iso] || "available";
-
-          if (isPastWeek(weekMonday)) {
-            status = "booked";
-          }
+          let status = getWeekStatus(weekMonday);
 
           const week = document.createElement("div");
           week.className = `calendar-week ${status}`;
 
-          if (iso === selectedWeekIso) {
+          if (selectedWeekIsos().includes(iso)) {
             week.classList.add("selected");
           }
+
+          const rangeAvailable =
+            status === "available" && isRangeAvailable(weekMonday);
 
           const statusText =
             isPastWeek(weekMonday)
               ? "Passée"
-              : statusLabels[status];
+              : status === "available" && !rangeAvailable
+                ? "Période indisponible"
+                : statusLabels[status];
 
           week.innerHTML = `
             <div class="week-topline">
@@ -450,19 +595,19 @@ const nav = [
               <button
                 type="button"
                 class="select-week"
-                ${status !== "available" ? "disabled" : ""}
+                ${!rangeAvailable ? "disabled" : ""}
               >
-                ${iso === selectedWeekIso ? "Sélectionnée" : "Choisir"}
+                ${selectedWeekIsos().includes(iso) ? "Sélectionnée" : "Choisir"}
               </button>
             </div>
           `;
 
-          if (status === "available") {
+          if (rangeAvailable) {
             const selectButton = week.querySelector(".select-week");
 
             selectButton.addEventListener("click", () => {
               selectedWeekIso = iso;
-              weekInput.value = formatWeekLabel(weekMonday, friday);
+              weekInput.value = formatRentalPeriod(weekMonday);
               renderCalendar();
 
               document
@@ -475,6 +620,20 @@ const nav = [
           monday.setDate(monday.getDate() + 7);
         }
       };
+
+      durationButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          setDuration(Number(button.dataset.duration));
+        });
+      });
+
+      durationSelect.addEventListener("change", () => {
+        setDuration(Number(durationSelect.value));
+      });
+
+      formulaSelect.addEventListener("change", updatePriceSummary);
+
+      updatePriceSummary();
 
       previousMonthButton.addEventListener("click", () => {
         displayedMonth = new Date(
@@ -518,7 +677,7 @@ const nav = [
 
         if (!weekInput.value) {
           formStatus.textContent =
-            "Choisissez d’abord une semaine disponible dans le calendrier.";
+            "Choisissez d’abord une période disponible dans le calendrier.";
           return;
         }
 
@@ -534,7 +693,9 @@ const nav = [
         const payload = {
           kit: formData.get("kit"),
           week: formData.get("week"),
+          duration: formData.get("duration"),
           formula: formData.get("formula"),
+          priceSummary: formData.get("price-summary"),
           name: formData.get("name"),
           email: formData.get("email"),
           organisation: formData.get("organisation"),
@@ -573,6 +734,15 @@ const nav = [
           bookingForm.reset();
           turnstileToken = "";
           selectedWeekIso = "";
+          selectedDuration = 1;
+          durationSelect.value = "1";
+          durationButtons.forEach((button) => {
+            button.classList.toggle(
+              "selected",
+              Number(button.dataset.duration) === 1,
+            );
+          });
+          updatePriceSummary();
           renderCalendar();
 
           if (
@@ -738,6 +908,43 @@ const nav = [
         line-height: 1.6;
       }
 
+      .duration-choice {
+        max-width: 820px;
+        margin: 0 auto 24px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .duration-option {
+        padding: 18px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        border: 1px solid #cfcac0;
+        border-radius: 7px;
+        background: #fffefa;
+        color: #42453a;
+        cursor: pointer;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .duration-option span {
+        font-size: .84rem;
+        font-weight: 700;
+      }
+
+      .duration-option strong {
+        color: #596243;
+        font-size: 1.35rem;
+      }
+
+      .duration-option.selected {
+        border-color: #7d8957;
+        background: #e6efdd;
+        box-shadow: 0 0 0 2px rgba(125, 137, 87, .12);
+      }
+
       .calendar-box {
         max-width: 960px;
         margin: 0 auto;
@@ -836,6 +1043,7 @@ const nav = [
 
       :global(.calendar-week.selected) {
         border-color: #596243;
+        background: #dce8cf;
         box-shadow: 0 0 0 2px rgba(89, 98, 67, .11);
       }
 
@@ -1177,7 +1385,8 @@ const nav = [
           padding: 50px 24px;
         }
 
-        .field-row {
+        .field-row,
+        .duration-choice {
           grid-template-columns: 1fr;
         }
 
