@@ -182,7 +182,7 @@ const formulas = [
 
         <div class="duration-grid">
 
-          <article class="duration-card featured">
+          <button type="button" class="duration-card selected" data-duration="1" aria-pressed="true">
 
             <p class="duration-label">
               1 semaine
@@ -197,10 +197,10 @@ const formulas = [
               d’animations autour du thème.
             </p>
 
-          </article>
+          </button>
 
 
-          <article class="duration-card">
+          <button type="button" class="duration-card" data-duration="2" aria-pressed="false">
 
             <p class="duration-label">
               2 semaines consécutives
@@ -215,10 +215,10 @@ const formulas = [
               plusieurs propositions au même groupe.
             </p>
 
-          </article>
+          </button>
 
 
-          <article class="duration-card">
+          <button type="button" class="duration-card" data-duration="4" aria-pressed="false">
 
             <p class="duration-label">
               4 semaines consécutives
@@ -234,7 +234,7 @@ const formulas = [
               ou pour l’utiliser avec plusieurs groupes.
             </p>
 
-          </article>
+          </button>
 
         </div>
 
@@ -267,8 +267,9 @@ const formulas = [
           </p>
 
           <a
+            id="pricing-reservation-link"
             class="primary-button"
-            href="/reserver-une-malle"
+            href="/reserver-une-malle?duration=1"
           >
             Voir les disponibilités et réserver
             <span aria-hidden="true">→</span>
@@ -728,6 +729,26 @@ const formulas = [
 
 
 
+    <script is:inline>
+      const durationCards = document.querySelectorAll(".duration-card[data-duration]");
+      const pricingReservationLink = document.getElementById("pricing-reservation-link");
+
+      durationCards.forEach((card) => {
+        card.addEventListener("click", () => {
+          const duration = card.dataset.duration;
+
+          durationCards.forEach((otherCard) => {
+            const selected = otherCard === card;
+            otherCard.classList.toggle("selected", selected);
+            otherCard.setAttribute("aria-pressed", selected ? "true" : "false");
+          });
+
+          pricingReservationLink.href =
+            "/reserver-une-malle?duration=" + encodeURIComponent(duration);
+        });
+      });
+    </script>
+
     <style>
 
 
@@ -1002,15 +1023,25 @@ const formulas = [
 
 
       .duration-card {
+        width: 100%;
         padding: 30px;
         background: #f9f7f2;
         border: 1px solid rgba(89, 98, 67, 0.16);
         border-radius: 9px;
+        color: inherit;
+        text-align: left;
+        cursor: pointer;
+        font: inherit;
+        transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
       }
 
+      .duration-card:hover {
+        transform: translateY(-2px);
+      }
 
-      .duration-card.featured {
+      .duration-card.selected {
         border: 2px solid #7d8957;
+        box-shadow: 0 0 0 2px rgba(125, 137, 87, .12);
       }
 
 
