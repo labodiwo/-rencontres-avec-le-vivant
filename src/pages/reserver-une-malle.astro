@@ -303,6 +303,7 @@ import SiteHeader from "../components/SiteHeader.astro";
 
     <script is:inline>
       let availability = {};
+      let availabilityReady = false;
 
       const statusLabels = {
         available: "Disponible",
@@ -660,14 +661,18 @@ import SiteHeader from "../components/SiteHeader.astro";
           }
 
           const rangeAvailable =
-            status === "available" && isRangeAvailable(weekMonday);
+            availabilityReady &&
+            status === "available" &&
+            isRangeAvailable(weekMonday);
 
           const statusText =
-            isPastWeek(weekMonday)
-              ? "Passée"
-              : status === "available" && !rangeAvailable
-                ? "Période indisponible"
-                : statusLabels[status];
+            !availabilityReady
+              ? "Disponibilités indisponibles"
+              : isPastWeek(weekMonday)
+                ? "Passée"
+                : status === "available" && !rangeAvailable
+                  ? "Période indisponible"
+                  : statusLabels[status];
 
           const schoolHoliday = getSchoolHolidayForWeek(weekMonday);
 
@@ -785,9 +790,18 @@ import SiteHeader from "../components/SiteHeader.astro";
 
           if (response.ok && result.ok) {
             availability = result.availability || {};
+            availabilityReady = true;
+            formStatus.textContent = "";
+          } else {
+            availabilityReady = false;
+            formStatus.textContent =
+              "Les disponibilités sont momentanément indisponibles. Merci de réessayer dans quelques instants.";
           }
         } catch (error) {
+          availabilityReady = false;
           console.error("Disponibilités indisponibles", error);
+          formStatus.textContent =
+            "Les disponibilités sont momentanément indisponibles. Merci de réessayer dans quelques instants.";
         } finally {
           renderCalendar();
         }
