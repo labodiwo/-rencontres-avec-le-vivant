@@ -839,7 +839,6 @@ const nav = [
         box-shadow: 0 0 0 2px rgba(89, 98, 67, .11);
       }
 
-      :global(.calendar-week.pending),
       :global(.calendar-week.booked) {
         background: #f2f0eb;
       }
@@ -880,27 +879,32 @@ const nav = [
         flex: 0 0 auto;
       }
 
-      .available :global(.week-status) {
+      :global(.calendar-week.available .week-status) {
         color: #3f642c;
       }
 
-      .available :global(.week-status::before) {
+      :global(.calendar-week.available .week-status::before) {
         background: #5f8a3f;
       }
 
-      .pending :global(.week-status) {
-        color: #9b6a21;
+      :global(.calendar-week.pending) {
+        background: #fff3df;
+        border-color: #d7b36f;
       }
 
-      .pending :global(.week-status::before) {
-        background: #c59e5d;
+      :global(.calendar-week.pending .week-status) {
+        color: #a76416;
       }
 
-      .booked :global(.week-status) {
+      :global(.calendar-week.pending .week-status::before) {
+        background: #d98b28;
+      }
+
+      :global(.calendar-week.booked .week-status) {
         color: #6f7068;
       }
 
-      .booked :global(.week-status::before) {
+      :global(.calendar-week.booked .week-status::before) {
         background: #9b9b92;
       }
 
