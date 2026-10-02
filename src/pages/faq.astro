@@ -1,12 +1,5 @@
 ---
-const nav = [
-  { label: "Les malles", href: "/les-malles" },
-  { label: "Louer une malle", href: "/louer-une-malle" },
-  { label: "À propos", href: "/a-propos" },
-  { label: "FAQ", href: "/faq" },
-  { label: "Le blog", href: "/blog" },
-  { label: "Me contacter", href: "/contact" },
-];
+import SiteHeader from "../components/SiteHeader.astro";
 
 const faqs = [
   ["À qui s’adressent les malles ?", "Les malles sont pensées pour les structures qui accompagnent de jeunes enfants : accueils de loisirs, maisons de quartier, médiathèques, écoles et autres lieux éducatifs. Chaque malle précise l’âge conseillé."],
@@ -30,10 +23,7 @@ const faqs = [
     <title>FAQ · Rencontres avec le vivant</title>
   </head>
   <body>
-    <header class="site-header">
-      <a class="brand" href="/"><span class="brand-decoration">⌇</span><span class="brand-text"><span>Rencontres</span><span>avec le vivant</span></span></a>
-      <nav>{nav.map((item)=><a href={item.href} aria-current={item.href==="/faq"?"page":undefined}>{item.label}</a>)}</nav>
-    </header>
+    <SiteHeader />
     <main>
       <section class="hero"><div><p class="eyebrow light">Questions fréquentes</p><h1>FAQ</h1><p>Les réponses aux questions les plus courantes sur le fonctionnement, la location et l’utilisation des malles.</p></div></section>
       <section class="faq-wrap">
