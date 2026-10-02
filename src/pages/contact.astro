@@ -19,6 +19,11 @@ import SiteHeader from "../components/SiteHeader.astro";
     />
 
     <title>Me contacter · Rencontres avec le vivant</title>
+    <script
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+      async
+      defer
+    ></script>
   </head>
 
 
@@ -118,7 +123,7 @@ import SiteHeader from "../components/SiteHeader.astro";
         <!-- FORMULAIRE -->
         <form
           class="contact-form"
-          method="POST"
+          id="contact-form"
         >
 
 
@@ -271,6 +276,16 @@ import SiteHeader from "../components/SiteHeader.astro";
 
 
 
+          <div class="hp-field" aria-hidden="true">
+            <label for="website">Site internet</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <div class="captcha-block">
+            <div id="turnstile-container"></div>
+            <p class="captcha-help">Vérification anti-robot sécurisée par Cloudflare Turnstile.</p>
+          </div>
+
           <!-- CONSENTEMENT -->
           <label class="consent">
 
@@ -309,6 +324,8 @@ import SiteHeader from "../components/SiteHeader.astro";
 
           </div>
 
+          <p id="contact-status" class="contact-status" role="status"></p>
+
         </form>
 
       </section>
@@ -316,6 +333,103 @@ import SiteHeader from "../components/SiteHeader.astro";
     </main>
 
 
+
+
+    <script is:inline>
+      const contactForm = document.getElementById("contact-form");
+      const contactStatus = document.getElementById("contact-status");
+      let turnstileToken = "";
+      let turnstileWidgetId = null;
+
+      const initTurnstile = async () => {
+        try {
+          const response = await fetch("/api/turnstile-config");
+          const config = await response.json();
+
+          if (!response.ok || !config.ok || !config.siteKey) {
+            throw new Error("Captcha non configuré.");
+          }
+
+          await new Promise((resolve) => {
+            const check = () => {
+              if (window.turnstile) resolve();
+              else setTimeout(check, 100);
+            };
+            check();
+          });
+
+          turnstileWidgetId = window.turnstile.render(
+            "#turnstile-container",
+            {
+              sitekey: config.siteKey,
+              theme: "light",
+              callback: (token) => { turnstileToken = token; },
+              "expired-callback": () => { turnstileToken = ""; },
+              "error-callback": () => { turnstileToken = ""; },
+            }
+          );
+        } catch (error) {
+          contactStatus.textContent =
+            "La vérification anti-robot n’est pas disponible. Merci de réessayer un peu plus tard.";
+        }
+      };
+
+      initTurnstile();
+
+      contactForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        if (!turnstileToken) {
+          contactStatus.textContent = "Merci de valider la vérification anti-robot.";
+          return;
+        }
+
+        const submitButton = contactForm.querySelector('button[type="submit"]');
+        const formData = new FormData(contactForm);
+
+        const payload = {
+          name: formData.get("name"),
+          email: formData.get("email"),
+          organisation: formData.get("organisation"),
+          age: formData.get("age"),
+          subject: formData.get("subject"),
+          message: formData.get("message"),
+          website: formData.get("website"),
+          turnstileToken,
+        };
+
+        submitButton.disabled = true;
+        contactStatus.textContent = "Envoi en cours…";
+
+        try {
+          const response = await fetch("/api/contact", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+          const result = await response.json();
+
+          if (!response.ok || !result.ok) {
+            throw new Error(result.error || "Le message n’a pas pu être envoyé.");
+          }
+
+          contactForm.reset();
+          contactStatus.textContent =
+            "Votre message a bien été envoyé. Je vous répondrai dès que possible.";
+          turnstileToken = "";
+
+          if (window.turnstile && turnstileWidgetId !== null) {
+            window.turnstile.reset(turnstileWidgetId);
+          }
+        } catch (error) {
+          contactStatus.textContent =
+            error.message || "Le message n’a pas pu être envoyé. Merci de réessayer.";
+        } finally {
+          submitButton.disabled = false;
+        }
+      });
+    </script>
 
     <!-- PIED DE PAGE -->
     <footer>
@@ -916,6 +1030,31 @@ import SiteHeader from "../components/SiteHeader.astro";
       }
 
 
+
+      .hp-field {
+        position: absolute !important;
+        left: -9999px !important;
+        width: 1px !important;
+        height: 1px !important;
+        overflow: hidden !important;
+      }
+
+      .captcha-block {
+        margin: 0 0 22px;
+      }
+
+      .captcha-help {
+        margin: 7px 0 0;
+        color: #85867d;
+        font: 0.72rem/1.45 Arial, Helvetica, sans-serif;
+      }
+
+      .contact-status {
+        min-height: 22px;
+        margin: 16px 0 0;
+        color: #596243;
+        font: 0.86rem/1.5 Arial, Helvetica, sans-serif;
+      }
 
       /* CONSENTEMENT */
 
