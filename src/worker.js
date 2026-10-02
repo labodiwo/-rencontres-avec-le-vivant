@@ -541,11 +541,31 @@ export default {
         }
 
         const payload = await request.json();
+        let reservationForCalendar = payload;
 
-        if (request.method === "POST" && payload.weekIso) {
-          const status = clean(payload.status, 30);
-          const duration = Math.max(1, Math.min(4, Number(payload.duration) || 1));
-          const start = new Date(payload.weekIso + "T12:00:00");
+        if (request.method === "DELETE" && payload.id) {
+          const currentResponse = await stub.fetch(
+            "https://reservations.internal/reservations",
+          );
+          const currentResult = await currentResponse.json();
+          reservationForCalendar =
+            (currentResult.reservations || []).find(
+              (item) => item.id === payload.id,
+            ) || payload;
+        }
+
+        if (reservationForCalendar.weekIso) {
+          const status =
+            request.method === "DELETE"
+              ? "cancelled"
+              : clean(reservationForCalendar.status, 30);
+          const duration = Math.max(
+            1,
+            Math.min(4, Number(reservationForCalendar.duration) || 1),
+          );
+          const start = new Date(
+            reservationForCalendar.weekIso + "T12:00:00",
+          );
 
           if (!Number.isNaN(start.getTime())) {
             const availabilityStatus =
