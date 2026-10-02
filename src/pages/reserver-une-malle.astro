@@ -40,14 +40,17 @@ import SiteHeader from "../components/SiteHeader.astro";
           <h2>Choisissez la durée de votre location</h2>
           <p>
             Vous pouvez louer la malle pendant <strong>1 semaine, 2 semaines
-            ou 4 semaines consécutives</strong>. La malle est remise le vendredi
-            précédant le début de la location afin que votre équipe puisse
-            l’installer et être prête dès le lundi.
+            ou 4 semaines consécutives</strong>. Pour une semaine, la location
+            se déroule du lundi au vendredi. Pour 2 ou 4 semaines, la malle
+            reste dans votre structure pendant les week-ends intermédiaires,
+            jusqu’au vendredi de la dernière semaine. Elle est remise le
+            vendredi précédant le début de la location.
           </p>
           <p>
-            Dès confirmation de la réservation, le livret pédagogique
-            vous est envoyé en version numérique afin que votre équipe
-            puisse préparer les animations à l’avance.
+            Après confirmation et paiement de la réservation, le livret
+            pédagogique imprimé vous est envoyé par la poste afin que votre
+            équipe puisse préparer les animations à l’avance. Les frais
+            d’envoi du livret sont inclus.
           </p>
 
           <div class="service-area-note">
@@ -198,8 +201,7 @@ import SiteHeader from "../components/SiteHeader.astro";
             <select id="formula" name="formula" required>
               <option value="">Choisir une formule</option>
               <option value="Autonome">Formule autonome · inclus</option>
-              <option value="Présentation">Avec présentation à l’équipe · + 60 €</option>
-              <option value="Animation">Avec animation enfants · + 140 €</option>
+              <option value="Accompagnement">Avec accompagnement d’équipe (1 h 30) · + 140 €</option>
             </select>
           </div>
 
@@ -370,8 +372,7 @@ import SiteHeader from "../components/SiteHeader.astro";
       const formulaSupplements = {
         "": 0,
         Autonome: 0,
-        Présentation: 60,
-        Animation: 140,
+        Accompagnement: 140,
       };
 
       const today = new Date();
@@ -575,11 +576,9 @@ import SiteHeader from "../components/SiteHeader.astro";
         const total = base + supplement;
 
         const formulaLabel =
-          formula === "Présentation"
-            ? "avec présentation"
-            : formula === "Animation"
-              ? "avec animation"
-              : "formule autonome";
+          formula === "Accompagnement"
+            ? "avec accompagnement d’équipe"
+            : "formule autonome";
 
         priceSummaryInput.value = `${total} € · ${formulaLabel}`;
       };
