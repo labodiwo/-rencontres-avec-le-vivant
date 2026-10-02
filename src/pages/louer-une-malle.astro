@@ -1,12 +1,5 @@
 ---
-const nav = [
-  { label: "Les malles", href: "/les-malles" },
-  { label: "Louer une malle", href: "/louer-une-malle" },
-  { label: "À propos", href: "/a-propos" },
-  { label: "FAQ", href: "/faq" },
-  { label: "Le blog", href: "/blog" },
-  { label: "Me contacter", href: "/contact" },
-];
+import SiteHeader from "../components/SiteHeader.astro";
 
 const steps = [
   {
@@ -92,51 +85,7 @@ const formulas = [
 
 
     <!-- HEADER -->
-    <header class="site-header">
-
-      <a
-        class="brand"
-        href="/"
-        aria-label="Accueil"
-      >
-
-        <span
-          class="brand-decoration"
-          aria-hidden="true"
-        >
-          ⌇
-        </span>
-
-        <span class="brand-text">
-          <span>Rencontres</span>
-          <span>avec le vivant</span>
-        </span>
-
-      </a>
-
-
-      <nav aria-label="Navigation principale">
-
-        {
-          nav.map((item) => (
-
-            <a
-              href={item.href}
-              aria-current={
-                item.href === "/louer-une-malle"
-                  ? "page"
-                  : undefined
-              }
-            >
-              {item.label}
-            </a>
-
-          ))
-        }
-
-      </nav>
-
-    </header>
+    <SiteHeader />
 
 
 
