@@ -587,7 +587,26 @@ import SiteHeader from "../components/SiteHeader.astro";
         selectedDuration = Number(duration);
         durationSelect.value = String(selectedDuration);
 
-        clearSelectionButton.addEventListener("click", () => {
+        durationButtons.forEach((button) => {
+          button.classList.toggle(
+            "selected",
+            Number(button.dataset.duration) === selectedDuration,
+          );
+        });
+
+        selectedWeekIso = "";
+        weekInput.value = "";
+        selectionPeriod.textContent = "";
+        selectionDuration.textContent = "";
+        selectionSummary.hidden = true;
+        formStatus.textContent = "";
+
+        updateDurationInterface();
+        updatePriceSummary();
+        renderCalendar();
+      };
+
+      clearSelectionButton.addEventListener("click", () => {
         selectedWeekIso = "";
         weekInput.value = "";
         selectionPeriod.textContent = "";
@@ -600,21 +619,6 @@ import SiteHeader from "../components/SiteHeader.astro";
           .querySelector(".calendar-section")
           .scrollIntoView({ behavior: "smooth", block: "start" });
       });
-
-      durationButtons.forEach((button) => {
-          button.classList.toggle(
-            "selected",
-            Number(button.dataset.duration) === selectedDuration,
-          );
-        });
-
-        selectedWeekIso = "";
-        weekInput.value = "";
-        formStatus.textContent = "";
-        updateDurationInterface();
-        updatePriceSummary();
-        renderCalendar();
-      };
 
       const renderCalendar = () => {
         grid.innerHTML = "";
