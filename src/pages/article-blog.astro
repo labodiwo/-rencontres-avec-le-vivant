@@ -30,7 +30,10 @@ const nav = [
           <h1 id="article-title"></h1>
           <p id="article-date" class="date"></p>
           <p id="article-excerpt" class="excerpt"></p>
-          <img id="article-cover" class="article-cover" alt="" hidden />
+          <figure id="article-cover-figure" class="article-cover-figure" hidden>
+            <img id="article-cover" class="article-cover" alt="" />
+            <figcaption id="article-cover-caption" class="photo-caption"></figcaption>
+          </figure>
           <div id="article-body" class="body"></div>
           <div id="article-gallery" class="article-gallery"></div>
         </div>
@@ -72,21 +75,42 @@ const nav = [
           document.getElementById("article-date").textContent = formatDate(post.date);
           document.getElementById("article-excerpt").textContent = post.excerpt || "";
 
+          const coverFigure = document.getElementById("article-cover-figure");
           const cover = document.getElementById("article-cover");
+          const coverCaption = document.getElementById("article-cover-caption");
+
           if (post.coverImageId) {
             cover.src = "/api/blog-image/" + encodeURIComponent(post.coverImageId);
-            cover.hidden = false;
+            cover.alt = post.coverCaption || "";
+            coverCaption.textContent = post.coverCaption || "";
+            coverCaption.hidden = !post.coverCaption;
+            coverFigure.hidden = false;
           }
 
           document.getElementById("article-body").appendChild(renderBody(post.content));
 
           const gallery = document.getElementById("article-gallery");
-          (post.galleryImageIds || []).forEach((imageId) => {
+          (post.galleryImageIds || []).forEach((imageId, index) => {
+            const figure = document.createElement("figure");
+            figure.className = "gallery-figure";
+
             const img = document.createElement("img");
+            const caption = (post.galleryCaptions || [])[index] || "";
+
             img.src = "/api/blog-image/" + encodeURIComponent(imageId);
-            img.alt = "";
+            img.alt = caption;
             img.loading = "lazy";
-            gallery.appendChild(img);
+
+            figure.appendChild(img);
+
+            if (caption) {
+              const figcaption = document.createElement("figcaption");
+              figcaption.className = "photo-caption";
+              figcaption.textContent = caption;
+              figure.appendChild(figcaption);
+            }
+
+            gallery.appendChild(figure);
           });
 
           status.hidden = true;
@@ -101,7 +125,7 @@ const nav = [
 
     <style>
       :global(*){box-sizing:border-box}:global(body){margin:0;background:#f9f7f2;color:#292b23;font-family:Georgia,"Times New Roman",serif}.site-header{min-height:94px;padding:15px 5.5%;display:flex;align-items:center;justify-content:space-between;gap:32px}.brand{display:flex;align-items:center;color:#29271f;text-decoration:none}.brand-decoration{margin-right:10px;font-size:2.7rem;color:#747b51;transform:rotate(-15deg)}.brand-text{display:flex;flex-direction:column;font-size:1.55rem;line-height:1.05}nav{display:flex;align-items:center;gap:clamp(16px,2.2vw,34px);flex-wrap:wrap}nav a{color:#161713;text-decoration:none;font:600 .93rem Arial,Helvetica,sans-serif;white-space:nowrap}
-      .article{width:min(820px,88%);margin:0 auto;padding:70px 0 90px}.back{display:inline-block;margin-bottom:42px;color:#596243;text-decoration:none;font-weight:700}.eyebrow{margin:0 0 12px;color:#74785e;font:700 .73rem Arial,Helvetica,sans-serif;letter-spacing:.11em;text-transform:uppercase}.article h1{margin:0 0 14px;font-size:clamp(2.6rem,5vw,4.7rem);font-weight:500;line-height:1.02}.date{margin:0 0 28px;color:#77796e;font: .82rem Arial,Helvetica,sans-serif}.excerpt{font-size:1.2rem;line-height:1.6;color:#55574d;margin-bottom:32px}.article-cover{display:block;width:100%;max-height:520px;object-fit:cover;border-radius:8px;margin:0 0 38px}.body{border-top:1px solid #dedbd2;padding-top:30px}.article-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:38px}.article-gallery :global(img){display:block;width:100%;height:280px;object-fit:cover;border-radius:7px}.body :global(p){font-size:1.04rem;line-height:1.82;margin:0 0 24px}.status{padding:40px 0;color:#6e7067}
+      .article{width:min(820px,88%);margin:0 auto;padding:70px 0 90px}.back{display:inline-block;margin-bottom:42px;color:#596243;text-decoration:none;font-weight:700}.eyebrow{margin:0 0 12px;color:#74785e;font:700 .73rem Arial,Helvetica,sans-serif;letter-spacing:.11em;text-transform:uppercase}.article h1{margin:0 0 14px;font-size:clamp(2.6rem,5vw,4.7rem);font-weight:500;line-height:1.02}.date{margin:0 0 28px;color:#77796e;font: .82rem Arial,Helvetica,sans-serif}.excerpt{font-size:1.2rem;line-height:1.6;color:#55574d;margin-bottom:32px}.article-cover-figure{margin:0 0 38px}.article-cover{display:block;width:100%;max-height:520px;object-fit:cover;border-radius:8px}.photo-caption{margin-top:8px;color:#72736b;font:italic .82rem/1.5 Georgia,"Times New Roman",serif}.body{border-top:1px solid #dedbd2;padding-top:30px}.article-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:38px}.gallery-figure{margin:0}.article-gallery :global(img){display:block;width:100%;height:280px;object-fit:cover;border-radius:7px}.body :global(p){font-size:1.04rem;line-height:1.82;margin:0 0 24px}.status{padding:40px 0;color:#6e7067}
       footer{padding:46px 5.5%;background:#303428;color:#f5f2e9;text-align:center}.footer-brand{color:inherit;text-decoration:none;font-size:1.35rem}footer p{color:rgba(255,255,255,.7)}footer small{color:rgba(255,255,255,.5);font-family:Arial,Helvetica,sans-serif}@media(max-width:900px){.site-header{flex-direction:column;align-items:flex-start}}@media(max-width:650px){.site-header{padding:16px 22px}.article{width:88%;padding:50px 0 70px}.article-gallery{grid-template-columns:1fr}.article-gallery :global(img){height:auto;max-height:420px}}
     </style>
   </body>
