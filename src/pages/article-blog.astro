@@ -42,13 +42,127 @@ import SiteHeader from "../components/SiteHeader.astro";
           .format(new Date(value + "T12:00:00"));
       };
 
+      const appendInlineFormatting = (element, text) => {
+        const pattern = /(\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\(https?:\/\/[^\s)]+\))/g;
+        let lastIndex = 0;
+        let match;
+
+        while ((match = pattern.exec(text)) !== null) {
+          if (match.index > lastIndex) {
+            element.appendChild(
+              document.createTextNode(text.slice(lastIndex, match.index)),
+            );
+          }
+
+          const token = match[0];
+
+          if (token.startsWith("**")) {
+            const strong = document.createElement("strong");
+            strong.textContent = token.slice(2, -2);
+            element.appendChild(strong);
+          } else if (token.startsWith("*")) {
+            const em = document.createElement("em");
+            em.textContent = token.slice(1, -1);
+            element.appendChild(em);
+          } else if (token.startsWith("[")) {
+            const parts = token.match(/^\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)$/);
+            if (parts) {
+              const link = document.createElement("a");
+              link.textContent = parts[1];
+              link.href = parts[2];
+              link.target = "_blank";
+              link.rel = "noopener noreferrer";
+              element.appendChild(link);
+            } else {
+              element.appendChild(document.createTextNode(token));
+            }
+          }
+
+          lastIndex = pattern.lastIndex;
+        }
+
+        if (lastIndex < text.length) {
+          element.appendChild(document.createTextNode(text.slice(lastIndex)));
+        }
+      };
+
       const renderBody = (text) => {
         const frag = document.createDocumentFragment();
-        String(text || "").split(/\n{2,}/).forEach((block) => {
+        const lines = String(text || "").replace(/\r\n/g, "\n").split("\n");
+        let paragraphLines = [];
+        let list = null;
+
+        const flushParagraph = () => {
+          if (!paragraphLines.length) return;
+
           const p = document.createElement("p");
-          p.textContent = block.trim();
-          if (p.textContent) frag.appendChild(p);
+          appendInlineFormatting(p, paragraphLines.join(" "));
+          frag.appendChild(p);
+          paragraphLines = [];
+        };
+
+        const flushList = () => {
+          if (!list) return;
+          frag.appendChild(list);
+          list = null;
+        };
+
+        lines.forEach((rawLine) => {
+          const line = rawLine.trim();
+
+          if (!line) {
+            flushParagraph();
+            flushList();
+            return;
+          }
+
+          if (line.startsWith("### ")) {
+            flushParagraph();
+            flushList();
+            const h3 = document.createElement("h3");
+            appendInlineFormatting(h3, line.slice(4));
+            frag.appendChild(h3);
+            return;
+          }
+
+          if (line.startsWith("## ")) {
+            flushParagraph();
+            flushList();
+            const h2 = document.createElement("h2");
+            appendInlineFormatting(h2, line.slice(3));
+            frag.appendChild(h2);
+            return;
+          }
+
+          if (line.startsWith("> ")) {
+            flushParagraph();
+            flushList();
+            const quote = document.createElement("blockquote");
+            appendInlineFormatting(quote, line.slice(2));
+            frag.appendChild(quote);
+            return;
+          }
+
+          if (line.startsWith("- ")) {
+            flushParagraph();
+
+            if (!list) {
+              list = document.createElement("ul");
+            }
+
+            const item = document.createElement("li");
+            appendInlineFormatting(item, line.slice(2));
+            list.appendChild(item);
+            return;
+          }
+
+          flushList();
+          paragraphLines.push(line);
         });
+
+        flushParagraph();
+        flushList();
+
         return frag;
       };
 
@@ -115,7 +229,7 @@ import SiteHeader from "../components/SiteHeader.astro";
 
     <style>
       :global(*){box-sizing:border-box}:global(body){margin:0;background:#f9f7f2;color:#292b23;font-family:Georgia,"Times New Roman",serif}.site-header{min-height:94px;padding:15px 5.5%;display:flex;align-items:center;justify-content:space-between;gap:32px}.brand{display:flex;align-items:center;color:#29271f;text-decoration:none}.brand-decoration{margin-right:10px;font-size:2.7rem;color:#747b51;transform:rotate(-15deg)}.brand-text{display:flex;flex-direction:column;font-size:1.55rem;line-height:1.05}nav{display:flex;align-items:center;gap:clamp(16px,2.2vw,34px);flex-wrap:wrap}nav a{color:#161713;text-decoration:none;font:600 .93rem Arial,Helvetica,sans-serif;white-space:nowrap}
-      .article{width:min(820px,88%);margin:0 auto;padding:70px 0 90px}.back{display:inline-block;margin-bottom:42px;color:#596243;text-decoration:none;font-weight:700}.eyebrow{margin:0 0 12px;color:#74785e;font:700 .73rem Arial,Helvetica,sans-serif;letter-spacing:.11em;text-transform:uppercase}.article h1{margin:0 0 14px;font-size:clamp(2.6rem,5vw,4.7rem);font-weight:500;line-height:1.02}.date{margin:0 0 28px;color:#77796e;font: .82rem Arial,Helvetica,sans-serif}.excerpt{font-size:1.2rem;line-height:1.6;color:#55574d;margin-bottom:32px}.article-cover-figure{margin:0 0 38px}.article-cover{display:block;width:100%;max-height:520px;object-fit:cover;border-radius:8px}.photo-caption{margin-top:8px;color:#72736b;font:italic .82rem/1.5 Georgia,"Times New Roman",serif}.body{border-top:1px solid #dedbd2;padding-top:30px}.article-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:38px}.gallery-figure{margin:0}.article-gallery :global(img){display:block;width:100%;height:280px;object-fit:cover;border-radius:7px}.body :global(p){font-size:1.04rem;line-height:1.82;margin:0 0 24px}.status{padding:40px 0;color:#6e7067}
+      .article{width:min(820px,88%);margin:0 auto;padding:70px 0 90px}.back{display:inline-block;margin-bottom:42px;color:#596243;text-decoration:none;font-weight:700}.eyebrow{margin:0 0 12px;color:#74785e;font:700 .73rem Arial,Helvetica,sans-serif;letter-spacing:.11em;text-transform:uppercase}.article h1{margin:0 0 14px;font-size:clamp(2.6rem,5vw,4.7rem);font-weight:500;line-height:1.02}.date{margin:0 0 28px;color:#77796e;font: .82rem Arial,Helvetica,sans-serif}.excerpt{font-size:1.2rem;line-height:1.6;color:#55574d;margin-bottom:32px}.article-cover-figure{margin:0 0 38px}.article-cover{display:block;width:100%;max-height:520px;object-fit:cover;border-radius:8px}.photo-caption{margin-top:8px;color:#72736b;font:italic .82rem/1.5 Georgia,"Times New Roman",serif}.body{border-top:1px solid #dedbd2;padding-top:30px}.article-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:38px}.gallery-figure{margin:0}.article-gallery :global(img){display:block;width:100%;height:280px;object-fit:cover;border-radius:7px}.body :global(p){font-size:1.04rem;line-height:1.82;margin:0 0 24px}.body :global(h2){margin:38px 0 16px;font-size:2rem;font-weight:500;line-height:1.15}.body :global(h3){margin:30px 0 12px;font-size:1.4rem;font-weight:500}.body :global(ul){margin:0 0 26px;padding-left:1.3rem}.body :global(li){margin:8px 0;font-size:1.02rem;line-height:1.7}.body :global(blockquote){margin:28px 0;padding:18px 22px;border-left:4px solid #7d8957;background:#eef0e3;color:#4f5248;font-style:italic;line-height:1.7}.body :global(a){color:#596243;text-decoration:underline;text-underline-offset:3px}.body :global(strong){font-weight:700}.body :global(em){font-style:italic}.status{padding:40px 0;color:#6e7067}
       footer{padding:46px 5.5%;background:#303428;color:#f5f2e9;text-align:center}.footer-brand{color:inherit;text-decoration:none;font-size:1.35rem}footer p{color:rgba(255,255,255,.7)}footer small{color:rgba(255,255,255,.5);font-family:Arial,Helvetica,sans-serif}@media(max-width:900px){.site-header{flex-direction:column;align-items:flex-start}}@media(max-width:650px){.site-header{padding:16px 22px}.article{width:88%;padding:50px 0 70px}.article-gallery{grid-template-columns:1fr}.article-gallery :global(img){height:auto;max-height:420px}}
     </style>
   </body>
