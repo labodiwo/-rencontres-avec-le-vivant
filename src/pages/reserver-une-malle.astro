@@ -643,14 +643,15 @@ import SiteHeader from "../components/SiteHeader.astro";
           12
         );
 
-        let monday = getMonday(firstDayOfMonth);
+        const monday = getMonday(firstDayOfMonth);
 
-        if (monday.getMonth() !== displayedMonth.getMonth()) {
-          monday.setDate(monday.getDate() + 7);
-        }
-
-        while (monday.getMonth() === displayedMonth.getMonth()) {
+        for (let row = 0; row < 6; row += 1) {
           const weekMonday = new Date(monday);
+          weekMonday.setDate(monday.getDate() + row * 7);
+
+          if (weekMonday.getMonth() !== displayedMonth.getMonth()) {
+            continue;
+          }
           const friday = new Date(weekMonday);
           friday.setDate(weekMonday.getDate() + 4);
 
@@ -733,7 +734,6 @@ import SiteHeader from "../components/SiteHeader.astro";
           }
 
           grid.appendChild(week);
-          monday.setDate(monday.getDate() + 7);
         }
       };
 
