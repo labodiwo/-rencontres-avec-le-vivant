@@ -69,13 +69,6 @@ export class AvailabilityStore extends DurableObject {
       const body = await request.json();
       const week = clean(body.week, 10);
       const status = clean(body.status, 20);
-      const coverImageId = clean(body.coverImageId, 80);
-      const galleryImageIds = Array.isArray(body.galleryImageIds)
-        ? body.galleryImageIds
-            .map((value) => clean(value, 80))
-            .filter(Boolean)
-            .slice(0, 6)
-        : [];
 
       if (!/^\d{4}-\d{2}-\d{2}$/.test(week)) {
         return json({ ok: false, error: "Semaine invalide." }, 400);
@@ -170,6 +163,23 @@ export class BlogStore extends DurableObject {
       const excerpt = cleanMultiline(body.excerpt, 500);
       const content = cleanMultiline(body.content, 30000);
       const status = clean(body.status, 20);
+      const coverImageId = clean(body.coverImageId, 80);
+      const coverCaption = cleanMultiline(body.coverCaption, 300);
+      const galleryImageIds = Array.isArray(body.galleryImageIds)
+        ? body.galleryImageIds
+            .map((value) => clean(value, 80))
+            .filter(Boolean)
+            .slice(0, 6)
+        : [];
+      const galleryCaptions = Array.isArray(body.galleryCaptions)
+        ? body.galleryCaptions
+            .slice(0, 6)
+            .map((value) => cleanMultiline(value, 300))
+        : [];
+
+      while (galleryCaptions.length < galleryImageIds.length) {
+        galleryCaptions.push("");
+      }
 
       if (!title || !excerpt || !content) {
         return json(
@@ -214,7 +224,9 @@ export class BlogStore extends DurableObject {
         content,
         status,
         coverImageId,
+        coverCaption,
         galleryImageIds,
+        galleryCaptions,
         createdAt: previous.createdAt || now,
         updatedAt: now,
       };
