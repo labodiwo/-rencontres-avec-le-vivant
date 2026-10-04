@@ -1,7 +1,7 @@
 ---
 const nav = [
+  { label: "Louer une malle", href: "/louer-une-malle", cta: true },
   { label: "Les malles", href: "/les-malles" },
-  { label: "Louer une malle", href: "/louer-une-malle" },
   { label: "À propos", href: "/a-propos" },
   { label: "FAQ", href: "/faq" },
   { label: "Le blog", href: "/blog" },
@@ -24,7 +24,11 @@ const isActive = (href) => pathname === href || (href === "/blog" && pathname ==
 
   <nav aria-label="Navigation principale">
     {nav.map((item) => (
-      <a href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>
+      <a
+        href={item.href}
+        class={item.cta ? "nav-cta" : undefined}
+        aria-current={isActive(item.href) ? "page" : undefined}
+      >
         {item.label}
       </a>
     ))}
@@ -48,6 +52,22 @@ const isActive = (href) => pathname === href || (href === "/blog" && pathname ==
   nav { display:flex; align-items:center; gap:clamp(16px,2.2vw,34px); flex-wrap:wrap; justify-content:flex-end; }
   nav a { color:#161713; text-decoration:none; font:600 .93rem Arial,Helvetica,sans-serif; white-space:nowrap; }
   nav a:hover, nav a[aria-current="page"] { color:#687347; }
+
+  nav .nav-cta {
+    padding: 10px 15px;
+    border: 2px solid #596243;
+    border-radius: 6px;
+    background: #596243;
+    color: #fff;
+    font-weight: 700;
+  }
+
+  nav .nav-cta:hover,
+  nav .nav-cta[aria-current="page"] {
+    background: #6b7551;
+    border-color: #6b7551;
+    color: #fff;
+  }
   @media (max-width:900px) {
     .site-header { flex-direction:column; align-items:flex-start; }
     nav { justify-content:flex-start; }
