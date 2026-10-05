@@ -99,7 +99,7 @@ import SiteFooter from "../components/SiteFooter.astro";
                 <img
                   class="article-image"
                   src="/api/blog-image/${encodeURIComponent(post.coverImageId)}"
-                  alt=""
+                  alt="${escapeHtml(post.title)}"
                   loading="lazy"
                 />
               ` : ""}
