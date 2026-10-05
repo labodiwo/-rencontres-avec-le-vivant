@@ -1122,6 +1122,19 @@ import SiteFooter from "../components/SiteFooter.astro";
         box-shadow: 0 0 0 2px rgba(125, 137, 87, .12);
       }
 
+      .duration-option:focus-visible,
+      .month-button:focus-visible,
+      :global(.select-week:focus-visible),
+      .clear-selection:focus-visible,
+      button[type="submit"]:focus-visible,
+      input:focus-visible,
+      select:focus-visible,
+      textarea:focus-visible,
+      .consent a:focus-visible {
+        outline: 3px solid #7d8957;
+        outline-offset: 3px;
+      }
+
       .calendar-box {
         max-width: 960px;
         margin: 0 auto;
@@ -1741,6 +1754,9 @@ import SiteFooter from "../components/SiteFooter.astro";
           justify-content: center;
           text-align: center;
         }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        :global(html) { scroll-behavior: auto; }
       }
     </style>
   </body>
