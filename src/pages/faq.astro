@@ -1,5 +1,6 @@
 ---
 import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
 
 const faqs = [
   ["À qui s’adressent les malles ?", "Les malles sont pensées pour les structures qui accompagnent de jeunes enfants : accueils de loisirs, maisons de quartier, médiathèques, écoles et autres lieux éducatifs. Elles ne conviennent jamais aux enfants de moins de 3 ans. Chaque malle précise ensuite le public d’âge pour lequel elle a été conçue."],
@@ -39,7 +40,7 @@ const faqs = [
         <div class="contact-box"><h3>Une autre question ?</h3><p>Vous pouvez me contacter directement si votre situation n’est pas abordée ici.</p><a href="/contact">Me contacter →</a></div>
       </section>
     </main>
-    <footer><a href="/" class="footer-brand">Rencontres avec le vivant</a><p>Des outils pour prendre le temps de rencontrer le vivant.</p><small>© Rencontres avec le vivant</small></footer>
+    <SiteFooter />
     <style>
       :global(*){box-sizing:border-box}:global(body){margin:0;background:#f9f7f2;color:#292b23;font-family:Georgia,"Times New Roman",serif}.site-header{min-height:94px;padding:15px 5.5%;display:flex;align-items:center;justify-content:space-between;gap:32px}.brand{display:flex;align-items:center;color:#29271f;text-decoration:none}.brand-decoration{margin-right:10px;font-size:2.7rem;color:#747b51;transform:rotate(-15deg)}.brand-text{display:flex;flex-direction:column;font-size:1.55rem;line-height:1.05}nav{display:flex;align-items:center;gap:clamp(16px,2.2vw,34px);flex-wrap:wrap}nav a{color:#161713;text-decoration:none;font:600 .93rem Arial,Helvetica,sans-serif;white-space:nowrap}nav a:hover,nav a[aria-current="page"]{color:#687347}
       .hero{min-height:300px;padding:55px 5.5%;display:flex;align-items:center;justify-content:center;background:#596243;color:#fffdf8;text-align:center}.hero>div{max-width:760px}.hero h1{margin:4px 0 18px;font-size:clamp(3.4rem,6vw,5.7rem);font-weight:500}.hero p:last-child{max-width:620px;margin:0 auto;line-height:1.6}.eyebrow{margin:0 0 10px;color:#74785e;font:700 .73rem Arial,Helvetica,sans-serif;letter-spacing:.11em;text-transform:uppercase}.eyebrow.light{color:rgba(255,255,255,.72)}
