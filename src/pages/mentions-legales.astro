@@ -1,0 +1,257 @@
+---
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Mentions légales du site Rencontres avec le vivant."
+    />
+    <title>Mentions légales · Rencontres avec le vivant</title>
+  </head>
+
+  <body>
+    <SiteHeader />
+
+    <main>
+      <section class="hero">
+        <p class="eyebrow light">Informations légales</p>
+        <h1>Mentions légales</h1>
+        <p>
+          Cette page est provisoire et sera complétée dès l’immatriculation
+          de l’entreprise.
+        </p>
+      </section>
+
+      <section class="legal">
+        <div class="legal-inner">
+
+          <aside class="notice">
+            <strong>Version provisoire</strong>
+            <p>
+              Certaines informations obligatoires ne peuvent pas encore être
+              renseignées car l’entreprise Rencontres avec le vivant n’est pas
+              encore immatriculée. Elles seront ajoutées avant le lancement
+              commercial définitif du site.
+            </p>
+          </aside>
+
+          <article>
+            <h2>1. Édition du site</h2>
+            <p>
+              Nom commercial : <strong>Rencontres avec le vivant</strong>
+            </p>
+            <p>
+              Statut juridique : <strong>à compléter après immatriculation</strong><br />
+              Nom et prénom de l’entrepreneuse : <strong>à compléter</strong><br />
+              Adresse professionnelle : <strong>à compléter</strong><br />
+              SIREN / SIRET : <strong>à compléter</strong><br />
+              Immatriculation au RNE : <strong>à compléter</strong><br />
+              Numéro de TVA intracommunautaire : <strong>à compléter si applicable</strong>
+            </p>
+            <p>
+              Adresse e-mail professionnelle : <strong>à compléter</strong><br />
+              Téléphone professionnel : <strong>à compléter</strong>
+            </p>
+          </article>
+
+          <article>
+            <h2>2. Direction de la publication</h2>
+            <p>
+              Directrice de la publication :
+              <strong>à compléter avec le nom et le prénom de l’entrepreneuse</strong>.
+            </p>
+          </article>
+
+          <article>
+            <h2>3. Hébergement</h2>
+            <p>
+              Le site est hébergé au moyen des services Cloudflare.
+            </p>
+            <p>
+              Les coordonnées légales complètes de l’hébergeur seront ajoutées
+              avant la mise en exploitation commerciale définitive du site.
+            </p>
+          </article>
+
+          <article>
+            <h2>4. Propriété intellectuelle</h2>
+            <p>
+              Sauf mention contraire, les textes, contenus pédagogiques,
+              photographies, illustrations, fiches, supports et éléments
+              graphiques présents sur ce site sont protégés par le droit de la
+              propriété intellectuelle.
+            </p>
+            <p>
+              Toute reproduction, représentation, adaptation, diffusion ou
+              exploitation, totale ou partielle, sans autorisation préalable
+              écrite est interdite, sauf dans les cas autorisés par la loi.
+            </p>
+            <p>
+              Les contenus appartenant à des tiers restent la propriété de leurs
+              auteurs ou titulaires respectifs. Les crédits photographiques sont
+              indiqués lorsqu’ils sont requis.
+            </p>
+          </article>
+
+          <article>
+            <h2>5. Données personnelles</h2>
+            <p>
+              Le traitement des données personnelles recueillies via le site est
+              détaillé dans la
+              <a href="/politique-confidentialite">
+                politique de confidentialité
+              </a>.
+            </p>
+          </article>
+
+          <article>
+            <h2>6. Conditions de location</h2>
+            <p>
+              Les règles applicables à la réservation, à l’utilisation, à la
+              restitution et à l’annulation des malles pédagogiques sont
+              présentées dans les
+              <a href="/conditions-location">conditions de location</a>.
+            </p>
+          </article>
+
+          <article>
+            <h2>7. Responsabilité</h2>
+            <p>
+              Les informations publiées sur le site sont présentées avec le plus
+              grand soin possible. Elles peuvent toutefois être modifiées ou
+              mises à jour, notamment lors de l’évolution des malles, des tarifs,
+              des modalités de location ou du cadre juridique applicable.
+            </p>
+          </article>
+
+          <article>
+            <h2>8. Médiation de la consommation</h2>
+            <p>
+              <strong>À compléter si la location est ouverte aux particuliers.</strong>
+              Les coordonnées du médiateur de la consommation choisi par
+              l’entreprise seront ajoutées avant toute contractualisation avec
+              des consommateurs.
+            </p>
+          </article>
+
+          <article>
+            <h2>9. Contact</h2>
+            <p>
+              Pour toute question concernant le site ou son contenu, vous pouvez
+              utiliser la page <a href="/contact">Me contacter</a>.
+            </p>
+          </article>
+
+          <p class="update-date">Dernière mise à jour : octobre 2026.</p>
+        </div>
+      </section>
+    </main>
+
+    <SiteFooter />
+
+    <style>
+      :global(*) { box-sizing: border-box; }
+      :global(body) {
+        margin: 0;
+        background: #f9f7f2;
+        color: #292b23;
+        font-family: Georgia, "Times New Roman", serif;
+      }
+
+      .hero {
+        padding: 58px 24px 50px;
+        background: #596243;
+        color: #fffdf8;
+        text-align: center;
+      }
+
+      .hero h1 {
+        margin: 4px 0 14px;
+        font-size: clamp(2.7rem, 5vw, 4.5rem);
+        font-weight: 500;
+      }
+
+      .hero p:last-child {
+        max-width: 660px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      .eyebrow {
+        margin: 0 0 9px;
+        font: 700 .72rem Arial, Helvetica, sans-serif;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+      }
+
+      .light { color: rgba(255,255,255,.72); }
+
+      .legal {
+        padding: 60px 24px 80px;
+      }
+
+      .legal-inner {
+        max-width: 840px;
+        margin: 0 auto;
+      }
+
+      .notice {
+        margin-bottom: 28px;
+        padding: 19px 21px;
+        border: 1px solid #d2ad74;
+        border-radius: 7px;
+        background: #fff3df;
+      }
+
+      .notice strong {
+        display: block;
+        margin-bottom: 7px;
+        color: #7a5520;
+        font: 700 .78rem Arial, Helvetica, sans-serif;
+      }
+
+      .notice p {
+        margin: 0;
+        line-height: 1.55;
+      }
+
+      article {
+        padding: 25px 0;
+        border-bottom: 1px solid #dedbd2;
+      }
+
+      article h2 {
+        margin: 0 0 12px;
+        color: #4f5939;
+        font-size: 1.45rem;
+        font-weight: 500;
+      }
+
+      article p {
+        line-height: 1.68;
+      }
+
+      article a {
+        color: #596243;
+        font-weight: 700;
+      }
+
+      .update-date {
+        margin-top: 28px;
+        color: #6f7067;
+        font-style: italic;
+      }
+
+      @media (max-width:650px) {
+        .hero { padding: 45px 22px; }
+        .legal { padding: 42px 22px 60px; }
+      }
+    </style>
+  </body>
+</html>
