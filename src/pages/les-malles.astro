@@ -189,9 +189,9 @@ import SiteHeader from "../components/SiteHeader.astro";
 
             <p>
               Le choix du matériel fait partie intégrante de la conception.
-              Il est sélectionné pour son intérêt pédagogique,
-              sa qualité et son respect des normes européennes
-              (certification CE des éléments des minis-mondes).
+              Pour chaque élément, les indications du fabricant, l’âge d’utilisation
+              et les avertissements de sécurité sont vérifiés avant son intégration
+              dans une malle.
             </p>
 
             <p>
@@ -498,6 +498,15 @@ import SiteHeader from "../components/SiteHeader.astro";
             par des professionnels qui ne sont pas nécessairement
             spécialistes de l’éducation à l’environnement.
           </p>
+
+          <aside class="age-warning">
+            <strong>Sécurité</strong>
+            <p>
+              Aucune malle ne convient aux enfants de moins de 3 ans.
+              Certains éléments peuvent comporter de petites pièces.
+              L’utilisation se fait toujours sous la surveillance d’un adulte.
+            </p>
+          </aside>
 
         </div>
 
@@ -1075,6 +1084,31 @@ import SiteHeader from "../components/SiteHeader.astro";
 
       .audience p {
         line-height: 1.65;
+      }
+
+
+      .age-warning {
+        max-width: 720px;
+        margin: 28px auto 0;
+        padding: 18px 20px;
+        border: 1px solid #d2ad74;
+        border-radius: 7px;
+        background: #fff3df;
+        text-align: left;
+      }
+
+      .age-warning strong {
+        display: block;
+        margin-bottom: 6px;
+        color: #7a5520;
+        font: 700 .75rem Arial, Helvetica, sans-serif;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+      }
+
+      .age-warning p {
+        margin: 0;
+        line-height: 1.55;
       }
 
 
