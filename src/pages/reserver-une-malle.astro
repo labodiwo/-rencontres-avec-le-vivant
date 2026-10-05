@@ -286,8 +286,11 @@ import SiteFooter from "../components/SiteFooter.astro";
           <label class="consent">
             <input type="checkbox" required />
             <span>
-              J’accepte que les informations renseignées soient utilisées
-              pour traiter ma demande de réservation.
+              J’ai pris connaissance de la
+              <a href="/politique-confidentialite" target="_blank" rel="noopener">
+                politique de confidentialité
+              </a>
+              concernant le traitement de ma demande.
             </span>
           </label>
 
@@ -1510,6 +1513,11 @@ import SiteFooter from "../components/SiteFooter.astro";
 
       .rental-consent a:hover {
         text-decoration-thickness: 2px;
+      }
+
+      .consent a {
+        color: #596243;
+        font-weight: 700;
       }
 
       .consent input {
