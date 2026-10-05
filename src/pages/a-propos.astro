@@ -1,5 +1,6 @@
 ---
 import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
 ---
 
 <!doctype html>
@@ -60,11 +61,7 @@ import SiteHeader from "../components/SiteHeader.astro";
       </section>
     </main>
 
-    <footer>
-      <a href="/" class="footer-brand">Rencontres avec le vivant</a>
-      <p>Des outils pour prendre le temps de rencontrer le vivant.</p>
-      <small>© Rencontres avec le vivant</small>
-    </footer>
+    <SiteFooter />
 
     <style>
       :global(*){box-sizing:border-box}:global(body){margin:0;background:#f9f7f2;color:#292b23;font-family:Georgia,"Times New Roman",serif}
