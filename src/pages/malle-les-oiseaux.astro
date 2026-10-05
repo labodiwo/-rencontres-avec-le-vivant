@@ -22,11 +22,11 @@ import SiteFooter from "../components/SiteFooter.astro";
     <meta property="og:title" content="La malle Les oiseaux · Rencontres avec le vivant" />
     <meta property="og:description" content="La malle pédagogique Les oiseaux, pensée pour les enfants de 3 à 5 ans." />
     <meta property="og:url" content="https://labodiwo.com/malle-les-oiseaux" />
-    <meta property="og:image" content="https://labodiwo.com/images/malle-oiseaux.jpg" />
+    <meta property="og:image" content="https://labodiwo.com/images/P1110637.JPG" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="La malle Les oiseaux · Rencontres avec le vivant" />
     <meta name="twitter:description" content="La malle pédagogique Les oiseaux, pensée pour les enfants de 3 à 5 ans." />
-    <meta name="twitter:image" content="https://labodiwo.com/images/malle-oiseaux.jpg" />
+    <meta name="twitter:image" content="https://labodiwo.com/images/P1110637.JPG" />
   </head>
 
   <body>
@@ -39,7 +39,7 @@ import SiteFooter from "../components/SiteFooter.astro";
       <section class="page-hero">
 
         <img
-          src="/images/malle-oiseaux.jpg"
+          src="/images/P1110637.JPG"
           alt="Malle pédagogique Les oiseaux et son matériel"
           class="page-hero-image"
         />
@@ -210,6 +210,13 @@ import SiteFooter from "../components/SiteFooter.astro";
 
           </div>
 
+
+          <div class="photo-story" aria-label="Aperçu du mini-monde de la malle Les oiseaux">
+            <figure class="photo-story-main"><img src="/images/P1110637.JPG" alt="Vue d’ensemble du mini-monde de la malle Les oiseaux installé dehors" loading="lazy" /></figure>
+            <figure><img src="/images/P1110660.JPG" alt="Œufs colorés du matériel pédagogique présentés en gros plan" loading="lazy" /></figure>
+            <figure><img src="/images/P1110650.JPG" alt="Détail d’un habitat du mini-monde avec un oiseau" loading="lazy" /></figure>
+            <figure><img src="/images/P1110656.JPG" alt="Détail du mini-monde et de ses éléments naturels à manipuler" loading="lazy" /></figure>
+          </div>
 
           <div class="contents-grid">
 
@@ -756,6 +763,12 @@ import SiteFooter from "../components/SiteFooter.astro";
         margin-bottom: 38px;
       }
 
+      .photo-story { margin: 0 0 42px; display: grid; grid-template-columns: 1.45fr 1fr 1fr; grid-template-rows: 210px 210px; gap: 14px; }
+      .photo-story figure { margin: 0; overflow: hidden; border-radius: 8px; background: #efede6; }
+      .photo-story-main { grid-row: 1 / 3; }
+      .photo-story figure:last-child { grid-column: 2 / 4; }
+      .photo-story img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
       .contents-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -1146,6 +1159,10 @@ import SiteFooter from "../components/SiteFooter.astro";
 
           gap: 38px;
         }
+
+        .photo-story { grid-template-columns: 1fr 1fr; grid-template-rows: 260px 180px 180px; }
+        .photo-story-main { grid-column: 1 / 3; grid-row: auto; }
+        .photo-story figure:last-child { grid-column: 1 / 3; }
 
         .contents-grid,
         .format-grid,
