@@ -868,6 +868,8 @@ import SiteFooter from "../components/SiteFooter.astro";
           childrenAge: formData.get("children-age"),
           childrenNumber: formData.get("children-number"),
           message: formData.get("message"),
+          conditionsAccepted: formData.get("accept-conditions") === "on",
+          conditionsVersion: "2026-10",
           website: formData.get("website"),
           turnstileToken,
         };
