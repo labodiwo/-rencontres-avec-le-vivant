@@ -803,6 +803,8 @@
         padding: 7px;
         margin-bottom: 18px;
         overflow-x: auto;
+        scrollbar-width: thin;
+        -webkit-overflow-scrolling: touch;
         border: 1px solid #e2ded4;
         border-radius: 10px;
         background: #ebe8e0;
@@ -1049,6 +1051,7 @@
         margin:0;
         color:#66685f;
         font:.84rem/1.5 Arial,Helvetica,sans-serif;
+        overflow-wrap:anywhere;
       }
 
       .request-head a { color:#596243; }
@@ -1103,7 +1106,11 @@
         text-transform:uppercase;
       }
 
-      .request-grid strong { font-size:.92rem; line-height:1.4; }
+      .request-grid strong {
+        font-size:.92rem;
+        line-height:1.4;
+        overflow-wrap:anywhere;
+      }
 
       .customer-message {
         margin:18px 0;
@@ -1147,6 +1154,7 @@
       .management-grid select,
       .management-grid textarea {
         width:100%;
+        min-width:0;
         padding:12px 13px;
         border:1px solid #c9c7bd;
         border-radius:6px;
@@ -1304,6 +1312,15 @@
 
       .save-status { text-align:center; }
 
+      @media (max-width:980px) {
+        .admin-wrap { width:94%; }
+        .request-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+        .management-grid { grid-template-columns:1fr; }
+        .planning-card { grid-template-columns:190px 1fr; }
+        .request-head { gap:18px; }
+        .request-date { min-width:210px; }
+      }
+
       @media (max-width:760px) {
         .hero { padding:34px 20px 30px; }
         .admin-wrap { width:94%; padding-top:24px; }
@@ -1318,10 +1335,46 @@
         .request-grid { grid-template-columns:1fr; }
         .management-grid { grid-template-columns:1fr; }
         .tabs { margin-bottom:18px; }
-        .tab { min-width:135px; }
+        .tab { min-width:135px; flex:0 0 auto; }
         .week-info { display:block; }
         .current-status { display:block; margin-top:6px; }
         .status-actions { grid-template-columns:1fr; }
+      }
+
+      @media (max-width:520px) {
+        .hero h1 { font-size:clamp(2.15rem,11vw,3rem); }
+        .hero p:last-child { font-size:.92rem; }
+        .admin-wrap { width:92%; padding-bottom:55px; }
+        .login-card { padding:26px 20px; }
+        .tabs { margin-left:-4px; margin-right:-4px; }
+        .dashboard-summary { gap:9px; margin-bottom:28px; }
+        .summary-card { padding:15px 17px; }
+        .planning-main,
+        .request-card { padding:18px 16px; }
+        .planning-top .small-button { width:100%; }
+        .filters {
+          justify-content:flex-start;
+          flex-wrap:nowrap;
+          overflow-x:auto;
+          padding-bottom:4px;
+          -webkit-overflow-scrolling:touch;
+        }
+        .filter { flex:0 0 auto; }
+        .request-actions {
+          flex-direction:column;
+          align-items:stretch;
+        }
+        .request-actions button { width:100%; }
+        .inline-status { text-align:center; }
+        .toolbar {
+          grid-template-columns:42px 1fr 42px;
+          gap:8px;
+        }
+        .toolbar strong { font-size:1.2rem; }
+        .month-button { width:42px; height:42px; }
+        .legend { justify-content:flex-start; gap:10px 14px; }
+        .week-card { padding:15px 14px; }
+        .status-actions button { min-height:46px; }
       }
     </style>
   </body>
