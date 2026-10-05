@@ -1657,6 +1657,79 @@ import SiteFooter from "../components/SiteFooter.astro";
           padding: 26px 20px;
         }
       }
+
+      @media (max-width: 430px) {
+        .booking-hero h1 {
+          font-size: clamp(2.5rem, 14vw, 3.4rem);
+        }
+
+        .booking-intro,
+        .calendar-section {
+          padding-left: 18px;
+          padding-right: 18px;
+        }
+
+        .calendar-box {
+          padding: 16px 12px;
+        }
+
+        .calendar-toolbar {
+          grid-template-columns: 42px 1fr 42px;
+          gap: 8px;
+        }
+
+        .month-button {
+          width: 42px;
+          height: 42px;
+        }
+
+        .month-title strong {
+          font-size: 1.2rem;
+        }
+
+        .legend {
+          justify-content: flex-start;
+          gap: 10px 16px;
+        }
+
+        :global(.calendar-week) {
+          padding: 15px 14px;
+        }
+
+        :global(.week-topline) {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 14px;
+        }
+
+        :global(.select-week) {
+          width: 100%;
+          min-width: 0;
+        }
+
+        :global(.school-holiday-label) {
+          width: 100%;
+          border-radius: 6px;
+        }
+
+        .selection-summary {
+          padding: 16px 14px;
+        }
+
+        .request-section {
+          width: 92%;
+        }
+
+        .booking-form {
+          padding: 24px 16px;
+        }
+
+        button[type="submit"] {
+          width: 100%;
+          justify-content: center;
+          text-align: center;
+        }
+      }
     </style>
   </body>
 </html>
