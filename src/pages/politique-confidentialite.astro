@@ -1,0 +1,118 @@
+---
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Politique de confidentialité du site Rencontres avec le vivant." />
+    <title>Politique de confidentialité · Rencontres avec le vivant</title>
+  </head>
+  <body>
+    <SiteHeader />
+    <main>
+      <section class="hero">
+        <p class="eyebrow light">Données personnelles</p>
+        <h1>Politique de confidentialité</h1>
+        <p>Cette page explique quelles données sont recueillies sur labodiwo.com, pourquoi elles le sont et comment exercer vos droits.</p>
+      </section>
+
+      <section class="privacy">
+        <div class="privacy-inner">
+          <aside class="notice">
+            <strong>À compléter lors de l’immatriculation de l’entreprise</strong>
+            <p>Les coordonnées professionnelles complètes du responsable du traitement seront ajoutées ici dès la création officielle de l’entreprise.</p>
+          </aside>
+
+          <article>
+            <h2>1. Responsable du traitement</h2>
+            <p>Le responsable du traitement est l’éditrice du site <strong>Rencontres avec le vivant</strong>.</p>
+            <p>Pour toute question concernant vos données personnelles ou pour exercer vos droits, vous pouvez utiliser la page <a href="/contact">Me contacter</a>.</p>
+          </article>
+
+          <article>
+            <h2>2. Formulaire de contact</h2>
+            <p>Les données susceptibles d’être recueillies sont : nom, adresse e-mail, structure, âge des enfants concernés, sujet de la demande et contenu du message.</p>
+            <p>Elles servent uniquement à répondre à votre demande et à assurer le suivi des échanges. Les champs non signalés comme obligatoires sont facultatifs.</p>
+          </article>
+
+          <article>
+            <h2>3. Demande de réservation</h2>
+            <p>Une demande de réservation peut comporter : nom, adresse e-mail, structure, période souhaitée, durée, formule choisie, âge et nombre d’enfants, tarif estimé ainsi que les précisions ajoutées librement dans le formulaire.</p>
+            <p>Ces données sont utilisées pour vérifier la disponibilité, répondre à la demande, préparer la réservation et assurer son suivi.</p>
+          </article>
+
+          <article>
+            <h2>4. Bases juridiques</h2>
+            <p>Le traitement des données liées à une demande de réservation repose sur les mesures précontractuelles prises à votre demande afin de préparer une éventuelle location.</p>
+            <p>Les données transmises via le formulaire de contact sont traitées afin de répondre à votre demande et d’assurer le suivi de l’échange.</p>
+          </article>
+
+          <article>
+            <h2>5. Destinataires</h2>
+            <p>Les données sont accessibles uniquement à Rencontres avec le vivant et aux prestataires techniques strictement nécessaires au fonctionnement du site et à la transmission des messages.</p>
+            <p>Le site utilise notamment les services de Cloudflare pour son hébergement, sa sécurité et la protection anti-robot des formulaires.</p>
+          </article>
+
+          <article>
+            <h2>6. Cloudflare Turnstile</h2>
+            <p>Les formulaires utilisent Cloudflare Turnstile afin de distinguer les visiteurs humains des robots et de protéger le site contre les abus. Ce service peut traiter certains signaux techniques nécessaires à cette vérification, comme l’adresse IP, des informations sur le navigateur et des données techniques de connexion.</p>
+          </article>
+
+          <article>
+            <h2>7. Durées de conservation</h2>
+            <ul>
+              <li><strong>Demandes de réservation non abouties :</strong> conservation pendant une durée maximale d’un an après le dernier échange, puis suppression.</li>
+              <li><strong>Réservations réalisées :</strong> conservation pendant la durée nécessaire au suivi de la location, puis archivage ou suppression selon les obligations légales applicables aux documents commerciaux et comptables.</li>
+              <li><strong>Messages de contact :</strong> conservation pendant la durée nécessaire au traitement de la demande et au suivi de l’échange, puis suppression lorsqu’ils ne sont plus utiles.</li>
+            </ul>
+          </article>
+
+          <article>
+            <h2>8. Vos droits</h2>
+            <p>Vous pouvez demander l’accès à vos données, leur rectification, leur effacement ou la limitation de leur traitement lorsque ces droits sont applicables. Vous pouvez également vous opposer à certains traitements lorsque la réglementation le permet.</p>
+            <p>Pour exercer vos droits, utilisez la page <a href="/contact">Me contacter</a> en précisant qu’il s’agit d’une demande relative à vos données personnelles.</p>
+            <p>Vous pouvez également introduire une réclamation auprès de la CNIL.</p>
+          </article>
+
+          <article>
+            <h2>9. Sécurité</h2>
+            <p>Des mesures techniques et organisationnelles sont mises en œuvre pour limiter l’accès aux données aux seules personnes autorisées et protéger les formulaires contre les usages automatisés abusifs.</p>
+          </article>
+
+          <article>
+            <h2>10. Mise à jour</h2>
+            <p>Cette politique pourra être mise à jour lorsque les services proposés, les outils techniques ou le cadre juridique évoluent.</p>
+            <p class="update-date">Dernière mise à jour : octobre 2026.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+    <SiteFooter />
+
+    <style>
+      :global(*){box-sizing:border-box}
+      :global(body){margin:0;background:#f9f7f2;color:#292b23;font-family:Georgia,"Times New Roman",serif}
+      .hero{padding:58px 24px 50px;background:#596243;color:#fffdf8;text-align:center}
+      .hero h1{margin:4px 0 14px;font-size:clamp(2.7rem,5vw,4.5rem);font-weight:500}
+      .hero p:last-child{max-width:680px;margin:0 auto;line-height:1.6}
+      .eyebrow{margin:0 0 9px;font:700 .72rem Arial,Helvetica,sans-serif;letter-spacing:.1em;text-transform:uppercase}
+      .light{color:rgba(255,255,255,.72)}
+      .privacy{padding:60px 24px 80px}
+      .privacy-inner{max-width:840px;margin:0 auto}
+      .notice{margin-bottom:28px;padding:19px 21px;border:1px solid #d2ad74;border-radius:7px;background:#fff3df}
+      .notice strong{display:block;margin-bottom:7px;color:#7a5520;font:700 .78rem Arial,Helvetica,sans-serif}
+      .notice p{margin:0;line-height:1.55}
+      article{padding:25px 0;border-bottom:1px solid #dedbd2}
+      article h2{margin:0 0 12px;color:#4f5939;font-size:1.45rem;font-weight:500}
+      article p,article li{line-height:1.68}
+      article ul{padding-left:22px}
+      article a{color:#596243;font-weight:700}
+      .update-date{color:#6f7067;font-style:italic}
+      @media(max-width:650px){.hero{padding:45px 22px}.privacy{padding:42px 22px 60px}}
+    </style>
+  </body>
+</html>
