@@ -99,6 +99,13 @@ const isActive = (href) => pathname === href || (href === "/blog" && pathname ==
   nav { display:flex; align-items:center; gap:clamp(16px,2.2vw,34px); flex-wrap:wrap; justify-content:flex-end; }
   nav a { color:#161713; text-decoration:none; font:600 .93rem Arial,Helvetica,sans-serif; white-space:nowrap; }
   nav a:hover, nav a[aria-current="page"] { color:#687347; }
+  .brand:focus-visible,
+  nav a:focus-visible,
+  .menu-toggle:focus-visible {
+    outline: 3px solid #a8b88f;
+    outline-offset: 4px;
+    border-radius: 5px;
+  }
 
   nav .nav-cta {
     padding: 10px 15px;
