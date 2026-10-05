@@ -1,5 +1,6 @@
 ---
 import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
 ---
 
 <!doctype html>
@@ -308,8 +309,11 @@ import SiteHeader from "../components/SiteHeader.astro";
             />
 
             <span>
-              J’accepte que les informations renseignées
-              soient utilisées pour répondre à ma demande.
+              J’ai pris connaissance de la
+              <a href="/politique-confidentialite" target="_blank" rel="noopener">
+                politique de confidentialité
+              </a>
+              concernant le traitement de ma demande.
             </span>
 
           </label>
@@ -459,25 +463,7 @@ import SiteHeader from "../components/SiteHeader.astro";
     </script>
 
     <!-- PIED DE PAGE -->
-    <footer>
-
-      <a
-        class="footer-brand"
-        href="/"
-      >
-        Rencontres avec le vivant
-      </a>
-
-      <p>
-        Des outils pour prendre le temps
-        de rencontrer le vivant.
-      </p>
-
-      <small>
-        © Rencontres avec le vivant
-      </small>
-
-    </footer>
+    <SiteFooter />
 
 
 
@@ -1156,6 +1142,11 @@ import SiteHeader from "../components/SiteHeader.astro";
         line-height: 1.45;
       }
 
+
+      .consent a {
+        color: #596243;
+        font-weight: 700;
+      }
 
       .consent input {
         width: 17px;
