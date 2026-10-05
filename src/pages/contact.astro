@@ -1227,6 +1227,15 @@ import SiteFooter from "../components/SiteFooter.astro";
         transform: translateY(-1px);
       }
 
+      button:focus-visible,
+      a:focus-visible,
+      input:focus-visible,
+      select:focus-visible,
+      textarea:focus-visible {
+        outline: 3px solid #a8b88f;
+        outline-offset: 3px;
+      }
+
 
       button span {
         font-size: 1.4rem;
@@ -1405,11 +1414,24 @@ import SiteFooter from "../components/SiteFooter.astro";
 
 
         .form-bottom {
-          align-items: flex-start;
+          align-items: stretch;
 
           flex-direction: column;
         }
 
+        .form-bottom button {
+          width: 100%;
+          justify-content: center;
+        }
+
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        :global(html) { scroll-behavior: auto; }
+        button,
+        input,
+        select,
+        textarea { transition: none; }
       }
 
     </style>
