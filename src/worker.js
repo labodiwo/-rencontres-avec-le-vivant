@@ -326,6 +326,26 @@ export class ReservationsStore extends DurableObject {
     const reservations =
       (await this.ctx.storage.get("reservations")) || {};
 
+    // Les demandes non abouties ne sont pas conservées indéfiniment.
+    // On supprime automatiquement les demandes "new" ou "cancelled"
+    // dont la dernière mise à jour remonte à plus d'un an.
+    const retentionCutoff = Date.now() - 365 * 24 * 60 * 60 * 1000;
+    let removedExpiredReservations = false;
+    Object.entries(reservations).forEach(([id, reservation]) => {
+      const referenceDate = Date.parse(reservation.updatedAt || reservation.createdAt || "");
+      if (
+        ["new", "cancelled"].includes(reservation.status) &&
+        Number.isFinite(referenceDate) &&
+        referenceDate < retentionCutoff
+      ) {
+        delete reservations[id];
+        removedExpiredReservations = true;
+      }
+    });
+    if (removedExpiredReservations) {
+      await this.ctx.storage.put("reservations", reservations);
+    }
+
     let migratedLegacyStatuses = false;
     Object.values(reservations).forEach((reservation) => {
       if (reservation.status === "pending") {
@@ -374,6 +394,18 @@ export class ReservationsStore extends DurableObject {
         message: cleanMultiline(body.message ?? previous.message, 2500),
         status: clean(body.status || previous.status || "new", 30),
         adminNotes: cleanMultiline(body.adminNotes ?? previous.adminNotes, 3000),
+        conditionsAccepted:
+          typeof body.conditionsAccepted === "boolean"
+            ? body.conditionsAccepted
+            : Boolean(previous.conditionsAccepted),
+        conditionsAcceptedAt:
+          body.conditionsAccepted === true
+            ? (previous.conditionsAcceptedAt || now)
+            : (previous.conditionsAcceptedAt || ""),
+        conditionsVersion: clean(
+          body.conditionsVersion || previous.conditionsVersion,
+          40,
+        ),
         createdAt: previous.createdAt || now,
         updatedAt: now,
       };
@@ -874,6 +906,8 @@ export default {
         childrenAge: clean(body.childrenAge, 120),
         childrenNumber: clean(body.childrenNumber, 40),
         message: clean(body.message, 2500),
+        conditionsAccepted: body.conditionsAccepted === true,
+        conditionsVersion: clean(body.conditionsVersion, 40),
       };
 
       if (
@@ -884,7 +918,9 @@ export default {
         !data.formula ||
         !data.name ||
         !data.email ||
-        !data.organisation
+        !data.organisation ||
+        !data.conditionsAccepted ||
+        !data.conditionsVersion
       ) {
         return json(
           {
@@ -961,6 +997,7 @@ export default {
         `Durée : ${data.duration} semaine(s)`,
         `Formule : ${data.formula}`,
         `Tarif estimé : ${data.priceSummary || "Non calculé"}`,
+        `Conditions de location : acceptées (version ${data.conditionsVersion})`,
         "",
         `Nom : ${data.name}`,
         `E-mail : ${data.email}`,
