@@ -160,3 +160,11 @@ const isActive = (href) => pathname === href || (href === "/blog" && pathname ==
     }
   }
 </style>
+
+<style is:global>
+  /* Titres plus aérés sur les grands écrans, sur toutes les pages publiques. */
+  @media (min-width: 901px) {
+    main h1 { line-height: 1.14 !important; }
+    main h2 { line-height: 1.22 !important; }
+  }
+</style>
