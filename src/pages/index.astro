@@ -153,13 +153,11 @@ import SiteFooter from "../components/SiteFooter.astro";
       <!-- MALLE OISEAUX -->
       <section class="malle" id="malles">
 
-        <div class="malle-image">
-
-          <img
-            src="/images/P1110650.JPG"
-            alt="Oiseau du mini-monde de la malle pédagogique Les oiseaux"
-          />
-
+        <div class="malle-image" aria-label="Photographies de la malle Les oiseaux">
+          <img class="malle-photo-main" src="/images/mini-monde-oiseaux.png" alt="Mini-monde de la malle Les oiseaux" loading="lazy" />
+          <img src="/images/P1110660.JPG" alt="Œufs colorés présentés dans une main" loading="lazy" />
+          <img src="/images/Cartes-oiseaux.png" alt="Cartes pédagogiques et œufs des oiseaux" loading="lazy" />
+          <img src="/images/Livres-oiseaux.png" alt="Livres illustrés autour des oiseaux" loading="lazy" />
         </div>
 
 
@@ -614,25 +612,30 @@ import SiteFooter from "../components/SiteFooter.astro";
 
 
       .malle-image {
-        width: min(100%, 360px);
-        aspect-ratio: 1 / 1;
+        width: min(100%, 430px);
         align-self: center;
         justify-self: center;
-        overflow: hidden;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: 220px 116px;
+        gap: 8px;
+        padding: 18px 0;
       }
-
 
       .malle-image img {
         display: block;
-
         width: 100%;
         height: 100%;
-
-        height: 100%;
-
+        min-width: 0;
         object-fit: cover;
-        object-position: center;
+        border-radius: 7px;
       }
+      .malle-image .malle-photo-main {
+        grid-column: 1 / 3;
+        object-fit: contain;
+        background: #e8e3d9;
+      }
+      .malle-image img:nth-child(4) { display: none; }
 
 
       .malle-content {
@@ -882,16 +885,8 @@ import SiteFooter from "../components/SiteFooter.astro";
         }
 
 
-        .malle-image {
-          min-height: 300px;
-        }
-
-
-        .malle-image img {
-          min-height: 300px;
-
-          max-height: 430px;
-        }
+        .malle-image { width: min(100% - 32px, 430px); grid-template-rows: 200px 105px; }
+        .malle-image img { min-height: 0; max-height: none; }
 
 
         .malle-content {
