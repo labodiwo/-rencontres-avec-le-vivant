@@ -116,8 +116,9 @@ import SiteFooter from "../components/SiteFooter.astro";
 
 
           <div class="photo-story" aria-label="Photographies du matériel de la malle Les oiseaux">
-            <div class="photo-story-left"><figure class="photo-story-main"><img src="/images/mini-monde-oiseaux.png" alt="Mini-monde des oiseaux avec arbre, refuges, figurines et œufs colorés" loading="lazy" /></figure><figure class="photo-story-cards"><img src="/images/Cartes-oiseaux.png" alt="Cartes pédagogiques sur le guillemot de Troïl et œufs à associer" loading="lazy" /></figure></div>
+            <figure class="photo-story-main"><img src="/images/mini-monde-oiseaux.png" alt="Mini-monde des oiseaux avec arbre, refuges, figurines et œufs colorés" loading="lazy" /></figure>
             <figure class="photo-story-eggs"><img src="/images/P1110660.JPG" alt="Œufs colorés présentés dans une main" loading="lazy" /></figure>
+            <figure class="photo-story-cards"><img src="/images/Cartes-oiseaux.png" alt="Cartes pédagogiques sur le guillemot de Troïl et œufs à associer" loading="lazy" /></figure>
             <figure class="photo-story-books"><img src="/images/Livres-oiseaux.png" alt="Livres illustrés et documentaires sur les oiseaux" loading="lazy" /></figure>
           </div>
 
@@ -763,16 +764,13 @@ import SiteFooter from "../components/SiteFooter.astro";
         margin-bottom: 38px;
       }
 
-      .photo-story { margin: 0 0 42px; display: grid; grid-template-columns: 1.4fr 1fr; gap: 14px; align-items: start; }
-      .photo-story figure { margin: 0; overflow: hidden; border-radius: 8px; background: #efede6; }
-      .photo-story img { display: block; width: 100%; height: auto; }
-      .photo-story-left { grid-row: 1 / 3; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
-      .photo-story-main { flex: none; }
-      .photo-story-cards { width: 62%; align-self: center; }
-      .photo-story-cards img { width: 100%; height: auto; object-fit: contain; }
-      .photo-story-main img { height: 100%; object-fit: contain; }
-      .photo-story-eggs img { aspect-ratio: 1.5 / 1; object-fit: cover; }
-      .photo-story-books img { object-fit: contain; }
+      .photo-story { margin: 0 0 42px; display: grid; grid-template-columns: 1.4fr 1fr; gap: 14px; align-items: stretch; }
+      .photo-story figure { margin: 0; overflow: hidden; border-radius: 8px; background: #efede6; min-width: 0; }
+      .photo-story img { display: block; width: 100%; height: 100%; }
+      .photo-story-main, .photo-story-eggs { aspect-ratio: 1.5 / 1; }
+      .photo-story-cards, .photo-story-books { aspect-ratio: 1.65 / 1; }
+      .photo-story-main img, .photo-story-cards img, .photo-story-books img { object-fit: contain; }
+      .photo-story-eggs img { object-fit: cover; }
 
       .contents-grid {
         display: grid;
@@ -1166,9 +1164,8 @@ import SiteFooter from "../components/SiteFooter.astro";
         }
 
         .photo-story { grid-template-columns: 1fr; }
-        .photo-story-left { grid-row: auto; }
-        .photo-story-cards { width: 65%; }
-        .photo-story-eggs img { aspect-ratio: auto; object-fit: contain; }
+        .photo-story figure { aspect-ratio: auto; }
+        .photo-story img { width: 100%; height: auto; object-fit: contain; }
 
         .contents-grid,
         .format-grid,
