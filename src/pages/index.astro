@@ -195,6 +195,20 @@ import SiteFooter from "../components/SiteFooter.astro";
       </section>
 
 
+      <!-- DERRIÈRE LES MALLES : photographie personnelle à ajouter ultérieurement -->
+      <section class="behind-malles" aria-labelledby="behind-title">
+        <div class="behind-photo-placeholder" aria-label="Emplacement réservé à une photographie de l'animatrice en train d'observer les oiseaux">
+          <span>Une photo de terrain viendra bientôt ici</span>
+        </div>
+        <div class="behind-copy">
+          <p class="eyebrow">Derrière les malles</p>
+          <h2 id="behind-title">Une animatrice, des idées et du matériel à partager</h2>
+          <p>Je travaille dans l’animation depuis une dizaine d’années. Au fil de mes expériences et de ma formation en éducation à l’environnement, j’ai eu envie de créer des outils que j’aurais aimé trouver sur le terrain.</p>
+          <p>Je prépare chaque malle avec soin, mais sans mode d’emploi figé : à chaque animateur de s’en emparer, de l’adapter et de la faire vivre avec son groupe.</p>
+          <a class="behind-link" href="/a-propos">En savoir plus sur mon parcours <span aria-hidden="true">→</span></a>
+        </div>
+      </section>
+
       <!-- POUR QUI -->
       <section class="audience" id="pour-qui">
 
@@ -696,6 +710,38 @@ import SiteFooter from "../components/SiteFooter.astro";
         font-weight: 600;
       }
 
+
+      /* DERRIÈRE LES MALLES */
+      .behind-malles {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        align-items: center;
+        gap: clamp(28px, 5vw, 80px);
+        padding: 72px 7%;
+        background: #f9f7f6;
+      }
+      .behind-photo-placeholder {
+        min-height: 320px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 30px;
+        border: 1px dashed #a6ad92;
+        border-radius: 8px;
+        background: #e9ebdf;
+        color: #667052;
+        text-align: center;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 0.9rem;
+      }
+      .behind-copy { max-width: 600px; }
+      .behind-copy h2 { margin: 4px 0 22px; font-size: clamp(2rem, 3vw, 2.9rem); font-weight: 500; line-height: 1.18; }
+      .behind-copy p:not(.eyebrow) { line-height: 1.65; font-size: 1.02rem; }
+      .behind-link { display: inline-block; margin-top: 14px; color: #596243; font-weight: 600; text-underline-offset: 4px; }
+      @media (max-width: 700px) {
+        .behind-malles { grid-template-columns: 1fr; padding: 48px 24px; gap: 28px; }
+        .behind-photo-placeholder { min-height: 220px; }
+      }
 
       /* ------------------------------
          POUR QUI
