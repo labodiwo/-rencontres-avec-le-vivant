@@ -34,7 +34,7 @@ import SiteHeader from "../components/SiteHeader.astro";
     <script is:inline>
       const status = document.getElementById("article-status");
       const container = document.getElementById("article-content");
-      const slug = decodeURIComponent(window.location.pathname.split("/").filter(Boolean).pop() || "");
+      const slug = new URLSearchParams(window.location.search).get("slug") || decodeURIComponent(window.location.pathname.split("/").filter(Boolean).pop() || "");
 
       const formatDate = (value) => {
         if (!value) return "";
