@@ -398,6 +398,14 @@
               </div>
             </div>
 
+            <div class="pedagogical-access">
+              <strong>Accès au livret numérique</strong>
+              <p>Créez un lien privé après confirmation. Il expire trois jours après la fin de la location. La création d’un nouveau lien invalide le précédent.</p>
+              <p>${item.pedagogicalAccess ? "Lien actif jusqu’au " + escapeHtml(formatDateShort(item.pedagogicalAccess.expiresAt?.slice(0,10))) + " (UTC), sauf annulation." : "Aucun lien créé."}</p>
+              ${["confirmed","paid"].includes(item.status) ? `<button type="button" data-create-access="${escapeHtml(item.id)}">Créer / renouveler le lien</button>` : ""}
+              ${item.pedagogicalAccess ? `<button type="button" class="delete-button" data-revoke-access="${escapeHtml(item.id)}">Désactiver le lien</button>` : ""}
+              <div data-access-result="${escapeHtml(item.id)}" class="access-result" role="status"></div>
+            </div>
             <div class="request-actions">
               <button type="button" data-save-request="${escapeHtml(item.id)}">
                 Enregistrer les modifications
@@ -419,6 +427,12 @@
           });
         });
 
+        requestsList.querySelectorAll("[data-create-access]").forEach(button => {
+          button.addEventListener("click", () => manageAccess(button.dataset.createAccess, "create"));
+        });
+        requestsList.querySelectorAll("[data-revoke-access]").forEach(button => {
+          button.addEventListener("click", () => manageAccess(button.dataset.revokeAccess, "revoke"));
+        });
         requestsList.querySelectorAll("[data-save-request]").forEach((button) => {
           button.addEventListener("click", () => saveReservation(button.dataset.saveRequest));
         });
@@ -464,6 +478,45 @@
         updateSummary();
         renderPlanning();
         renderRequests();
+      };
+
+      const manageAccess = async (id, action) => {
+        if (action === "revoke" && !confirm("Désactiver immédiatement ce lien privé ?")) return;
+        if (action === "create" && reservations.find(r => r.id === id)?.pedagogicalAccess &&
+            !confirm("Le lien précédent cessera de fonctionner. Continuer ?")) return;
+        const output = document.querySelector('[data-access-result="' + CSS.escape(id) + '"]');
+        if (!output) return;
+        output.textContent = "Traitement…";
+        try {
+          const response = await fetch("/api/admin/pedagogical-access", {
+            method: "POST",
+            headers: { "content-type": "application/json", "x-admin-key": adminKey },
+            body: JSON.stringify({ id, action }),
+          });
+          const result = await response.json();
+          if (!response.ok || !result.ok) throw new Error(result.error || "Opération impossible.");
+          await loadReservations();
+          const fresh = document.querySelector('[data-access-result="' + CSS.escape(id) + '"]');
+          if (!fresh) return;
+          if (result.link) {
+            const field = document.createElement("input");
+            field.type = "text";
+            field.readOnly = true;
+            field.value = result.link;
+            field.setAttribute("aria-label", "Lien privé à transmettre à la structure");
+            const copy = document.createElement("button");
+            copy.type = "button";
+            copy.textContent = "Copier le lien";
+            copy.addEventListener("click", async () => {
+              try { await navigator.clipboard.writeText(field.value); copy.textContent = "Lien copié"; }
+              catch { field.select(); copy.textContent = "Sélectionnez et copiez le lien"; }
+            });
+            fresh.textContent = "Lien créé. Copiez-le maintenant : il ne sera plus affiché après fermeture ou actualisation de la page.";
+            fresh.append(field, copy);
+          } else fresh.textContent = "Lien désactivé.";
+        } catch (error) {
+          output.textContent = error.message || "Opération impossible.";
+        }
       };
 
       const saveReservation = async (id) => {
@@ -1174,6 +1227,12 @@
         font:.75rem/1.5 Arial,Helvetica,sans-serif;
       }
 
+      .pedagogical-access{background:#edf0e6;border:1px solid #d6ddc9;border-radius:8px;padding:18px;margin-top:22px}
+      .pedagogical-access strong{color:#46573d}
+      .pedagogical-access p{font:.82rem/1.5 Arial,Helvetica,sans-serif;color:#5c6255}
+      .pedagogical-access button{margin:5px 8px 5px 0}
+      .access-result{margin-top:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font:.82rem/1.5 Arial,Helvetica,sans-serif}
+      .access-result input{width:min(100%,430px);padding:10px;border:1px solid #a8b79a;border-radius:5px}
       .request-actions {
         display:flex;
         align-items:center;
