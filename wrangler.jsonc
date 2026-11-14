@@ -10,7 +10,8 @@
     "binding": "ASSETS",
     "run_worker_first": [
       "/api/*",
-      "/blog/*",\n      "/acces-pedagogique"
+      "/blog/*",
+      "/acces-pedagogique"
     ]
   },
   "send_email": [
