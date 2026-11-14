@@ -1136,6 +1136,46 @@ export default {
       );
 
       const reservationResult = await reservationResponse.json();
+      if (!reservationResponse.ok || !reservationResult.ok) {
+        console.error("Impossible d'enregistrer la demande de réservation.");
+        return json({ ok: false, error: "La demande n’a pas pu être enregistrée. Merci de nous contacter." }, 500);
+      }
+
+      // Accusé de réception au demandeur, distinct de la confirmation de location.
+      // Une erreur d'envoi ne doit pas annuler la demande déjà enregistrée.
+      try {
+        const confirmationLines = [
+          `Bonjour ${data.name},`,
+          "",
+          "Nous avons bien reçu votre demande de réservation pour la malle pédagogique « Les oiseaux ».",
+          "",
+          "Récapitulatif de votre demande :",
+          `Malle : ${data.kit}`,
+          `Période souhaitée : ${data.week}`,
+          `Durée : ${data.duration} semaine(s)`,
+          `Formule : ${data.formula}`,
+          `Tarif estimé : ${data.priceSummary || "À confirmer"}`,
+          "",
+          "Votre demande est en cours de traitement. Nous reviendrons vers vous pour confirmer la disponibilité de la malle et les modalités de location.",
+          "",
+          "Attention : cet e-mail confirme uniquement la réception de votre demande. Il ne constitue pas une confirmation de réservation.",
+          "",
+          "À bientôt,",
+          "Rencontres avec le vivant",
+          "https://labodiwo.com",
+        ];
+        await env.EMAIL.send({
+          to: data.email,
+          from: {
+            email: "reservations@labodiwo.com",
+            name: "Rencontres avec le vivant",
+          },
+          subject: "Nous avons bien reçu votre demande de réservation",
+          text: confirmationLines.join("\n"),
+        });
+      } catch (error) {
+        console.error("Accusé de réception client non envoyé", error);
+      }
 
       return json({
         ok: true,
