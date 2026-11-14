@@ -442,6 +442,7 @@ export class ReservationsStore extends DurableObject {
         priceSummary: clean(body.priceSummary || previous.priceSummary, 120),
         name: clean(body.name || previous.name, 120),
         email: clean(body.email || previous.email, 180),
+        phone: clean(body.phone ?? previous.phone, 30),
         organisation: clean(body.organisation || previous.organisation, 180),
         childrenAge: clean(body.childrenAge || previous.childrenAge, 120),
         childrenNumber: clean(body.childrenNumber || previous.childrenNumber, 40),
@@ -989,6 +990,7 @@ export default {
         priceSummary: clean(body.priceSummary, 120),
         name: clean(body.name, 120),
         email: clean(body.email, 180),
+        phone: clean(body.phone, 30),
         organisation: clean(body.organisation, 180),
         childrenAge: clean(body.childrenAge, 120),
         childrenNumber: clean(body.childrenNumber, 40),
@@ -1005,6 +1007,7 @@ export default {
         !data.formula ||
         !data.name ||
         !data.email ||
+        !data.phone ||
         !data.organisation ||
         !data.conditionsAccepted ||
         !data.conditionsVersion
@@ -1088,6 +1091,7 @@ export default {
         "",
         `Nom : ${data.name}`,
         `E-mail : ${data.email}`,
+        `Téléphone : ${data.phone}`,
         `Structure : ${data.organisation}`,
         `Âge des enfants : ${data.childrenAge || "Non renseigné"}`,
         `Nombre d’enfants : ${data.childrenNumber || "Non renseigné"}`,
