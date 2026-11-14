@@ -351,6 +351,7 @@
                 </span>
                 <h3>${escapeHtml(item.organisation || "Structure non renseignée")}</h3>
                 <p>${escapeHtml(item.name)} · <a href="mailto:${escapeHtml(item.email)}">${escapeHtml(item.email)}</a></p>
+                <p>Téléphone : ${item.phone ? `<a href="tel:${escapeHtml(item.phone.replace(/[^+0-9]/g, ""))}">${escapeHtml(item.phone)}</a>` : "Non renseigné"}</p>
               </div>
               <div class="request-date">
                 <small>Période souhaitée</small>
