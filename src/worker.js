@@ -428,7 +428,8 @@ export class ReservationsStore extends DurableObject {
       const previous = reservations[id] || {};
       const now = new Date().toISOString();
 
-      const reservation = {\n        pedagogicalAccess: previous.pedagogicalAccess || null,
+      const reservation = {
+        pedagogicalAccess: previous.pedagogicalAccess || null,
         id,
         kit: clean(body.kit || previous.kit, 120),
         week: clean(body.week || previous.week, 220),
