@@ -125,11 +125,13 @@ const isActive = (href) => pathname === href || (href === "/blog" && pathname ==
   /* Navigation compacte sur téléphone et tablette. */
   @media (max-width: 900px) {
     .site-header {
+      box-sizing: border-box;
+      width: 100%;
       min-height: 0;
       padding: 12px clamp(14px, 4vw, 28px);
       display: flex;
       flex-direction: row;
-      flex-wrap: wrap;
+      flex-wrap: wrap !important;
       align-items: center;
       justify-content: space-between;
       gap: 0 12px;
@@ -140,25 +142,29 @@ const isActive = (href) => pathname === href || (href === "/blog" && pathname ==
     .brand-text span:last-child { font-size: .62rem; letter-spacing: .1em; }
     .menu-toggle { display: inline-flex; flex: 0 0 auto; margin-left: auto; }
     nav {
-      display: none;
-      flex: 0 0 100%;
-      width: 100%;
+      display: none !important;
+      flex: 0 0 100% !important;
+      width: 100% !important;
+      max-width: 100%;
+      box-sizing: border-box;
       margin-top: 12px;
       padding: 10px 0 2px;
       border-top: 1px solid #e6e2d9;
-      flex-direction: column;
-      align-items: stretch;
+      flex-direction: column !important;
+      align-items: stretch !important;
       justify-content: flex-start;
       gap: 2px;
     }
-    nav.is-open { display: flex; }
+    nav.is-open { display: flex !important; }
     nav a {
       width: 100%;
+      box-sizing: border-box;
       padding: 12px 10px;
       font-size: .93rem;
       line-height: 1.25;
       white-space: normal;
       text-align: left;
+      overflow-wrap: anywhere;
       border-radius: 5px;
     }
     nav .nav-cta {
