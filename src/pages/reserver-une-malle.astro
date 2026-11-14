@@ -234,6 +234,12 @@ import SiteFooter from "../components/SiteFooter.astro";
           </div>
 
           <div class="field">
+            <label for="phone">Téléphone <span aria-hidden="true">*</span></label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="30" required />
+            <small>Pour vous contacter au sujet de la réservation et organiser la livraison.</small>
+          </div>
+
+          <div class="field">
             <label for="organisation">Votre structure <span aria-hidden="true">*</span></label>
             <input
               id="organisation"
@@ -864,6 +870,7 @@ import SiteFooter from "../components/SiteFooter.astro";
           priceSummary: formData.get("price-summary"),
           name: formData.get("name"),
           email: formData.get("email"),
+          phone: formData.get("phone"),
           organisation: formData.get("organisation"),
           childrenAge: formData.get("children-age"),
           childrenNumber: formData.get("children-number"),
