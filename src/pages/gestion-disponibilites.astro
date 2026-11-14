@@ -374,6 +374,11 @@
               </div>
             ` : ""}
 
+            <div class="reservation-dates">
+              <label for="start-${escapeHtml(item.id)}">Début de location (lundi)</label>
+              <input type="date" id="start-${escapeHtml(item.id)}" data-start-date="${escapeHtml(item.id)}" value="${escapeHtml(item.weekIso || "")}" />
+              <small>Cette date est indispensable pour créer le lien privé. Enregistrez les modifications avant de générer le lien.</small>
+            </div>
             <div class="management-grid">
               <div>
                 <label for="status-${escapeHtml(item.id)}">Statut</label>
@@ -526,6 +531,16 @@
         const statusSelect = document.querySelector(
           `[data-status-select="${CSS.escape(id)}"]`
         );
+        const startField = document.querySelector(
+          `[data-start-date="${CSS.escape(id)}"]`
+        );
+        if (startField?.value) {
+          const selectedDate = new Date(startField.value + "T12:00:00Z");
+          if (selectedDate.getUTCDay() !== 1) {
+            alert("La date de début doit être un lundi.");
+            return;
+          }
+        }
         const notesField = document.querySelector(
           `[data-notes="${CSS.escape(id)}"]`
         );
@@ -545,7 +560,7 @@
             body: JSON.stringify({
               ...item,
               status: statusSelect.value,
-              adminNotes: notesField.value,
+              adminNotes: notesField.value,\n              weekIso: startField?.value || item.weekIso,
             }),
           });
 
@@ -1227,6 +1242,10 @@
         font:.75rem/1.5 Arial,Helvetica,sans-serif;
       }
 
+      .reservation-dates{margin-top:20px;padding:16px;background:#f7f5ef;border:1px solid #e6e1d6;border-radius:8px;display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+      .reservation-dates label{font:700 .8rem Arial,Helvetica,sans-serif;color:#454d3d}
+      .reservation-dates input{padding:10px;border:1px solid #bdbdb2;border-radius:5px;font-size:1rem}
+      .reservation-dates small{color:#686b60;font:.75rem/1.5 Arial,Helvetica,sans-serif}
       .pedagogical-access{background:#edf0e6;border:1px solid #d6ddc9;border-radius:8px;padding:18px;margin-top:22px}
       .pedagogical-access strong{color:#46573d}
       .pedagogical-access p{font:.82rem/1.5 Arial,Helvetica,sans-serif;color:#5c6255}
