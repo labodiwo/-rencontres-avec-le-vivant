@@ -329,6 +329,14 @@ import SiteFooter from "../components/SiteFooter.astro";
 
           <p id="form-status" class="form-status" role="status"></p>
         </form>
+        <div id="booking-success" class="booking-success" role="status" aria-live="polite" tabindex="-1" hidden>
+          <div class="booking-success-icon" aria-hidden="true">✓</div>
+          <h2>Votre demande a bien été envoyée !</h2>
+          <p>Merci pour votre intérêt pour les malles Labodiwo.</p>
+          <p>Votre demande de réservation a bien été reçue. Je reviendrai vers vous pour confirmer la disponibilité de la malle.</p>
+          <p class="booking-success-email">Un e-mail récapitulatif vous a été envoyé. Pensez à vérifier vos courriers indésirables.</p>
+          <p class="booking-success-note">Votre réservation n'est pas encore confirmée.</p>
+        </div>
       </section>
     </main>
 
@@ -903,8 +911,11 @@ import SiteFooter from "../components/SiteFooter.astro";
             );
           }
 
-          formStatus.textContent =
-            "Votre demande a bien été envoyée. Je reviendrai vers vous pour confirmer la disponibilité et la réservation.";
+          bookingForm.hidden = true;
+          const successPanel = document.getElementById("booking-success");
+          successPanel.hidden = false;
+          successPanel.focus({ preventScroll: true });
+          successPanel.scrollIntoView({ behavior: "smooth", block: "center" });
 
           bookingForm.reset();
           turnstileToken = "";
@@ -1589,6 +1600,40 @@ import SiteFooter from "../components/SiteFooter.astro";
         color: #596243;
         line-height: 1.5;
       }
+
+      .booking-form[hidden], .booking-success[hidden] { display: none !important; }
+      .booking-success {
+        margin: 24px auto;
+        padding: clamp(28px, 5vw, 52px) 24px;
+        max-width: 720px;
+        border: 2px solid #7d8957;
+        border-radius: 16px;
+        background: #f5f7ee;
+        color: #34412b;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(40, 55, 30, .08);
+      }
+      .booking-success:focus { outline: none; }
+      .booking-success-icon {
+        display: grid;
+        place-items: center;
+        width: 68px;
+        height: 68px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        background: #7d8957;
+        color: #fff;
+        font: bold 2.3rem Arial, sans-serif;
+      }
+      .booking-success h2 { margin: 0 0 18px; font-size: clamp(1.4rem, 4vw, 2rem); }
+      .booking-success p { line-height: 1.65; }
+      .booking-success-email {
+        margin: 22px 0;
+        padding: 16px;
+        border-radius: 10px;
+        background: #e7edda;
+      }
+      .booking-success-note { font-weight: 700; }
 
       .technical-note {
         margin: 18px 0 0;
