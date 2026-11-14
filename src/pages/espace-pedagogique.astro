@@ -56,7 +56,7 @@ const propositions = [
         <section class="activities" aria-labelledby="activities-title">
           <p class="eyebrow">À explorer à votre rythme</p>
           <h2 id="activities-title">Les propositions de la malle</h2>
-          <p class="section-intro">Les cinq animations de ton livret sont présentées ci-dessous. Chaque fiche détaillée donnera accès aux objectifs, au matériel, à la préparation et aux propositions à choisir librement. Dans les fiches actuelles, le temps d’expérimentation est nommé « J’explore ».</p>
+          <p class="section-intro">Choisissez une animation pour découvrir le fonctionnement du lecteur. Les pages originales du livret seront ajoutées après la mise en place d’un accès privé sécurisé.</p>
           <div class="cards">
             {propositions.map((p, i) => (
               <article class="activity">
@@ -64,10 +64,46 @@ const propositions = [
                 <p class="theme">{p.theme}</p>
                 <h3>{p.titre}</h3>
                 <p>{p.description}</p><p class="prep"><strong>À prévoir :</strong> {p.preparation}</p><p class="sequence">{p.temps}</p>
-                <span class="soon">Fiche détaillée bientôt disponible</span>
+                <button class="open-reader" type="button" data-fiche={i} aria-label={`Voir l’aperçu du lecteur pour ${p.titre}`}>Voir dans le lecteur →</button>
               </article>
             ))}
           </div>
+        </section>
+
+        <section class="reader-section" id="lecteur" aria-labelledby="reader-title">
+          <p class="eyebrow">Démonstration du lecteur</p>
+          <h2 id="reader-title">Consulter les fiches</h2>
+          <p class="section-intro">Ce lecteur est fonctionnel pour la navigation et le zoom. Les pages originales du livret ne sont pas encore publiées : elles seront affichées ici uniquement après la sécurisation de l’espace réservé aux locataires.</p>
+          <div class="reader-shell" oncontextmenu="return false">
+            <div class="reader-toolbar">
+              <button type="button" id="prev-fiche" aria-label="Animation précédente">← Précédente</button>
+              <span id="reader-count" aria-live="polite">Animation 1 / 5</span>
+              <button type="button" id="next-fiche" aria-label="Animation suivante">Suivante →</button>
+            </div>
+            <div class="reader-canvas" id="reader-canvas">
+              <div class="reader-paper" id="reader-paper">
+                <div class="reader-paper-header">RENCONTRES AVEC LE VIVANT · LES OISEAUX</div>
+                <div class="reader-paper-inner">
+                  <p class="reader-kicker" id="reader-kicker">ANIMATION 01</p>
+                  <h3 id="reader-fiche-title">Dans le monde des oiseaux</h3>
+                  <p class="reader-fiche-theme" id="reader-fiche-theme">Mini-monde · Jeu libre</p>
+                  <div class="reader-placeholder">
+                    <span aria-hidden="true">✦</span>
+                    <strong>Emplacement de la fiche originale</strong>
+                    <p>La page de ton livret sera affichée ici, sans modification de sa mise en page, une fois l’accès privé activé.</p>
+                  </div>
+                </div>
+                <div class="reader-paper-footer">REGARDER · ÉCOUTER · S’ÉMERVEILLER</div>
+              </div>
+            </div>
+            <div class="reader-toolbar reader-bottom">
+              <button type="button" id="zoom-out" aria-label="Réduire le zoom">−</button>
+              <output id="zoom-value" aria-live="polite">100 %</output>
+              <button type="button" id="zoom-in" aria-label="Agrandir le zoom">+</button>
+              <button type="button" id="zoom-reset">Réinitialiser</button>
+            </div>
+          </div>
+          <p class="reader-note">Aucun bouton de téléchargement ou d’impression n’est proposé. La sélection du texte et le clic droit sont désactivés dans le lecteur. Ces mesures ne peuvent toutefois pas empêcher les captures d’écran.</p>
         </section>
 
         <section class="inventory" aria-labelledby="inventory-title">
@@ -138,6 +174,26 @@ const propositions = [
       .theme{font:700 .72rem Arial,Helvetica,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#717d58;margin:20px 0 8px}
       .activity p:not(.theme){color:#585b50;font-size:.93rem;margin:0 0 14px}.activity .prep{font-size:.84rem!important}.activity .sequence{color:#65754e!important;font-size:.78rem!important;font-weight:700}
       .soon{font:600 .78rem Arial,Helvetica,sans-serif;color:#6d7759;margin-top:auto;border-top:1px solid #d6d7ca;padding-top:14px}
+      .open-reader{margin-top:auto;cursor:pointer;text-align:left;background:none;border:0;border-top:1px solid #d6d7ca;padding:14px 0 0;color:#566844;font:700 .85rem Arial,Helvetica,sans-serif}
+      .open-reader:hover,.open-reader:focus-visible{text-decoration:underline}
+      .reader-section{padding:58px 0 72px;border-top:1px solid #deded5}
+      .reader-shell{border:1px solid #d7ddce;border-radius:10px;overflow:hidden;background:#e7e8df;user-select:none;-webkit-user-select:none}
+      .reader-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;background:#e4e9dc;font:600 .85rem Arial,Helvetica,sans-serif}
+      .reader-toolbar button{background:#fffdf8;color:#405038;border:1px solid #bbc8b2;border-radius:6px;padding:10px 13px;cursor:pointer;font:inherit}
+      .reader-toolbar button:disabled{opacity:.45;cursor:default}
+      .reader-canvas{overflow:auto;max-height:650px;padding:24px;display:flex;align-items:flex-start;justify-content:center}
+      .reader-paper{width:440px;min-width:440px;min-height:570px;transform-origin:top center;background:#fffdf8;box-shadow:0 8px 24px #34402d25;display:flex;flex-direction:column;pointer-events:none}
+      .reader-paper-header,.reader-paper-footer{background:#677554;color:#fff;padding:16px 25px;font:700 .66rem Arial,Helvetica,sans-serif;letter-spacing:.11em}
+      .reader-paper-inner{flex:1;padding:45px 38px}
+      .reader-kicker{color:#7c8d60;font:700 .7rem Arial,Helvetica,sans-serif;letter-spacing:.1em}
+      .reader-paper h3{font-size:2rem;line-height:1.15;margin:20px 0}
+      .reader-fiche-theme{color:#677554;font-size:.95rem}
+      .reader-placeholder{border:2px dashed #b9c7ac;border-radius:7px;margin-top:36px;padding:28px 20px;text-align:center;color:#56614d}
+      .reader-placeholder span{font-size:2rem;display:block;margin-bottom:12px}
+      .reader-placeholder strong{font:700 .92rem Arial,Helvetica,sans-serif}
+      .reader-placeholder p{font-size:.88rem;line-height:1.6}
+      .reader-bottom{justify-content:center}
+      .reader-note{font-size:.86rem;color:#5b6154;max-width:760px}
       .inventory,.resources{padding:50px 0 70px;border-top:1px solid #deded5}.inventory-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.inventory-grid>div{background:#f0eee7;padding:26px;border-radius:8px}.inventory-grid p,.resource-grid p{color:#56594d;font-size:.93rem}.resource-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.resource-grid article{border:1px solid #d9dece;padding:24px;border-radius:8px}.ethics{padding:35px;margin:0 0 50px;border-left:4px solid #7d8957;background:#f0eee7}.ethics p{max-width:850px;color:#4f5748}.outside{background:#dfe4d1;border-radius:8px;padding:38px 42px;margin-bottom:52px}
       .outside>div{max-width:730px}
       .outside p:last-child{color:#4f5748;margin-bottom:0}
@@ -147,5 +203,43 @@ const propositions = [
       @media(max-width:850px){.welcome{grid-template-columns:1fr;gap:26px}.cards,.resource-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
       @media(max-width:600px){.hero{padding:55px 6%}.page{width:88%}.welcome{padding:48px 0}.steps,.cards,.resource-grid,.inventory-grid{grid-template-columns:1fr}.prepare,.activities{padding:45px 0}.outside{padding:28px}.notice{padding:22px;margin-bottom:50px}}
     </style>
+    <script>
+      const fiches = [
+        { titre: "Dans le monde des oiseaux", theme: "Mini-monde · Jeu libre" },
+        { titre: "À l’écoute des oiseaux… et du monde qui nous entoure", theme: "Écoute · Sons · Espace" },
+        { titre: "Les oiseaux sont passés par ici…", theme: "Indices · Traces · Matières" },
+        { titre: "Comme des oiseaux", theme: "Mouvement · Conte · Création" },
+        { titre: "Balade avec les oiseaux", theme: "Dehors · Observation · Attention" }
+      ];
+      let index = 0;
+      let zoom = 100;
+      const byId = (id: string) => document.getElementById(id);
+      const updateReader = () => {
+        if (!byId("reader-fiche-title")) return;
+        byId("reader-fiche-title")!.textContent = fiches[index].titre;
+        byId("reader-fiche-theme")!.textContent = fiches[index].theme;
+        byId("reader-kicker")!.textContent = "ANIMATION " + String(index + 1).padStart(2, "0");
+        byId("reader-count")!.textContent = "Animation " + (index + 1) + " / " + fiches.length;
+        (byId("prev-fiche") as HTMLButtonElement).disabled = index === 0;
+        (byId("next-fiche") as HTMLButtonElement).disabled = index === fiches.length - 1;
+        byId("zoom-value")!.textContent = zoom + " %";
+        byId("reader-paper")!.style.zoom = String(zoom / 100);
+      };
+      byId("prev-fiche")?.addEventListener("click", () => { index = Math.max(0,index-1); updateReader(); });
+      byId("next-fiche")?.addEventListener("click", () => { index = Math.min(fiches.length-1,index+1); updateReader(); });
+      byId("zoom-out")?.addEventListener("click", () => { zoom = Math.max(60,zoom-20); updateReader(); });
+      byId("zoom-in")?.addEventListener("click", () => { zoom = Math.min(200,zoom+20); updateReader(); });
+      byId("zoom-reset")?.addEventListener("click", () => { zoom = 100; updateReader(); });
+      document.querySelectorAll<HTMLButtonElement>(".open-reader").forEach(button => {
+        button.addEventListener("click", () => {
+          index = Number(button.dataset.fiche) || 0;
+          zoom = 100;
+          updateReader();
+          byId("lecteur")?.scrollIntoView({behavior:"smooth",block:"start"});
+        });
+      });
+      byId("reader-canvas")?.addEventListener("dragstart", e => e.preventDefault());
+      updateReader();
+    </script>
   </body>
 </html>
