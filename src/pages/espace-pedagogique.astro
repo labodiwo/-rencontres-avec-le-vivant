@@ -3,12 +3,11 @@ import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 
 const propositions = [
-  { titre: "Les traces des oiseaux", theme: "Observer les indices de présence", description: "Des pistes pour regarder autrement ce que les oiseaux laissent derrière eux." },
-  { titre: "À l’écoute des oiseaux", theme: "Écouter et expérimenter", description: "Prêter attention aux sons et explorer l’écoute à travers le jeu." },
-  { titre: "Les refuges", theme: "Explorer les habitats", description: "Découvrir différents endroits où les oiseaux peuvent trouver refuge." },
-  { titre: "Les œufs et les nids", theme: "Manipuler et imaginer", description: "Observer, comparer et jouer avec le matériel de la malle." },
-  { titre: "Peinture végétale", theme: "Créer et expérimenter", description: "Explorer des matières et des couleurs à partir du végétal." },
-  { titre: "Le conte moteur", theme: "Bouger et raconter", description: "Entrer dans l’univers des oiseaux par le mouvement." }
+  { titre: "Dans le monde des oiseaux", theme: "Mini-monde · Jeu libre", description: "Entrer dans l’univers des oiseaux par le jeu et l’imaginaire : manipuler, aménager les refuges et inventer des histoires.", preparation: "Prévoir quelques éléments naturels et choisir une entrée : album ou histoire de la naissance du mini-monde.", temps: "Je découvre · J’explore · Je poursuis dehors" },
+  { titre: "À l’écoute des oiseaux… et du monde qui nous entoure", theme: "Écoute · Sons · Espace", description: "Prendre le temps d’écouter, repérer la direction d’un son et découvrir quelques chants et cris d’oiseaux.", preparation: "Charger les deux enceintes, prévoir un téléphone ou ordinateur et tester les sons à l’avance.", temps: "Je découvre · J’explore · Je poursuis dehors" },
+  { titre: "Les oiseaux sont passés par ici…", theme: "Indices · Traces · Matières", description: "Observer les indices laissés par les oiseaux, puis explorer les traces dans l’argile ou avec de la peinture de terre.", preparation: "Préparer la boîte de photographies, un espace protégé pour l’argile et le matériel de peinture.", temps: "Je découvre · J’explore · Je poursuis dehors" },
+  { titre: "Comme des oiseaux", theme: "Mouvement · Conte · Création", description: "Observer différentes façons de se déplacer, les expérimenter avec son corps et prolonger le mouvement sur le papier.", preparation: "Prévoir le conte moteur, les cartes de déplacement, du papier grand format et de la peinture.", temps: "Je découvre · J’explore · Je poursuis dehors" },
+  { titre: "Balade avec les oiseaux", theme: "Dehors · Observation · Attention", description: "Marcher sans destination imposée : écouter, suivre un oiseau du regard, chercher des indices et garder une trace de la balade.", preparation: "Choisir un parcours court, prévoir des vêtements adaptés, un peu d’eau et éventuellement un support pour créer.", temps: "Une balade à composer librement" }
 ];
 ---
 
@@ -27,8 +26,8 @@ const propositions = [
       <section class="hero">
         <div class="hero-inner">
           <p class="eyebrow">Rencontres avec le vivant · Malle 01</p>
-          <h1>Préparer ma rencontre avec les oiseaux</h1>
-          <p>Un espace pour prendre connaissance des propositions, choisir ce qui convient à son groupe et préparer les découvertes avant l’arrivée de la malle.</p>
+          <h1>Préparer vos rencontres avec les oiseaux</h1>
+          <p>Regarder, écouter, s’émerveiller. Retrouvez les repères pour découvrir la malle, choisir vos animations et préparer vos rencontres avec les oiseaux avant son arrivée.</p>
           <span class="status">Aperçu de l’espace pédagogique · Accès privé à venir</span>
         </div>
       </section>
@@ -37,48 +36,69 @@ const propositions = [
         <section class="welcome" aria-labelledby="welcome-title">
           <div>
             <p class="eyebrow">Bienvenue</p>
-            <h2 id="welcome-title">À chacun sa façon d’utiliser la malle</h2>
-            <p>Vous pouvez choisir une seule proposition, en associer plusieurs, laisser les enfants explorer librement le mini-monde ou partager un album. Il n’y a pas de programme à suivre dans un ordre précis.</p>
-            <p>Ces ressources sont pensées pour vous accompagner dans vos choix, sans remplacer votre connaissance du groupe.</p>
+            <h2 id="welcome-title">Une malle, plusieurs façons de l’utiliser</h2>
+            <p>Vous pouvez laisser les enfants jouer librement avec le mini-monde, choisir une animation, construire un cycle de cinq séances ou composer votre propre proposition. Les durées indiquées dans le livret sont des repères, pas des obligations.</p>
+            <p>La malle a été pensée pour un groupe d’environ huit enfants de 3 à 5 ans. Adaptez son utilisation à votre groupe, à l’espace et au nombre d’adultes présents. Prenez le temps : les questions des enfants sont souvent le meilleur point de départ.</p>
           </div>
           <img src="/images/mini-monde-oiseaux.png" alt="Mini-monde pédagogique consacré aux oiseaux" loading="lazy" />
         </section>
 
         <section class="prepare" aria-labelledby="prepare-title">
           <p class="eyebrow">Avant de recevoir la malle</p>
-          <h2 id="prepare-title">Quelques repères pour préparer vos animations</h2>
+          <h2 id="prepare-title">Avant l’arrivée de la malle</h2>
           <div class="steps">
-            <article><span>01</span><h3>Découvrir</h3><p>Prendre connaissance du matériel et des différentes propositions.</p></article>
-            <article><span>02</span><h3>Choisir</h3><p>Retenir ce qui correspond à votre groupe, à vos envies et au temps disponible.</p></article>
-            <article><span>03</span><h3>Préparer</h3><p>Repérer les espaces, le matériel complémentaire et les éventuelles préparations.</p></article>
+            <article><span>01</span><h3>Découvrir</h3><p>Découvrir le contenu de la malle, le mini-monde et les cinq animations.</p></article>
+            <article><span>02</span><h3>Choisir</h3><p>Choisir entre jeu libre, animation ponctuelle, cycle ou balade.</p></article>
+            <article><span>03</span><h3>Préparer</h3><p>Prévoir les éléments non fournis et tester le matériel sonore si nécessaire.</p></article>
           </div>
         </section>
 
         <section class="activities" aria-labelledby="activities-title">
           <p class="eyebrow">À explorer à votre rythme</p>
           <h2 id="activities-title">Les propositions de la malle</h2>
-          <p class="section-intro">Chaque proposition aura sa propre fiche, avec les éléments nécessaires pour la préparer et les trois temps « Je découvre », « J’expérimente » et « Je poursuis dehors » lorsque cela s’y prête.</p>
+          <p class="section-intro">Les cinq animations de ton livret sont présentées ci-dessous. Chaque fiche détaillée donnera accès aux objectifs, au matériel, à la préparation et aux propositions à choisir librement. Dans les fiches actuelles, le temps d’expérimentation est nommé « J’explore ».</p>
           <div class="cards">
             {propositions.map((p, i) => (
               <article class="activity">
                 <span class="number">{String(i + 1).padStart(2, "0")}</span>
                 <p class="theme">{p.theme}</p>
                 <h3>{p.titre}</h3>
-                <p>{p.description}</p>
+                <p>{p.description}</p><p class="prep"><strong>À prévoir :</strong> {p.preparation}</p><p class="sequence">{p.temps}</p>
                 <span class="soon">Fiche détaillée bientôt disponible</span>
               </article>
             ))}
           </div>
         </section>
 
+        <section class="inventory" aria-labelledby="inventory-title">
+          <p class="eyebrow">Préparer le matériel</p>
+          <h2 id="inventory-title">Ce que vous trouverez dans la malle</h2>
+          <div class="inventory-grid">
+            <div><h3>Dans la malle</h3><p>Un mini-monde avec arbre, souche, tronc, figurines d’oiseaux, œufs et bols en bois ; une boîte de photographies d’indices, des cartes de déplacement, des photographies plastifiées, des outils pour la peinture de terre, cinq albums jeunesse, cinq fiches d’animation plastifiées et deux enceintes.</p></div>
+            <div><h3>À prévoir de votre côté</h3><p>Argile marron, peinture, pinceaux, papier ou rouleau de papier, téléphone ou ordinateur pour les sons et, si possible, un appareil photo.</p><p>Vérifiez la liste définitive avec la fiche d’inventaire papier fournie avec la malle.</p></div>
+          </div>
+        </section>
+        <section class="resources" aria-labelledby="resources-title">
+          <p class="eyebrow">Des outils à piocher</p>
+          <h2 id="resources-title">Pour enrichir les animations</h2>
+          <div class="resource-grid">
+            <article><h3>Le mini-monde</h3><p>Un univers volontairement ouvert, à aménager et transformer au fil des histoires et des saisons.</p></article>
+            <article><h3>L’œuf, l’oiseau et son nid</h3><p>Un jeu d’association pour observer et comparer des œufs et des lieux de nidification.</p></article>
+            <article><h3>La boîte des indices</h3><p>Des photographies pour regarder les traces laissées par les oiseaux.</p></article>
+            <article><h3>Les cartes de déplacement</h3><p>Des supports pour inventer des jeux de mouvement ou adapter des jeux connus.</p></article>
+            <article><h3>L’exposition à compléter</h3><p>Des photographies à enrichir avec les observations et les créations du groupe.</p></article>
+            <article><h3>Les ressentis et les questions</h3><p>Plusieurs façons de terminer une activité, sans imposer de prise de parole.</p></article>
+          </div>
+        </section>
         <section class="outside">
           <div>
             <p class="eyebrow">Et après ?</p>
-            <h2>Poursuivre dehors</h2>
-            <p>La malle peut être un point de départ : écouter un chant, remarquer une plume au sol, observer un arbre ou simplement prendre le temps de regarder autour de soi.</p>
+            <h2>Observer au fil des saisons</h2>
+            <p>La malle se découvre toute l’année. Les chants, les déplacements et les indices changent avec les saisons. Un même lieu observé au printemps, en été, en automne ou en hiver peut devenir une nouvelle expérience. Pas besoin d’aller loin : une cour, un jardin ou un arbre visible depuis une fenêtre peuvent suffire.</p>
           </div>
         </section>
 
+        <section class="ethics"><p class="eyebrow">Observer sans déranger</p><h2>Respecter le vivant</h2><p>Observer les oiseaux à distance, leur laisser de la tranquillité et privilégier les photographies ou les dessins plutôt que les prélèvements. Le mini-monde est fait pour être touché et déplacé ; dehors, les oiseaux, leurs nids et leurs œufs doivent être respectés.</p><p><strong>Le réflexe de la malle :</strong> J’observe · J’écoute · Je garde une trace · Je laisse sur place.</p></section>
         <section class="notice" aria-labelledby="notice-title">
           <h2 id="notice-title">À propos de cet espace</h2>
           <p>Cette page est une maquette de l’espace pédagogique. Elle ne contient pas encore le livret complet et <strong>n’est pas un espace privé sécurisé</strong>. Les fiches détaillées ne seront ajoutées qu’une fois l’accès réservé aux locataires mis en place.</p>
@@ -116,16 +136,16 @@ const propositions = [
       .activity{background:#f0eee7;padding:28px;border-radius:8px;display:flex;flex-direction:column;min-height:270px}
       .number{color:#84916a;font-size:1.55rem}
       .theme{font:700 .72rem Arial,Helvetica,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#717d58;margin:20px 0 8px}
-      .activity p:not(.theme){color:#585b50;font-size:.93rem;margin:0 0 24px}
+      .activity p:not(.theme){color:#585b50;font-size:.93rem;margin:0 0 14px}.activity .prep{font-size:.84rem!important}.activity .sequence{color:#65754e!important;font-size:.78rem!important;font-weight:700}
       .soon{font:600 .78rem Arial,Helvetica,sans-serif;color:#6d7759;margin-top:auto;border-top:1px solid #d6d7ca;padding-top:14px}
-      .outside{background:#dfe4d1;border-radius:8px;padding:38px 42px;margin-bottom:52px}
+      .inventory,.resources{padding:50px 0 70px;border-top:1px solid #deded5}.inventory-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.inventory-grid>div{background:#f0eee7;padding:26px;border-radius:8px}.inventory-grid p,.resource-grid p{color:#56594d;font-size:.93rem}.resource-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.resource-grid article{border:1px solid #d9dece;padding:24px;border-radius:8px}.ethics{padding:35px;margin:0 0 50px;border-left:4px solid #7d8957;background:#f0eee7}.ethics p{max-width:850px;color:#4f5748}.outside{background:#dfe4d1;border-radius:8px;padding:38px 42px;margin-bottom:52px}
       .outside>div{max-width:730px}
       .outside p:last-child{color:#4f5748;margin-bottom:0}
       .notice{border-left:4px solid #7d8957;background:#f0eee7;padding:25px 30px;margin-bottom:80px;border-radius:4px}
       .notice h2{font-size:1.5rem}
       .notice p{font-size:.93rem;color:#55594e}
-      @media(max-width:850px){.welcome{grid-template-columns:1fr;gap:26px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
-      @media(max-width:600px){.hero{padding:55px 6%}.page{width:88%}.welcome{padding:48px 0}.steps,.cards{grid-template-columns:1fr}.prepare,.activities{padding:45px 0}.outside{padding:28px}.notice{padding:22px;margin-bottom:50px}}
+      @media(max-width:850px){.welcome{grid-template-columns:1fr;gap:26px}.cards,.resource-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+      @media(max-width:600px){.hero{padding:55px 6%}.page{width:88%}.welcome{padding:48px 0}.steps,.cards,.resource-grid,.inventory-grid{grid-template-columns:1fr}.prepare,.activities{padding:45px 0}.outside{padding:28px}.notice{padding:22px;margin-bottom:50px}}
     </style>
   </body>
 </html>
