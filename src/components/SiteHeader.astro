@@ -185,6 +185,67 @@ const isActive = (href) => pathname === href || (href === "/blog" && pathname ==
 </style>
 
 <style is:global>
+
+  /* Règles globales ciblées : empêchent les styles des pages de placer
+     le menu à droite du logo sur les petits écrans. */
+  @media (max-width: 900px) {
+    header.site-header {
+      display: grid !important;
+      grid-template-columns: minmax(0, 1fr) auto !important;
+      align-items: center !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      gap: 0 10px !important;
+      padding: 12px 16px !important;
+    }
+    header.site-header > a.brand {
+      grid-column: 1 !important;
+      grid-row: 1 !important;
+      min-width: 0 !important;
+    }
+    header.site-header > button.menu-toggle {
+      display: inline-flex !important;
+      grid-column: 2 !important;
+      grid-row: 1 !important;
+      margin: 0 !important;
+    }
+    header.site-header > nav#main-navigation {
+      display: none !important;
+      grid-column: 1 / -1 !important;
+      grid-row: 2 !important;
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      margin: 12px 0 0 !important;
+      padding: 10px 0 0 !important;
+      border-top: 1px solid #e6e2d9 !important;
+      flex-direction: column !important;
+      align-items: stretch !important;
+      justify-content: flex-start !important;
+      flex-wrap: nowrap !important;
+      overflow: visible !important;
+      gap: 2px !important;
+    }
+    header.site-header > nav#main-navigation.is-open {
+      display: flex !important;
+    }
+    header.site-header > nav#main-navigation > a {
+      display: block !important;
+      box-sizing: border-box !important;
+      width: 100% !important;
+      min-width: 0 !important;
+      padding: 12px !important;
+      margin: 0 !important;
+      text-align: left !important;
+      white-space: normal !important;
+      overflow-wrap: anywhere !important;
+    }
+    header.site-header > nav#main-navigation > a.nav-cta {
+      text-align: center !important;
+    }
+  }
   /* Titres plus aérés sur les grands écrans, sur toutes les pages publiques. */
   @media (min-width: 901px) {
     main h1 { line-height: 1.14 !important; }
