@@ -393,7 +393,7 @@ export class ReservationsStore extends DurableObject {
         return json({ ok: false, error: "Date de début invalide." }, 400);
       }
       // Vendredi de la dernière semaine + trois jours, à 23 h 59 UTC.
-      const expiresAt = new Date(start.getTime() + ((duration - 1) * 7 + 7) * 86400000 - 1000).toISOString();
+      const expiresAt = new Date(start.getTime() + ((duration - 1) * 7 + 8) * 86400000 - 1000).toISOString();
       if (Date.parse(expiresAt) <= Date.now()) return json({ ok: false, error: "La période d’accès est déjà terminée." }, 400);
       const bytes = crypto.getRandomValues(new Uint8Array(32));
       const token = Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("");
@@ -428,7 +428,7 @@ export class ReservationsStore extends DurableObject {
       const previous = reservations[id] || {};
       const now = new Date().toISOString();
 
-      const reservation = {
+      const reservation = {\n        pedagogicalAccess: previous.pedagogicalAccess || null,
         id,
         kit: clean(body.kit || previous.kit, 120),
         week: clean(body.week || previous.week, 220),
