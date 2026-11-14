@@ -367,6 +367,56 @@ export class ReservationsStore extends DurableObject {
         return String(b.createdAt || "").localeCompare(String(a.createdAt || ""));
       });
 
+    if (request.method === "POST" && url.pathname === "/pedagogical-access") {
+      const body = await request.json();
+      const id = clean(body.id, 80);
+      const action = clean(body.action, 20);
+      const reservation = reservations[id];
+      if (!reservation) return json({ ok: false, error: "Réservation introuvable." }, 404);
+      if (action === "revoke") {
+        delete reservation.pedagogicalAccess;
+        await this.ctx.storage.put("reservations", reservations);
+        return json({ ok: true });
+      }
+      if (action !== "create" || !["confirmed", "paid"].includes(reservation.status)) {
+        return json({ ok: false, error: "Confirmez d’abord la réservation." }, 400);
+      }
+      if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(reservation.weekIso)) {
+        return json({ ok: false, error: "Dates de location manquantes." }, 400);
+      }
+      const duration = Number(reservation.duration);
+      if (![1, 2, 4].includes(duration)) {
+        return json({ ok: false, error: "Durée invalide." }, 400);
+      }
+      const start = new Date(reservation.weekIso + "T00:00:00Z");
+      if (!Number.isFinite(start.getTime()) || start.toISOString().slice(0,10) !== reservation.weekIso || start.getUTCDay() !== 1) {
+        return json({ ok: false, error: "Date de début invalide." }, 400);
+      }
+      // Vendredi de la dernière semaine + trois jours, à 23 h 59 UTC.
+      const expiresAt = new Date(start.getTime() + ((duration - 1) * 7 + 7) * 86400000 - 1000).toISOString();
+      if (Date.parse(expiresAt) <= Date.now()) return json({ ok: false, error: "La période d’accès est déjà terminée." }, 400);
+      const bytes = crypto.getRandomValues(new Uint8Array(32));
+      const token = Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("");
+      const hashBytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(token));
+      const tokenHash = Array.from(new Uint8Array(hashBytes), b => b.toString(16).padStart(2, "0")).join("");
+      reservation.pedagogicalAccess = { tokenHash, expiresAt, createdAt: new Date().toISOString() };
+      await this.ctx.storage.put("reservations", reservations);
+      return json({ ok: true, token, expiresAt });
+    }
+
+    if (request.method === "POST" && url.pathname === "/verify-pedagogical-access") {
+      const { token } = await request.json();
+      if (typeof token !== "string" || !/^[a-f0-9]{64}$/.test(token)) return json({ ok: false }, 403);
+      const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(token));
+      const hash = Array.from(new Uint8Array(digest), b => b.toString(16).padStart(2, "0")).join("");
+      const valid = Object.values(reservations).some(r =>
+        r.pedagogicalAccess?.tokenHash === hash &&
+        Date.parse(r.pedagogicalAccess.expiresAt) > Date.now() &&
+        ["confirmed", "paid", "completed"].includes(r.status)
+      );
+      return json({ ok: valid }, valid ? 200 : 403);
+    }
+
     if (request.method === "GET" && url.pathname === "/reservations") {
       return json({ ok: true, reservations: sorted() });
     }
@@ -609,6 +659,39 @@ export default {
       }
 
       return json({ ok: false, error: "Méthode non autorisée." }, 405);
+    }
+
+    if (url.pathname === "/api/admin/pedagogical-access") {
+      if (!env.ADMIN_KEY || !safeEqual(request.headers.get("x-admin-key") || "", env.ADMIN_KEY)) {
+        return json({ ok: false, error: "Accès administrateur refusé." }, 401);
+      }
+      if (request.method !== "POST" || !(request.headers.get("content-type") || "").includes("application/json")) {
+        return json({ ok: false, error: "Méthode ou format invalide." }, 405);
+      }
+      const body = await request.json();
+      const response = await getReservationsStub(env).fetch(new Request("https://reservations.internal/pedagogical-access", {
+        method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body)
+      }));
+      const data = await response.json();
+      if (data.token) data.link = url.origin + "/acces-pedagogique?cle=" + data.token;
+      delete data.token;
+      return json(data, response.status);
+    }
+
+    if (url.pathname === "/acces-pedagogique") {
+      const token = url.searchParams.get("cle") || "";
+      const response = await getReservationsStub(env).fetch(new Request("https://reservations.internal/verify-pedagogical-access", {
+        method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ token })
+      }));
+      const valid = response.ok;
+      const title = valid ? "Espace pédagogique privé" : "Lien expiré ou invalide";
+      const message = valid
+        ? "Votre lien est valide. Les fiches originales seront disponibles ici après leur intégration sécurisée. Le livret complet n’est pas encore en ligne."
+        : "Ce lien est invalide, a expiré ou a été désactivé. Contactez Rencontres avec le vivant si votre location est toujours en cours.";
+      return new Response(`<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer"><title>${title} · Rencontres avec le vivant</title><style>body{background:#f9f7f2;color:#293025;font:18px/1.7 Georgia,serif;margin:0}main{max-width:640px;margin:12vh auto;padding:36px;background:#fff;border-radius:12px}h1{color:#596243;font-weight:400}a{color:#596243}</style></head><body><main><p>RENCONTRES AVEC LE VIVANT · LES OISEAUX</p><h1>${title}</h1><p>${message}</p><p><a href="/">Retour à l’accueil</a></p></main></body></html>`, {
+        status: valid ? 200 : 403,
+        headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store, private", "referrer-policy": "no-referrer", "x-robots-tag": "noindex, nofollow", "x-content-type-options": "nosniff" }
+      });
     }
 
     if (url.pathname === "/api/admin/reservations") {
