@@ -381,7 +381,10 @@ export class ReservationsStore extends DurableObject {
       if (action !== "create" || !["confirmed", "paid"].includes(reservation.status)) {
         return json({ ok: false, error: "Confirmez d’abord la réservation." }, 400);
       }
-      if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(reservation.weekIso)) {
+      if (!reservation.weekIso) {
+        return json({ ok: false, error: "Enregistrez d’abord la date de début de location." }, 400);
+      }
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(reservation.weekIso)) {
         return json({ ok: false, error: "Dates de location manquantes." }, 400);
       }
       const duration = Number(reservation.duration);
