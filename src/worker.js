@@ -1163,6 +1163,9 @@ export default {
           "À bientôt,",
           "Rencontres avec le vivant",
           "https://labodiwo.com",
+          "",
+          "Ceci est un e-mail automatique, merci de ne pas y répondre.",
+          "Pour toute question concernant votre demande de réservation, contactez-nous via le formulaire : https://labodiwo.com/contact",
         ];
         await env.EMAIL.send({
           to: data.email,
