@@ -1,0 +1,131 @@
+---
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+
+const propositions = [
+  { titre: "Les traces des oiseaux", theme: "Observer les indices de présence", description: "Des pistes pour regarder autrement ce que les oiseaux laissent derrière eux." },
+  { titre: "À l’écoute des oiseaux", theme: "Écouter et expérimenter", description: "Prêter attention aux sons et explorer l’écoute à travers le jeu." },
+  { titre: "Les refuges", theme: "Explorer les habitats", description: "Découvrir différents endroits où les oiseaux peuvent trouver refuge." },
+  { titre: "Les œufs et les nids", theme: "Manipuler et imaginer", description: "Observer, comparer et jouer avec le matériel de la malle." },
+  { titre: "Peinture végétale", theme: "Créer et expérimenter", description: "Explorer des matières et des couleurs à partir du végétal." },
+  { titre: "Le conte moteur", theme: "Bouger et raconter", description: "Entrer dans l’univers des oiseaux par le mouvement." }
+];
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="description" content="Aperçu de l’espace pédagogique de la malle Les oiseaux." />
+    <title>Espace pédagogique · Les oiseaux · Rencontres avec le vivant</title>
+  </head>
+  <body>
+    <SiteHeader />
+    <main>
+      <section class="hero">
+        <div class="hero-inner">
+          <p class="eyebrow">Rencontres avec le vivant · Malle 01</p>
+          <h1>Préparer ma rencontre avec les oiseaux</h1>
+          <p>Un espace pour prendre connaissance des propositions, choisir ce qui convient à son groupe et préparer les découvertes avant l’arrivée de la malle.</p>
+          <span class="status">Aperçu de l’espace pédagogique · Accès privé à venir</span>
+        </div>
+      </section>
+
+      <div class="page">
+        <section class="welcome" aria-labelledby="welcome-title">
+          <div>
+            <p class="eyebrow">Bienvenue</p>
+            <h2 id="welcome-title">À chacun sa façon d’utiliser la malle</h2>
+            <p>Vous pouvez choisir une seule proposition, en associer plusieurs, laisser les enfants explorer librement le mini-monde ou partager un album. Il n’y a pas de programme à suivre dans un ordre précis.</p>
+            <p>Ces ressources sont pensées pour vous accompagner dans vos choix, sans remplacer votre connaissance du groupe.</p>
+          </div>
+          <img src="/images/mini-monde-oiseaux.png" alt="Mini-monde pédagogique consacré aux oiseaux" loading="lazy" />
+        </section>
+
+        <section class="prepare" aria-labelledby="prepare-title">
+          <p class="eyebrow">Avant de recevoir la malle</p>
+          <h2 id="prepare-title">Quelques repères pour préparer vos animations</h2>
+          <div class="steps">
+            <article><span>01</span><h3>Découvrir</h3><p>Prendre connaissance du matériel et des différentes propositions.</p></article>
+            <article><span>02</span><h3>Choisir</h3><p>Retenir ce qui correspond à votre groupe, à vos envies et au temps disponible.</p></article>
+            <article><span>03</span><h3>Préparer</h3><p>Repérer les espaces, le matériel complémentaire et les éventuelles préparations.</p></article>
+          </div>
+        </section>
+
+        <section class="activities" aria-labelledby="activities-title">
+          <p class="eyebrow">À explorer à votre rythme</p>
+          <h2 id="activities-title">Les propositions de la malle</h2>
+          <p class="section-intro">Chaque proposition aura sa propre fiche, avec les éléments nécessaires pour la préparer et les trois temps « Je découvre », « J’expérimente » et « Je poursuis dehors » lorsque cela s’y prête.</p>
+          <div class="cards">
+            {propositions.map((p, i) => (
+              <article class="activity">
+                <span class="number">{String(i + 1).padStart(2, "0")}</span>
+                <p class="theme">{p.theme}</p>
+                <h3>{p.titre}</h3>
+                <p>{p.description}</p>
+                <span class="soon">Fiche détaillée bientôt disponible</span>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section class="outside">
+          <div>
+            <p class="eyebrow">Et après ?</p>
+            <h2>Poursuivre dehors</h2>
+            <p>La malle peut être un point de départ : écouter un chant, remarquer une plume au sol, observer un arbre ou simplement prendre le temps de regarder autour de soi.</p>
+          </div>
+        </section>
+
+        <section class="notice" aria-labelledby="notice-title">
+          <h2 id="notice-title">À propos de cet espace</h2>
+          <p>Cette page est une maquette de l’espace pédagogique. Elle ne contient pas encore le livret complet et <strong>n’est pas un espace privé sécurisé</strong>. Les fiches détaillées ne seront ajoutées qu’une fois l’accès réservé aux locataires mis en place.</p>
+          <p>À terme, l’accès pourra être ouvert dès la confirmation de la réservation, pour préparer les animations avant la livraison de la malle.</p>
+        </section>
+      </div>
+    </main>
+    <SiteFooter />
+    <style>
+      :global(*){box-sizing:border-box}
+      :global(body){margin:0;background:#f9f7f2;color:#292b23;font-family:Georgia,"Times New Roman",serif}
+      .hero{background:#596243;color:#fffdf8;padding:76px 5.5% 68px}
+      .hero-inner{width:min(1050px,100%);margin:auto}
+      .eyebrow{font:700 .75rem Arial,Helvetica,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#7a835c;margin:0 0 14px}
+      .hero .eyebrow{color:#dce4cb}
+      h1{font-size:clamp(2.7rem,5vw,4.6rem);line-height:1.05;font-weight:400;max-width:760px;margin:0 0 22px}
+      .hero p:not(.eyebrow){max-width:700px;font-size:1.1rem;line-height:1.7}
+      .status{display:inline-block;margin-top:14px;padding:10px 14px;border:1px solid #b6c2a3;border-radius:5px;font:600 .82rem Arial,Helvetica,sans-serif}
+      .page{width:min(1100px,89%);margin:auto}
+      h2{font-size:clamp(1.9rem,3vw,2.8rem);line-height:1.15;font-weight:400;margin:0 0 20px}
+      h3{font-size:1.35rem;font-weight:400;margin:0 0 12px}
+      p{line-height:1.7}
+      .welcome{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:55px;padding:76px 0}
+      .welcome p:not(.eyebrow){color:#56594d}
+      .welcome img{width:100%;height:auto;max-height:410px;object-fit:contain;background:#ece9e0;border-radius:8px}
+      .prepare{padding:54px 0 72px;border-top:1px solid #deded5}
+      .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
+      .steps article{background:#e5e8d9;padding:28px;border-radius:7px}
+      .steps span{color:#73825b;font-size:1.8rem}
+      .steps h3{margin-top:16px}
+      .steps p{color:#53584d;margin-bottom:0;font-size:.95rem}
+      .activities{padding:66px 0 80px;border-top:1px solid #deded5}
+      .section-intro{max-width:740px;color:#56594d;margin-bottom:32px}
+      .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+      .activity{background:#f0eee7;padding:28px;border-radius:8px;display:flex;flex-direction:column;min-height:270px}
+      .number{color:#84916a;font-size:1.55rem}
+      .theme{font:700 .72rem Arial,Helvetica,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#717d58;margin:20px 0 8px}
+      .activity p:not(.theme){color:#585b50;font-size:.93rem;margin:0 0 24px}
+      .soon{font:600 .78rem Arial,Helvetica,sans-serif;color:#6d7759;margin-top:auto;border-top:1px solid #d6d7ca;padding-top:14px}
+      .outside{background:#dfe4d1;border-radius:8px;padding:38px 42px;margin-bottom:52px}
+      .outside>div{max-width:730px}
+      .outside p:last-child{color:#4f5748;margin-bottom:0}
+      .notice{border-left:4px solid #7d8957;background:#f0eee7;padding:25px 30px;margin-bottom:80px;border-radius:4px}
+      .notice h2{font-size:1.5rem}
+      .notice p{font-size:.93rem;color:#55594e}
+      @media(max-width:850px){.welcome{grid-template-columns:1fr;gap:26px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+      @media(max-width:600px){.hero{padding:55px 6%}.page{width:88%}.welcome{padding:48px 0}.steps,.cards{grid-template-columns:1fr}.prepare,.activities{padding:45px 0}.outside{padding:28px}.notice{padding:22px;margin-bottom:50px}}
+    </style>
+  </body>
+</html>
