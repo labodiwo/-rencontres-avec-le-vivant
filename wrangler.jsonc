@@ -51,7 +51,9 @@
   },
   "previews": {
     "vars": {
-      "TURNSTILE_SITE_KEY": "0x4AAAAAAFLbq9U43C7dk5EU"
+      "TURNSTILE_SITE_KEY": "1x00000000000000000000AA",
+      "TURNSTILE_SECRET_KEY": "1x0000000000000000000000000000000AA",
+      "PREVIEW_MODE": "true"
     },
     "send_email": [
       {
