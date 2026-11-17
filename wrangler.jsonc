@@ -32,6 +32,10 @@
       {
         "name": "RESERVATIONS",
         "class_name": "ReservationsStore"
+      },
+      {
+        "name": "SECURITY",
+        "class_name": "SecurityStore"
       }
     ]
   },
@@ -45,6 +49,10 @@
       "storage": "sqlite"
     },
     "ReservationsStore": {
+      "type": "durable-object",
+      "storage": "sqlite"
+    },
+    "SecurityStore": {
       "type": "durable-object",
       "storage": "sqlite"
     }
@@ -73,6 +81,10 @@
         {
           "name": "RESERVATIONS",
           "class_name": "ReservationsStore"
+        },
+        {
+          "name": "SECURITY",
+          "class_name": "SecurityStore"
         }
       ]
     }
