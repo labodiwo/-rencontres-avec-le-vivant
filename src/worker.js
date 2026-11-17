@@ -441,24 +441,52 @@ export class ReservationsStore extends DurableObject {
 
     // Les données personnelles ne sont pas conservées indéfiniment dans
     // l'outil de gestion actif. Les demandes non abouties sont supprimées
-    // après un an ; les dossiers terminés après trois ans.
+    // après un an. Les dossiers clients sont supprimés trois ans après la fin
+    // de la location, même si leur statut n'a pas été repassé à "completed".
+    // Les éventuels documents comptables sont archivés séparément.
     const oneYearCutoff = Date.now() - 365 * 24 * 60 * 60 * 1000;
-    const threeYearsCutoff = Date.now() - 3 * 365 * 24 * 60 * 60 * 1000;
+    const threeYearsMs = 3 * 365 * 24 * 60 * 60 * 1000;
     let removedExpiredReservations = false;
+
     Object.entries(reservations).forEach(([id, reservation]) => {
       const referenceDate = Date.parse(
         reservation.updatedAt || reservation.createdAt || "",
       );
+
       const expiredUnsuccessful =
         ["new", "cancelled"].includes(reservation.status) &&
         Number.isFinite(referenceDate) &&
         referenceDate < oneYearCutoff;
-      const expiredCompleted =
-        reservation.status === "completed" &&
-        Number.isFinite(referenceDate) &&
-        referenceDate < threeYearsCutoff;
 
-      if (expiredUnsuccessful || expiredCompleted) {
+      let clientRelationshipEndedAt = NaN;
+      if (
+        ["confirmed", "paid", "completed"].includes(reservation.status) &&
+        /^\d{4}-\d{2}-\d{2}$/.test(reservation.weekIso || "")
+      ) {
+        const duration = Math.max(
+          1,
+          Math.min(4, Number(reservation.duration) || 1),
+        );
+        const start = new Date(reservation.weekIso + "T12:00:00Z");
+        if (Number.isFinite(start.getTime())) {
+          clientRelationshipEndedAt =
+            start.getTime() + duration * 7 * 24 * 60 * 60 * 1000;
+        }
+      }
+
+      // Fallback pour les anciennes fiches sans date de location exploitable.
+      if (
+        !Number.isFinite(clientRelationshipEndedAt) &&
+        ["confirmed", "paid", "completed"].includes(reservation.status)
+      ) {
+        clientRelationshipEndedAt = referenceDate;
+      }
+
+      const expiredClient =
+        Number.isFinite(clientRelationshipEndedAt) &&
+        clientRelationshipEndedAt < Date.now() - threeYearsMs;
+
+      if (expiredUnsuccessful || expiredClient) {
         delete reservations[id];
         removedExpiredReservations = true;
       }
