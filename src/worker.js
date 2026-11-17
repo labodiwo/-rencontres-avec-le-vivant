@@ -29,8 +29,16 @@ const isEmail = (value) =>
 const isPhone = (value) => {
   const raw = String(value ?? "").trim();
   if (!raw || !/^[+0-9().\s-]+$/.test(raw)) return false;
+
   const compact = raw.replace(/[().\s-]/g, "");
-  return /^\+?\d{8,15}$/.test(compact);
+
+  // France métropolitaine :
+  // 06 12 34 56 78, 01 23 45 67 89, +33 6 12 34 56 78 ou 0033 6 12 34 56 78.
+  return (
+    /^0[1-9]\d{8}$/.test(compact) ||
+    /^\+33[1-9]\d{8}$/.test(compact) ||
+    /^0033[1-9]\d{8}$/.test(compact)
+  );
 };
 
 const safeEqual = (a, b) => {
@@ -1230,7 +1238,7 @@ export default {
           {
             ok: false,
             error:
-              "Le numéro de téléphone indiqué n’est pas valide. Utilisez uniquement des chiffres et, si besoin, +, espaces, points, tirets ou parenthèses.",
+              "Le numéro de téléphone indiqué n’est pas valide. Exemple : 06 12 34 56 78 ou +33 6 12 34 56 78.",
           },
           400,
         );
