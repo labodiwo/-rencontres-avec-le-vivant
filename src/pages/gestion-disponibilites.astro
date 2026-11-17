@@ -489,6 +489,39 @@
         }
 
         reservations = result.reservations || [];
+
+        // Donnée fictive uniquement sur les domaines de Preview Cloudflare,
+        // afin de tester l'export CSV sans utiliser de données clients réelles.
+        if (
+          reservations.length === 0 &&
+          window.location.hostname.endsWith(".workers.dev")
+        ) {
+          reservations = [
+            {
+              id: "preview-demo",
+              status: "new",
+              organisation: "Centre social exemple",
+              name: "Camille Test",
+              email: "camille.test@example.com",
+              phone: "06 12 34 56 78",
+              kit: "Malle Les oiseaux",
+              week: "Du lundi 7 décembre au vendredi 11 décembre 2026",
+              weekIso: "2026-12-07",
+              duration: "1",
+              formula: "Autonome",
+              priceSummary: "200 € · formule autonome",
+              childrenAge: "3–5 ans",
+              childrenNumber: "8",
+              message: "Donnée fictive destinée uniquement au test de l’export.",
+              adminNotes: "Ne pas utiliser en production.",
+              conditionsAccepted: true,
+              conditionsVersion: "2026-10",
+              createdAt: "2026-11-17T14:00:00.000Z",
+              updatedAt: "2026-11-17T14:00:00.000Z",
+            },
+          ];
+        }
+
         updateNewCount();
         updateSummary();
         renderPlanning();
