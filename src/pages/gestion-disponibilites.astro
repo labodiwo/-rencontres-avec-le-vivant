@@ -41,6 +41,10 @@
         </div>
 
         <div id="admin-panel" hidden>
+          <div class="admin-session-bar">
+            <span>Session administrateur ouverte</span>
+            <button type="button" id="logout-button" class="logout-button">Se déconnecter</button>
+          </div>
           <div class="tabs" role="tablist" aria-label="Gestion des réservations">
             <button type="button" class="tab active" data-tab="planning">Planning</button>
             <button type="button" class="tab" data-tab="requests">
@@ -162,6 +166,7 @@
       const summaryNew = document.getElementById("summary-new");
       const summaryConfirmed = document.getElementById("summary-confirmed");
       const summaryUpcoming = document.getElementById("summary-upcoming");
+      const logoutButton = document.getElementById("logout-button");
 
       let adminKey = "";
       let availability = {};
@@ -751,6 +756,30 @@
         });
       });
 
+      const logout = () => {
+        adminKey = "";
+        availability = {};
+        reservations = [];
+        currentFilter = "active";
+        passwordInput.value = "";
+        loginStatus.textContent = "";
+        saveStatus.textContent = "";
+        weeksContainer.innerHTML = "";
+        planningList.innerHTML = "";
+        requestsList.innerHTML = "";
+        summaryNew.textContent = "0";
+        summaryConfirmed.textContent = "0";
+        summaryUpcoming.textContent = "0";
+        newCount.textContent = "";
+        newCount.hidden = true;
+        adminPanel.hidden = true;
+        loginCard.hidden = false;
+        loginForm.reset();
+        passwordInput.focus();
+      };
+
+      logoutButton.addEventListener("click", logout);
+
       loginForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         loginStatus.textContent = "Vérification…";
@@ -866,6 +895,40 @@
       }
 
       .login-card button { width:100%; margin-top:14px; }
+
+      .admin-session-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 14px;
+        padding: 12px 14px;
+        border: 1px solid #d9d6cc;
+        border-radius: 9px;
+        background: #fffefa;
+        color: #66685f;
+        font: .78rem Arial, Helvetica, sans-serif;
+      }
+
+      .logout-button {
+        min-height: 38px;
+        padding: 8px 13px;
+        border: 1px solid #8c6a5d;
+        border-radius: 6px;
+        background: #fff;
+        color: #6f4f44;
+        cursor: pointer;
+        font: 700 .78rem Arial, Helvetica, sans-serif;
+      }
+
+      .logout-button:hover {
+        background: #f7efec;
+      }
+
+      .logout-button:focus-visible {
+        outline: 3px solid #7d8957;
+        outline-offset: 3px;
+      }
 
       .tabs {
         display: flex;
