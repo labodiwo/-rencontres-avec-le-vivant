@@ -914,6 +914,65 @@ export default {
       });
     }
 
+    if (url.pathname === "/api/admin/reset-test-data") {
+      if (request.method !== "POST") {
+        return json({ ok: false, error: "Méthode non autorisée." }, 405);
+      }
+
+      const contentType = request.headers.get("content-type") || "";
+      if (!contentType.includes("application/json")) {
+        return json({ ok: false, error: "Format de requête invalide." }, 415);
+      }
+
+      const body = await request.json();
+      if (clean(body.confirmation, 40) !== "EFFACER") {
+        return json(
+          { ok: false, error: "Confirmation de suppression invalide." },
+          400,
+        );
+      }
+
+      const reservationsStub = getReservationsStub(env);
+      const reservationsResponse = await reservationsStub.fetch(
+        "https://reservations.internal/reservations",
+      );
+      const reservationsResult = await reservationsResponse.json();
+      const reservations = reservationsResult.reservations || [];
+
+      for (const reservation of reservations) {
+        await reservationsStub.fetch(
+          new Request("https://reservations.internal/reservations", {
+            method: "DELETE",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ id: reservation.id }),
+          }),
+        );
+      }
+
+      const availabilityStub = getAvailabilityStub(env);
+      const availabilityResponse = await availabilityStub.fetch(
+        "https://availability.internal/availability",
+      );
+      const availabilityResult = await availabilityResponse.json();
+      const availability = availabilityResult.availability || {};
+
+      for (const week of Object.keys(availability)) {
+        await availabilityStub.fetch(
+          new Request("https://availability.internal/availability", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ week, status: "available" }),
+          }),
+        );
+      }
+
+      return json({
+        ok: true,
+        deletedReservations: reservations.length,
+        resetWeeks: Object.keys(availability).length,
+      });
+    }
+
     if (url.pathname === "/api/admin/reservations") {
       if (!env.ADMIN_KEY) {
         return json(
