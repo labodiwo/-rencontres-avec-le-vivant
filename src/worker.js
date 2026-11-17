@@ -1,11 +1,12 @@
 import { DurableObject } from "cloudflare:workers";
 
-const json = (data, status = 200) =>
+const json = (data, status = 200, extraHeaders = {}) =>
   new Response(JSON.stringify(data), {
     status,
     headers: {
       "content-type": "application/json; charset=utf-8",
       "cache-control": "no-store",
+      ...extraHeaders,
     },
   });
 
@@ -24,6 +25,13 @@ const cleanMultiline = (value, max = 30000) =>
 
 const isEmail = (value) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
+const isPhone = (value) => {
+  const raw = String(value ?? "").trim();
+  if (!raw || !/^[+0-9().\s-]+$/.test(raw)) return false;
+  const compact = raw.replace(/[().\s-]/g, "");
+  return /^\+?\d{8,15}$/.test(compact);
+};
 
 const safeEqual = (a, b) => {
   const left = new TextEncoder().encode(String(a ?? ""));
@@ -58,6 +66,25 @@ const getBlogStub = (env) => {
 const getReservationsStub = (env) => {
   const id = env.RESERVATIONS.idFromName("reservations");
   return env.RESERVATIONS.get(id);
+};
+
+const getSecurityStub = (env) => {
+  const id = env.SECURITY.idFromName("admin-security");
+  return env.SECURITY.get(id);
+};
+
+const adminClientId = async (request) => {
+  const source =
+    request.headers.get("cf-connecting-ip") ||
+    request.headers.get("x-forwarded-for") ||
+    "unknown";
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(source),
+  );
+  return Array.from(new Uint8Array(digest), (byte) =>
+    byte.toString(16).padStart(2, "0"),
+  ).join("");
 };
 
 export class AvailabilityStore extends DurableObject {
@@ -320,24 +347,110 @@ export class BlogStore extends DurableObject {
 }
 
 
+export class SecurityStore extends DurableObject {
+  async fetch(request) {
+    const url = new URL(request.url);
+    if (request.method !== "POST") {
+      return json({ ok: false }, 405);
+    }
+
+    const body = await request.json();
+    const clientId = clean(body.clientId, 64);
+    const action = clean(body.action, 20);
+
+    if (!/^[a-f0-9]{64}$/.test(clientId)) {
+      return json({ ok: false }, 400);
+    }
+
+    const key = `admin-auth:${clientId}`;
+    const now = Date.now();
+    const windowMs = 15 * 60 * 1000;
+    const blockMs = 15 * 60 * 1000;
+    const maxFailures = 5;
+    const record = (await this.ctx.storage.get(key)) || {
+      failures: [],
+      blockedUntil: 0,
+      lastFailureAt: 0,
+    };
+
+    record.failures = (record.failures || []).filter(
+      (timestamp) => Number(timestamp) > now - windowMs,
+    );
+
+    if (action === "check") {
+      const blocked = Number(record.blockedUntil || 0) > now;
+      if (!blocked && record.blockedUntil) {
+        record.blockedUntil = 0;
+        await this.ctx.storage.put(key, record);
+      }
+      return json({
+        ok: true,
+        blocked,
+        retryAfter: blocked
+          ? Math.max(1, Math.ceil((record.blockedUntil - now) / 1000))
+          : 0,
+      });
+    }
+
+    if (action === "success") {
+      await this.ctx.storage.delete(key);
+      return json({ ok: true, blocked: false, retryAfter: 0 });
+    }
+
+    if (action === "failure") {
+      // Un formulaire de connexion peut déclencher plusieurs requêtes presque
+      // simultanément : on ne compte qu'un échec par seconde.
+      if (now - Number(record.lastFailureAt || 0) > 1000) {
+        record.failures.push(now);
+        record.lastFailureAt = now;
+      }
+
+      if (record.failures.length >= maxFailures) {
+        record.blockedUntil = now + blockMs;
+      }
+
+      await this.ctx.storage.put(key, record);
+      const blocked = Number(record.blockedUntil || 0) > now;
+
+      return json({
+        ok: true,
+        blocked,
+        retryAfter: blocked
+          ? Math.max(1, Math.ceil((record.blockedUntil - now) / 1000))
+          : 0,
+      });
+    }
+
+    return json({ ok: false }, 400);
+  }
+}
+
 export class ReservationsStore extends DurableObject {
   async fetch(request) {
     const url = new URL(request.url);
     const reservations =
       (await this.ctx.storage.get("reservations")) || {};
 
-    // Les demandes non abouties ne sont pas conservées indéfiniment.
-    // On supprime automatiquement les demandes "new" ou "cancelled"
-    // dont la dernière mise à jour remonte à plus d'un an.
-    const retentionCutoff = Date.now() - 365 * 24 * 60 * 60 * 1000;
+    // Les données personnelles ne sont pas conservées indéfiniment dans
+    // l'outil de gestion actif. Les demandes non abouties sont supprimées
+    // après un an ; les dossiers terminés après trois ans.
+    const oneYearCutoff = Date.now() - 365 * 24 * 60 * 60 * 1000;
+    const threeYearsCutoff = Date.now() - 3 * 365 * 24 * 60 * 60 * 1000;
     let removedExpiredReservations = false;
     Object.entries(reservations).forEach(([id, reservation]) => {
-      const referenceDate = Date.parse(reservation.updatedAt || reservation.createdAt || "");
-      if (
+      const referenceDate = Date.parse(
+        reservation.updatedAt || reservation.createdAt || "",
+      );
+      const expiredUnsuccessful =
         ["new", "cancelled"].includes(reservation.status) &&
         Number.isFinite(referenceDate) &&
-        referenceDate < retentionCutoff
-      ) {
+        referenceDate < oneYearCutoff;
+      const expiredCompleted =
+        reservation.status === "completed" &&
+        Number.isFinite(referenceDate) &&
+        referenceDate < threeYearsCutoff;
+
+      if (expiredUnsuccessful || expiredCompleted) {
         delete reservations[id];
         removedExpiredReservations = true;
       }
@@ -503,6 +616,72 @@ export class ReservationsStore extends DurableObject {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    if (url.pathname.startsWith("/api/admin/")) {
+      if (!env.ADMIN_KEY) {
+        return json(
+          { ok: false, error: "L’accès administrateur n’est pas encore configuré." },
+          503,
+        );
+      }
+
+      const clientId = await adminClientId(request);
+      const securityStub = getSecurityStub(env);
+      const checkResponse = await securityStub.fetch(
+        new Request("https://security.internal/admin-auth", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ clientId, action: "check" }),
+        }),
+      );
+      const check = await checkResponse.json();
+
+      if (check.blocked) {
+        return json(
+          {
+            ok: false,
+            error:
+              "Trop de tentatives de connexion. Réessayez dans quelques minutes.",
+          },
+          429,
+          { "retry-after": String(check.retryAfter || 900) },
+        );
+      }
+
+      const providedKey = request.headers.get("x-admin-key") || "";
+      if (!safeEqual(providedKey, env.ADMIN_KEY)) {
+        const failureResponse = await securityStub.fetch(
+          new Request("https://security.internal/admin-auth", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ clientId, action: "failure" }),
+          }),
+        );
+        const failure = await failureResponse.json();
+
+        if (failure.blocked) {
+          return json(
+            {
+              ok: false,
+              error:
+                "Trop de tentatives de connexion. Réessayez dans quelques minutes.",
+            },
+            429,
+            { "retry-after": String(failure.retryAfter || 900) },
+          );
+        }
+
+        return json({ ok: false, error: "Mot de passe incorrect." }, 401);
+      }
+
+      await securityStub.fetch(
+        new Request("https://security.internal/admin-auth", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ clientId, action: "success" }),
+        }),
+      );
+    }
 
     if (url.pathname === "/api/turnstile-config") {
       if (!env.TURNSTILE_SITE_KEY) {
@@ -921,6 +1100,24 @@ export default {
       return env.ASSETS.fetch(new Request(assetUrl, request));
     }
 
+    if (
+      url.pathname === "/gestion-disponibilites" ||
+      url.pathname === "/gestion-disponibilites/"
+    ) {
+      const assetResponse = await env.ASSETS.fetch(request);
+      const headers = new Headers(assetResponse.headers);
+      headers.set("cache-control", "no-store, private");
+      headers.set("referrer-policy", "no-referrer");
+      headers.set("x-content-type-options", "nosniff");
+      headers.set("x-frame-options", "DENY");
+      headers.set("content-security-policy", "frame-ancestors 'none'");
+      return new Response(assetResponse.body, {
+        status: assetResponse.status,
+        statusText: assetResponse.statusText,
+        headers,
+      });
+    }
+
     if (url.pathname !== "/api/reservation") {
       return env.ASSETS.fetch(request);
     }
@@ -1024,6 +1221,17 @@ export default {
       if (!isEmail(data.email)) {
         return json(
           { ok: false, error: "L’adresse e-mail indiquée n’est pas valide." },
+          400,
+        );
+      }
+
+      if (!isPhone(data.phone)) {
+        return json(
+          {
+            ok: false,
+            error:
+              "Le numéro de téléphone indiqué n’est pas valide. Utilisez uniquement des chiffres et, si besoin, +, espaces, points, tirets ou parenthèses.",
+          },
           400,
         );
       }
