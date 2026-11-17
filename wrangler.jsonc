@@ -49,6 +49,34 @@
       "storage": "sqlite"
     }
   },
+  "previews": {
+    "vars": {
+      "TURNSTILE_SITE_KEY": "1x00000000000000000000AA",
+      "TURNSTILE_SECRET_KEY": "1x0000000000000000000000000000000AA",
+      "PREVIEW_MODE": "true"
+    },
+    "send_email": [
+      {
+        "name": "EMAIL"
+      }
+    ],
+    "durable_objects": {
+      "bindings": [
+        {
+          "name": "AVAILABILITY",
+          "class_name": "AvailabilityStore"
+        },
+        {
+          "name": "BLOG",
+          "class_name": "BlogStore"
+        },
+        {
+          "name": "RESERVATIONS",
+          "class_name": "ReservationsStore"
+        }
+      ]
+    }
+  },
   "secrets": {
     "required": [
       "BOOKING_TO",

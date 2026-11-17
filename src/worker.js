@@ -1028,6 +1028,10 @@ export default {
         );
       }
 
+      if (env.PREVIEW_MODE === "true") {
+        return json({ ok: true, preview: true });
+      }
+
       if (!env.BOOKING_TO) {
         console.error("BOOKING_TO n'est pas configuré.");
         return json(
