@@ -45,6 +45,7 @@
             <span>Session administrateur ouverte</span>
             <div class="admin-session-actions">
               <button type="button" id="export-csv-button" class="export-button">Exporter les réservations (.csv)</button>
+              <button type="button" id="reset-test-data-button" class="reset-test-button">Effacer les données de test</button>
               <button type="button" id="logout-button" class="logout-button">Se déconnecter</button>
             </div>
           </div>
@@ -170,6 +171,7 @@
       const summaryConfirmed = document.getElementById("summary-confirmed");
       const summaryUpcoming = document.getElementById("summary-upcoming");
       const exportCsvButton = document.getElementById("export-csv-button");
+      const resetTestDataButton = document.getElementById("reset-test-data-button");
       const logoutButton = document.getElementById("logout-button");
 
       let adminKey = "";
@@ -883,6 +885,56 @@
 
       exportCsvButton.addEventListener("click", exportReservationsCsv);
 
+      const resetTestData = async () => {
+        const confirmation = prompt(
+          "Cette action supprimera définitivement toutes les réservations actuellement enregistrées et remettra toutes les semaines en Disponible.\n\nTapez EFFACER pour continuer."
+        );
+
+        if (confirmation !== "EFFACER") return;
+
+        resetTestDataButton.disabled = true;
+        resetTestDataButton.textContent = "Suppression…";
+
+        try {
+          const response = await fetch("/api/admin/reset-test-data", {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              "x-admin-key": adminKey,
+            },
+            body: JSON.stringify({ confirmation }),
+          });
+          const result = await response.json();
+
+          if (!response.ok || !result.ok) {
+            throw new Error(result.error || "Suppression impossible.");
+          }
+
+          reservations = [];
+          availability = {};
+          updateNewCount();
+          updateSummary();
+          renderPlanning();
+          renderRequests();
+          renderWeeks();
+
+          alert(
+            "Nettoyage terminé : " +
+              result.deletedReservations +
+              " réservation(s) supprimée(s) et " +
+              result.resetWeeks +
+              " semaine(s) remise(s) en Disponible."
+          );
+        } catch (error) {
+          alert(error.message || "Suppression impossible.");
+        } finally {
+          resetTestDataButton.disabled = false;
+          resetTestDataButton.textContent = "Effacer les données de test";
+        }
+      };
+
+      resetTestDataButton.addEventListener("click", resetTestData);
+
       const logout = () => {
         adminKey = "";
         availability = {};
@@ -1061,6 +1113,31 @@
       }
 
       .export-button:focus-visible {
+        outline: 3px solid #7d8957;
+        outline-offset: 3px;
+      }
+
+      .reset-test-button {
+        min-height: 38px;
+        padding: 8px 13px;
+        border: 1px solid #b98b82;
+        border-radius: 6px;
+        background: #fff7f5;
+        color: #7c4d45;
+        cursor: pointer;
+        font: 700 .78rem Arial, Helvetica, sans-serif;
+      }
+
+      .reset-test-button:hover {
+        background: #f9ebe7;
+      }
+
+      .reset-test-button:disabled {
+        opacity: .6;
+        cursor: wait;
+      }
+
+      .reset-test-button:focus-visible {
         outline: 3px solid #7d8957;
         outline-offset: 3px;
       }
