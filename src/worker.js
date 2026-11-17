@@ -707,7 +707,13 @@ export default {
           );
         }
 
-        return json({ ok: false, error: "Mot de passe incorrect." }, 401);
+        return json(
+          {
+            ok: false,
+            error: "Erreur de mot de passe. Vérifiez votre saisie et réessayez.",
+          },
+          401,
+        );
       }
 
       await securityStub.fetch(

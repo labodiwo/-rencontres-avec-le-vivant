@@ -913,7 +913,11 @@
         adminKey = passwordInput.value;
 
         try {
-          await Promise.all([loadAvailability(), loadReservations()]);
+          // On vérifie d'abord le mot de passe avec une seule requête.
+          // Si elle échoue, la seconde n'est jamais envoyée : une saisie
+          // correspond donc toujours à une seule tentative de connexion.
+          await loadAvailability();
+          await loadReservations();
           passwordInput.value = "";
           loginCard.hidden = true;
           adminPanel.hidden = false;
