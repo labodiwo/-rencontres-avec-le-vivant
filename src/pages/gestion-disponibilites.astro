@@ -43,7 +43,10 @@
         <div id="admin-panel" hidden>
           <div class="admin-session-bar">
             <span>Session administrateur ouverte</span>
-            <button type="button" id="logout-button" class="logout-button">Se déconnecter</button>
+            <div class="admin-session-actions">
+              <button type="button" id="export-csv-button" class="export-button">Exporter les réservations (.csv)</button>
+              <button type="button" id="logout-button" class="logout-button">Se déconnecter</button>
+            </div>
           </div>
           <div class="tabs" role="tablist" aria-label="Gestion des réservations">
             <button type="button" class="tab active" data-tab="planning">Planning</button>
@@ -166,6 +169,7 @@
       const summaryNew = document.getElementById("summary-new");
       const summaryConfirmed = document.getElementById("summary-confirmed");
       const summaryUpcoming = document.getElementById("summary-upcoming");
+      const exportCsvButton = document.getElementById("export-csv-button");
       const logoutButton = document.getElementById("logout-button");
 
       let adminKey = "";
@@ -756,6 +760,96 @@
         });
       });
 
+      const csvSafe = (value) => {
+        let text = String(value ?? "")
+          .replace(/\r?\n/g, " ")
+          .trim();
+
+        // Neutralise les valeurs qui pourraient être interprétées comme formules
+        // par Excel ou LibreOffice.
+        if (/^[=+\-@]/.test(text)) {
+          text = "'" + text;
+        }
+
+        return '"' + text.replaceAll('"', '""') + '"';
+      };
+
+      const exportReservationsCsv = () => {
+        if (!adminKey || adminPanel.hidden) {
+          alert("Connectez-vous à l’administration avant d’exporter les réservations.");
+          return;
+        }
+
+        if (!reservations.length) {
+          alert("Aucune réservation à exporter.");
+          return;
+        }
+
+        const headers = [
+          "Statut",
+          "Structure",
+          "Nom",
+          "E-mail",
+          "Téléphone",
+          "Malle",
+          "Période souhaitée",
+          "Début de location",
+          "Durée (semaines)",
+          "Formule",
+          "Tarif estimé",
+          "Âge des enfants",
+          "Nombre d’enfants",
+          "Message",
+          "Notes administratives",
+          "Conditions acceptées",
+          "Version des conditions",
+          "Demande créée le",
+          "Dernière mise à jour",
+        ];
+
+        const rows = reservations.map((item) => [
+          statusLabels[item.status] || item.status || "",
+          item.organisation || "",
+          item.name || "",
+          item.email || "",
+          item.phone || "",
+          item.kit || "",
+          item.week || "",
+          item.weekIso || "",
+          item.duration || "",
+          item.formula || "",
+          item.priceSummary || "",
+          item.childrenAge || "",
+          item.childrenNumber || "",
+          item.message || "",
+          item.adminNotes || "",
+          item.conditionsAccepted ? "Oui" : "Non",
+          item.conditionsVersion || "",
+          item.createdAt || "",
+          item.updatedAt || "",
+        ]);
+
+        const csv = [
+          headers.map(csvSafe).join(";"),
+          ...rows.map((row) => row.map(csvSafe).join(";")),
+        ].join("\r\n");
+
+        const blob = new Blob(["\uFEFF" + csv], {
+          type: "text/csv;charset=utf-8",
+        });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download =
+          "reservations-labodiwo-" + new Date().toISOString().slice(0, 10) + ".csv";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      };
+
+      exportCsvButton.addEventListener("click", exportReservationsCsv);
+
       const logout = () => {
         adminKey = "";
         availability = {};
@@ -908,6 +1002,34 @@
         background: #fffefa;
         color: #66685f;
         font: .78rem Arial, Helvetica, sans-serif;
+      }
+
+      .admin-session-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .export-button {
+        min-height: 38px;
+        padding: 8px 13px;
+        border: 1px solid #7d8957;
+        border-radius: 6px;
+        background: #7d8957;
+        color: #fff;
+        cursor: pointer;
+        font: 700 .78rem Arial, Helvetica, sans-serif;
+      }
+
+      .export-button:hover {
+        background: #69754a;
+      }
+
+      .export-button:focus-visible {
+        outline: 3px solid #7d8957;
+        outline-offset: 3px;
       }
 
       .logout-button {
@@ -1485,6 +1607,15 @@
       }
 
       @media (max-width:520px) {
+        .admin-session-bar {
+          align-items: stretch;
+          flex-direction: column;
+        }
+        .admin-session-actions {
+          align-items: stretch;
+          flex-direction: column;
+        }
+        .admin-session-actions button { width:100%; }
         .hero h1 { font-size:clamp(2.15rem,11vw,3rem); }
         .hero p:last-child { font-size:.92rem; }
         .admin-wrap { width:92%; padding-bottom:55px; }
