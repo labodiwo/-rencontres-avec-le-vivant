@@ -906,17 +906,398 @@ export default {
 
     if (url.pathname === "/acces-pedagogique") {
       const token = url.searchParams.get("cle") || "";
-      const response = await getReservationsStub(env).fetch(new Request("https://reservations.internal/verify-pedagogical-access", {
-        method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ token })
-      }));
+      const response = await getReservationsStub(env).fetch(
+        new Request("https://reservations.internal/verify-pedagogical-access", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ token }),
+        }),
+      );
       const valid = response.ok;
-      const title = valid ? "Espace pédagogique privé" : "Lien expiré ou invalide";
-      const message = valid
-        ? "Votre lien est valide. Les fiches originales seront disponibles ici après leur intégration sécurisée. Le livret complet n’est pas encore en ligne."
-        : "Ce lien est invalide, a expiré ou a été désactivé. Contactez Rencontres avec le vivant si votre location est toujours en cours.";
-      return new Response(`<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer"><title>${title} · Rencontres avec le vivant</title><style>body{background:#f9f7f2;color:#293025;font:18px/1.7 Georgia,serif;margin:0}main{max-width:640px;margin:12vh auto;padding:36px;background:#fff;border-radius:12px}h1{color:#596243;font-weight:400}a{color:#596243}</style></head><body><main><p>RENCONTRES AVEC LE VIVANT · LES OISEAUX</p><h1>${title}</h1><p>${message}</p><p><a href="/">Retour à l’accueil</a></p></main></body></html>`, {
-        status: valid ? 200 : 403,
-        headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store, private", "referrer-policy": "no-referrer", "x-robots-tag": "noindex, nofollow", "x-content-type-options": "nosniff" }
+
+      if (!valid) {
+        return new Response(`<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="referrer" content="no-referrer">
+  <title>Lien expiré ou invalide · Rencontres avec le vivant</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;background:#f7f4ee;color:#293025;font:18px/1.7 Georgia,serif}
+    main{width:min(640px,90%);margin:12vh auto;padding:36px;background:#fffefa;border:1px solid #e2ded4;border-radius:12px}
+    h1{color:#596243;font-weight:400;line-height:1.15}
+    a{color:#596243;font-weight:700}
+    .eyebrow{font:700 .72rem Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#74785e}
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">Rencontres avec le vivant · Les oiseaux</p>
+    <h1>Lien expiré ou invalide</h1>
+    <p>Ce lien est invalide, a expiré ou a été désactivé. Contactez Rencontres avec le vivant si votre location est toujours en cours.</p>
+    <p><a href="/">Retour à l’accueil</a></p>
+  </main>
+</body>
+</html>`, {
+          status: 403,
+          headers: {
+            "content-type": "text/html; charset=utf-8",
+            "cache-control": "no-store, private",
+            "referrer-policy": "no-referrer",
+            "x-robots-tag": "noindex, nofollow, noarchive",
+            "x-content-type-options": "nosniff",
+            "x-frame-options": "DENY",
+            "content-security-policy": "frame-ancestors 'none'",
+          },
+        });
+      }
+
+      return new Response(`<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="referrer" content="no-referrer">
+  <title>Préparer la malle Les oiseaux · Espace pédagogique privé</title>
+  <style>
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:#f8f6f1;color:#292b23;font-family:Georgia,"Times New Roman",serif}
+    a{color:inherit}
+    .hero{padding:54px 6% 48px;background:#596243;color:#fffdf8}
+    .hero-inner{max-width:980px;margin:auto}
+    .eyebrow{margin:0 0 10px;font:700 .72rem Arial,Helvetica,sans-serif;letter-spacing:.11em;text-transform:uppercase;color:#74785e}
+    .hero .eyebrow{color:rgba(255,255,255,.72)}
+    .hero h1{max-width:760px;margin:0 0 18px;font-size:clamp(2.7rem,6vw,5rem);font-weight:500;line-height:.98}
+    .hero p:last-child{max-width:720px;margin:0;font-size:1.06rem;line-height:1.65;color:rgba(255,255,255,.9)}
+    .private-badge{display:inline-flex;margin-top:22px;padding:8px 11px;border:1px solid rgba(255,255,255,.35);border-radius:999px;font:700 .72rem Arial,sans-serif}
+    .nav-wrap{position:sticky;top:0;z-index:10;background:#fffefa;border-bottom:1px solid #e3dfd5}
+    .nav{max-width:1080px;margin:auto;padding:10px 5%;display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin}
+    .nav a{flex:0 0 auto;padding:9px 12px;border-radius:999px;text-decoration:none;background:#f0eee7;color:#4c533d;font:700 .76rem Arial,sans-serif}
+    section{scroll-margin-top:76px}
+    .section{padding:64px 6%}
+    .section.alt{background:#eeece5}
+    .inner{max-width:980px;margin:auto}
+    .heading{max-width:720px;margin-bottom:32px}
+    .heading h2{margin:0 0 14px;font-size:clamp(2rem,4vw,3rem);font-weight:500;line-height:1.08}
+    .heading p{margin:0;line-height:1.7;color:#55584e}
+    .welcome{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:start}
+    .welcome-card,.info-card,.material-card,.activity-card{background:#fffefa;border:1px solid #dfdcd2;border-radius:10px}
+    .welcome-card{padding:28px}
+    .welcome-card h3{margin:0 0 12px;font-size:1.35rem}
+    .welcome-card p{margin:0 0 14px;line-height:1.65}
+    .welcome-card p:last-child{margin-bottom:0}
+    .quick-list{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+    .quick-list li{padding:13px 14px;background:#e5ead8;border-radius:7px;font:700 .86rem/1.45 Arial,sans-serif}
+    .warning{padding:22px 24px;border:1px solid #d4ae72;border-radius:10px;background:#fff3df}
+    .warning strong{display:block;margin-bottom:8px;color:#77511d;font-family:Arial,sans-serif}
+    .warning p{margin:0;line-height:1.6}
+    .three-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .info-card{padding:22px}
+    .info-card h3{margin:0 0 10px;font-size:1.2rem}
+    .info-card p{margin:0;color:#575a51;font: .9rem/1.65 Arial,sans-serif}
+    .rule-box{margin-top:24px;padding:24px;background:#dfe3cf;border-radius:10px}
+    .rule-box h3{margin:0 0 12px;font-size:1.35rem}
+    .rule-box ul{margin:0;padding-left:20px}
+    .rule-box li{margin:8px 0;line-height:1.55}
+    .legal-note{margin-top:18px;padding:16px 18px;border-left:4px solid #7d8957;background:#fffefa;color:#5b5d54;font:.82rem/1.6 Arial,sans-serif}
+    .legal-note a{color:#596243;font-weight:700}
+    .check-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .check-item{padding:16px 18px;background:#fffefa;border:1px solid #dfdcd2;border-radius:8px}
+    .check-item strong{display:block;margin-bottom:5px}
+    .check-item span{color:#61645a;font:.86rem/1.5 Arial,sans-serif}
+    .optional{margin-top:20px;padding:18px;border-radius:8px;background:#f3f1eb}
+    .optional h3{margin:0 0 8px;font-size:1.08rem}
+    .optional p{margin:0;color:#5e6158;font:.88rem/1.6 Arial,sans-serif}
+    .materials{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .material-card{padding:20px}
+    .material-card h3{margin:0 0 8px;font-size:1.08rem}
+    .material-card p{margin:0;color:#5d6056;font:.86rem/1.55 Arial,sans-serif}
+    .activities{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    .activity-card{padding:22px}
+    .activity-card span{display:inline-block;margin-bottom:10px;color:#7d8957;font:700 .7rem Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase}
+    .activity-card h3{margin:0 0 9px;font-size:1.18rem}
+    .activity-card p{margin:0;color:#5d6056;font:.88rem/1.6 Arial,sans-serif}
+    .activity-card small{display:block;margin-top:12px;color:#777a70;font:.76rem/1.5 Arial,sans-serif}
+    .path{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .path article{text-align:center;padding:22px 18px;background:#fffefa;border-radius:9px}
+    .path strong{display:block;margin-bottom:9px;color:#596243}
+    .path p{margin:0;font:.88rem/1.55 Arial,sans-serif;color:#5e6158}
+    .outdoor{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    .observe{padding:24px;background:#fffefa;border-radius:10px}
+    .observe h3{margin-top:0}
+    .observe ul{margin:0;padding-left:20px}
+    .observe li{margin:8px 0}
+    .footer-note{padding:30px 6%;background:#596243;color:#fffdf8;text-align:center}
+    .footer-note p{max-width:760px;margin:0 auto;line-height:1.65}
+    @media(max-width:800px){
+      .welcome,.outdoor{grid-template-columns:1fr}
+      .three-grid,.materials{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:600px){
+      .hero{padding:42px 24px}
+      .section{padding:48px 24px}
+      .three-grid,.materials,.activities,.path,.check-grid{grid-template-columns:1fr}
+      .nav{padding-left:20px;padding-right:20px}
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">Rencontres avec le vivant · Espace pédagogique privé</p>
+      <h1>Préparer votre rencontre avec les oiseaux</h1>
+      <p>
+        Cet espace vous accompagne avant l’arrivée de la malle. Il n’est pas nécessaire
+        de tout lire ni de tout faire : découvrez le matériel, choisissez les propositions
+        qui correspondent à votre groupe et gardez de la place pour les observations des enfants.
+      </p>
+      <span class="private-badge">Accès privé valide</span>
+    </div>
+  </header>
+
+  <div class="nav-wrap">
+    <nav class="nav" aria-label="Navigation de l’espace pédagogique">
+      <a href="#commencer">Commencer</a>
+      <a href="#securite">Âge & sécurité</a>
+      <a href="#oiseaux">Réglementation oiseaux</a>
+      <a href="#prevoir">À prévoir</a>
+      <a href="#malle">Dans la malle</a>
+      <a href="#activites">Animations</a>
+      <a href="#dehors">Observer dehors</a>
+    </nav>
+  </div>
+
+  <main>
+    <section class="section" id="commencer">
+      <div class="inner">
+        <div class="heading">
+          <p class="eyebrow">Avant de commencer</p>
+          <h2>Un outil à adapter, pas un programme à suivre</h2>
+          <p>
+            La malle a été conçue pour pouvoir être utilisée par une équipe qui n’est pas
+            spécialiste des oiseaux ou de l’éducation à l’environnement. Les fiches sont des
+            points de départ : vous pouvez raccourcir, prolonger, déplacer ou laisser de côté
+            une proposition selon votre groupe.
+          </p>
+        </div>
+        <div class="welcome">
+          <div class="welcome-card">
+            <h3>La posture proposée</h3>
+            <p>Prendre le temps d’écouter, de regarder et de laisser les enfants manipuler.</p>
+            <p>Une question inattendue, une peur, une observation ou un détour peuvent devenir une partie intéressante de la séance.</p>
+            <p><strong>Observez les enfants autant que les oiseaux.</strong></p>
+          </div>
+          <ul class="quick-list">
+            <li>Public principal : 3–5 ans</li>
+            <li>Activités modulables et utilisables séparément</li>
+            <li>Jeu libre possible avec une partie du matériel</li>
+            <li>Prolongements dehors encouragés</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="securite">
+      <div class="inner">
+        <div class="heading">
+          <p class="eyebrow">Âge & sécurité</p>
+          <h2>À lire avant toute utilisation</h2>
+        </div>
+        <div class="warning">
+          <strong>La malle ne convient pas aux enfants de moins de 3 ans.</strong>
+          <p>
+            Certains éléments comportent de petites pièces. L’utilisation se fait toujours
+            sous la surveillance d’un adulte. L’équipe reste responsable de l’encadrement,
+            de l’organisation de l’espace et de l’adaptation des propositions au groupe accueilli.
+          </p>
+        </div>
+        <div class="three-grid" style="margin-top:18px">
+          <article class="info-card">
+            <h3>Avant la séance</h3>
+            <p>Repérez le matériel utilisé, prévoyez un espace stable et retirez les éléments qui ne seront pas nécessaires.</p>
+          </article>
+          <article class="info-card">
+            <h3>Pendant la séance</h3>
+            <p>Présentez le matériel progressivement et restez attentif aux manipulations, en particulier avec les petites pièces.</p>
+          </article>
+          <article class="info-card">
+            <h3>Dehors</h3>
+            <p>Les règles habituelles de votre structure continuent de s’appliquer : encadrement, lieu, météo, déplacements et sécurité du groupe.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="oiseaux">
+      <div class="inner">
+        <div class="heading">
+          <p class="eyebrow">Respect du vivant</p>
+          <h2>Observer les oiseaux sans les prélever ni les déranger</h2>
+          <p>
+            La réglementation varie selon les espèces. Pour les oiseaux bénéficiant d’un statut
+            de protection, la loi protège notamment les individus, leurs œufs, leurs nids et,
+            selon les cas, leurs sites de reproduction et aires de repos.
+          </p>
+        </div>
+
+        <div class="rule-box">
+          <h3>La règle pédagogique la plus simple</h3>
+          <ul>
+            <li>On observe sans capturer.</li>
+            <li>On ne touche pas aux nids ni aux œufs trouvés dehors.</li>
+            <li>On ne prélève pas un nid pour le rapporter dans la structure.</li>
+            <li>On ne déplace pas un oiseau pour mieux l’observer.</li>
+            <li>On garde ses distances avec un nid occupé et on s’éloigne si notre présence semble perturber les oiseaux.</li>
+            <li>On privilégie les photographies, reproductions, figurines, sons et observations à distance.</li>
+          </ul>
+        </div>
+
+        <div class="legal-note">
+          <strong>Repère réglementaire :</strong> le Code de l’environnement (art. L411-1)
+          et l’arrêté du 29 octobre 2009 relatif aux oiseaux protégés encadrent notamment
+          la destruction ou l’enlèvement des œufs et nids, la capture ou l’enlèvement
+          d’oiseaux et certaines perturbations intentionnelles.
+          <br>
+          <a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000033035411/" target="_blank" rel="noopener noreferrer">Code de l’environnement · L411-1</a>
+          ·
+          <a href="https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000054806424" target="_blank" rel="noopener noreferrer">Arrêté du 29 octobre 2009 · article 3</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="prevoir">
+      <div class="inner">
+        <div class="heading">
+          <p class="eyebrow">À préparer dans votre structure</p>
+          <h2>Ce qui n’est pas fourni avec la malle</h2>
+          <p>
+            La majorité du matériel pédagogique est déjà réunie dans la malle.
+            Quelques éléments courants restent à prévoir selon les activités choisies.
+          </p>
+        </div>
+
+        <div class="check-grid">
+          <div class="check-item"><strong>Eau</strong><span>Pour les activités qui nécessitent de mouiller, nettoyer ou préparer une matière.</span></div>
+          <div class="check-item"><strong>Protections de table</strong><span>Nappe, vieux drap ou protection habituelle de votre structure pour les activités salissantes.</span></div>
+          <div class="check-item"><strong>Tabliers ou vêtements adaptés</strong><span>À prévoir notamment pour les expérimentations avec des matières végétales.</span></div>
+          <div class="check-item"><strong>Accès à un espace extérieur</strong><span>Cour, jardin, parc ou simple trajet de proximité pour prolonger certaines observations.</span></div>
+          <div class="check-item"><strong>Végétaux courants, selon l’activité</strong><span>Uniquement lorsque la fiche le prévoit, en choisissant des éléments autorisés et sans prélever d’espèces protégées.</span></div>
+          <div class="check-item"><strong>Un appareil Bluetooth, si besoin</strong><span>Téléphone ou tablette de la structure pour lancer certaines ressources sonores avec les enceintes de la malle.</span></div>
+        </div>
+
+        <div class="optional">
+          <h3>À vérifier sur chaque fiche</h3>
+          <p>
+            Chaque proposition précisera clairement ce qui se trouve dans la malle,
+            ce que votre structure doit prévoir et ce qui reste facultatif. Cette liste
+            générale pourra donc être affinée activité par activité.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="malle">
+      <div class="inner">
+        <div class="heading">
+          <p class="eyebrow">Découvrir la malle</p>
+          <h2>Les grandes familles de matériel</h2>
+          <p>Vous pourrez choisir de sortir seulement une partie de la malle selon votre séance.</p>
+        </div>
+        <div class="materials">
+          <article class="material-card"><h3>Mini-monde</h3><p>Habitats, figurines, éléments de décor et objets pour jouer, raconter et observer.</p></article>
+          <article class="material-card"><h3>Œufs & nids</h3><p>Reproductions et supports de manipulation pour comparer, associer et questionner.</p></article>
+          <article class="material-card"><h3>Écoute</h3><p>Enceintes et ressources sonores pour travailler l’attention, la direction et la distance.</p></article>
+          <article class="material-card"><h3>Livres & images</h3><p>Albums, imagiers et supports visuels pour introduire ou prolonger les découvertes.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="activites">
+      <div class="inner">
+        <div class="heading">
+          <p class="eyebrow">Préparer les animations</p>
+          <h2>Quelques portes d’entrée</h2>
+          <p>
+            Les fiches détaillées seront ajoutées ici progressivement. Vous pourrez choisir
+            une activité isolée ou construire un petit parcours sur plusieurs jours.
+          </p>
+        </div>
+        <div class="activities">
+          <article class="activity-card"><span>Observer</span><h3>Traces au sol et dans le vol</h3><p>Repérer différentes façons de se déplacer et apprendre à regarder les indices laissés autour de nous.</p><small>Fiche détaillée à intégrer.</small></article>
+          <article class="activity-card"><span>Écouter</span><h3>Les sons des oiseaux</h3><p>Écouter, localiser un son et expérimenter les notions de près/loin ou gauche/droite.</p><small>Fiche détaillée à intégrer.</small></article>
+          <article class="activity-card"><span>Habiter</span><h3>Créer un refuge</h3><p>À partir d’une histoire et du mini-monde, réfléchir à ce dont un oiseau peut avoir besoin.</p><small>Fiche détaillée à intégrer.</small></article>
+          <article class="activity-card"><span>Comparer</span><h3>Œufs et nids</h3><p>Observer des différences de formes, tailles, couleurs et associer des éléments par le jeu.</p><small>Fiche détaillée à intégrer.</small></article>
+          <article class="activity-card"><span>Créer</span><h3>Peinture végétale</h3><p>Expérimenter des couleurs et matières issues d’éléments végétaux choisis pour l’activité.</p><small>Fiche détaillée à intégrer.</small></article>
+          <article class="activity-card"><span>Bouger</span><h3>Conte moteur</h3><p>Entrer dans l’univers des oiseaux par le corps, les gestes et différentes façons de se déplacer.</p><small>Fiche détaillée à intégrer.</small></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="dehors">
+      <div class="inner">
+        <div class="heading">
+          <p class="eyebrow">Je poursuis dehors</p>
+          <h2>Observer sans devoir tout connaître</h2>
+          <p>
+            Il n’est pas nécessaire de savoir nommer chaque espèce. L’objectif est d’aider
+            les enfants à remarquer quelque chose qu’ils n’avaient peut-être pas vu ou entendu auparavant.
+          </p>
+        </div>
+        <div class="outdoor">
+          <div class="observe">
+            <h3>On peut chercher…</h3>
+            <ul>
+              <li>un son proche ou lointain ;</li>
+              <li>un oiseau posé, qui marche, saute ou vole ;</li>
+              <li>une trace au sol ;</li>
+              <li>un endroit où un oiseau pourrait se cacher ou se reposer ;</li>
+              <li>un comportement qui intrigue les enfants.</li>
+            </ul>
+          </div>
+          <div class="observe">
+            <h3>Quelques questions possibles</h3>
+            <ul>
+              <li>Qu’est-ce que tu as remarqué ?</li>
+              <li>Qu’est-ce qui t’a surpris ?</li>
+              <li>Qu’est-ce que tu entends ?</li>
+              <li>Comment l’oiseau se déplace-t-il ?</li>
+              <li>Qu’aimerais-tu regarder encore ?</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="path" style="margin-top:26px">
+          <article><strong>Je découvre</strong><p>Une histoire, une image, un objet ou une première observation.</p></article>
+          <article><strong>J’expérimente</strong><p>Je manipule, j’écoute, je bouge, je compare ou je crée.</p></article>
+          <article><strong>Je poursuis dehors</strong><p>Je retrouve dans l’environnement réel une question née avec la malle.</p></article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer-note">
+    <p>
+      Cet espace accompagne la malle « Les oiseaux ». Le lien est personnel à votre location
+      et expire automatiquement après la période prévue.
+    </p>
+  </footer>
+</body>
+</html>`, {
+        status: 200,
+        headers: {
+          "content-type": "text/html; charset=utf-8",
+          "cache-control": "no-store, private",
+          "referrer-policy": "no-referrer",
+          "x-robots-tag": "noindex, nofollow, noarchive",
+          "x-content-type-options": "nosniff",
+          "x-frame-options": "DENY",
+          "content-security-policy": "frame-ancestors 'none'",
+        },
       });
     }
 
