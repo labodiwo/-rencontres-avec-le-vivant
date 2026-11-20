@@ -197,9 +197,10 @@ import SiteFooter from "../components/SiteFooter.astro";
 
       <!-- DERRIÈRE LES MALLES : photographie personnelle à ajouter ultérieurement -->
       <section class="behind-malles" aria-labelledby="behind-title">
-        <div class="behind-photo-placeholder" aria-label="Emplacement réservé à une photographie de l'animatrice en train d'observer les oiseaux">
-          <span>Une photo de terrain viendra bientôt ici</span>
-        </div>
+        <figure class="behind-photo">
+          <img src="/images/mesange-jardin.jpg" alt="Mésange charbonnière près d’une mangeoire dans un jardin" loading="lazy" />
+          <figcaption>Observer ce qui vit déjà tout près de nous.</figcaption>
+        </figure>
         <div class="behind-copy">
           <p class="eyebrow">Derrière les malles</p>
           <h2 id="behind-title">Une animatrice, des idées et du matériel à partager</h2>
@@ -716,19 +717,18 @@ import SiteFooter from "../components/SiteFooter.astro";
         padding: 72px 7%;
         background: #f9f7f6;
       }
-      .behind-photo-placeholder {
-        min-height: 320px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 30px;
-        border: 1px dashed #a6ad92;
-        border-radius: 8px;
-        background: #e9ebdf;
-        color: #667052;
-        text-align: center;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 0.9rem;
+      .behind-photo { margin:0; }
+      .behind-photo img {
+        display:block;
+        width:100%;
+        aspect-ratio:4/3;
+        object-fit:cover;
+        border-radius:8px;
+      }
+      .behind-photo figcaption {
+        margin-top:9px;
+        color:#71756a;
+        font: .78rem/1.4 Arial,Helvetica,sans-serif;
       }
       .behind-copy { max-width: 600px; }
       .behind-copy h2 { margin: 4px 0 22px; font-size: clamp(2rem, 3vw, 2.9rem); font-weight: 500; line-height: 1.18; }
@@ -736,7 +736,7 @@ import SiteFooter from "../components/SiteFooter.astro";
       .behind-link { display: inline-block; margin-top: 14px; color: #596243; font-weight: 600; text-underline-offset: 4px; }
       @media (max-width: 700px) {
         .behind-malles { grid-template-columns: 1fr; padding: 48px 24px; gap: 28px; }
-        .behind-photo-placeholder { min-height: 220px; }
+        
       }
 
       /* ------------------------------
