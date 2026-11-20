@@ -1206,8 +1206,8 @@ export default {
         <div class="usage-note">
           <strong>Usage réservé à votre location</strong>
           <p>
-            Les fiches, supports et outils pédagogiques présentés dans cet espace sont destinés à préparer et mener les animations avec votre groupe pendant la période de location.
-            Ils ne doivent pas être diffusés, partagés publiquement, reproduits ou réutilisés en dehors de ce cadre sans autorisation préalable.
+            Les activités découvertes avec la malle peuvent bien sûr être reprises et adaptées par votre équipe dans votre structure après la location.
+            En revanche, les fiches, supports visuels et outils pédagogiques originaux présentés dans cet espace ne doivent pas être diffusés publiquement, copiés ou partagés tels quels sans autorisation préalable.
           </p>
         </div>
 
