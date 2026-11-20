@@ -44,10 +44,7 @@ import SiteFooter from "../components/SiteFooter.astro";
             Rencontres avec le vivant
           </p>
 
-          <h1>
-            Les malles<br />
-            pédagogiques
-          </h1>
+          <h1>Les malles pédagogiques</h1>
 
           <p>
             Des outils conçus pour permettre aux enfants
@@ -713,16 +710,14 @@ import SiteFooter from "../components/SiteFooter.astro";
       }
 
       .page-hero-content {
-        max-width: 760px;
+        max-width: 1120px;
         margin: 0 auto;
       }
 
       .page-hero h1 {
         margin: 4px 0 18px;
-
-        font-size: clamp(3rem, 5vw, 5rem);
+        font-size: clamp(2.8rem, 4.4vw, 4.5rem);
         line-height: 0.98;
-
         font-weight: 500;
       }
 
@@ -1291,6 +1286,36 @@ import SiteFooter from "../components/SiteFooter.astro";
         font-size: 0.78rem;
 
         color: #656559;
+      }
+
+
+      /* TITRES SUR UNE LIGNE — TABLETTE PAYSAGE ET ORDINATEUR */
+
+      @media (min-width: 901px) {
+        .page-hero h1 {
+          white-space: nowrap;
+        }
+
+        .intro h2 {
+          max-width: none;
+          font-size: clamp(1.9rem, 2.35vw, 2.45rem);
+          white-space: nowrap;
+        }
+
+        .toolbox-positioning h2 {
+          max-width: 1040px;
+          white-space: nowrap;
+          font-size: clamp(1.9rem, 2.5vw, 2.55rem);
+        }
+
+        .rental-benefits-heading {
+          max-width: 1180px;
+        }
+
+        .rental-benefits-heading h2 {
+          font-size: clamp(1.85rem, 2.35vw, 2.45rem);
+          white-space: nowrap;
+        }
       }
 
 
