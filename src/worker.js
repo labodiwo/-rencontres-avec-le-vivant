@@ -1102,13 +1102,13 @@ export default {
     .optional p{margin:0;color:#5e6158;font:.88rem/1.6 Arial,sans-serif}
     .materials{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
     .material-card{padding:0;overflow:hidden}
-    .material-card img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:#efede6}
+    .material-card img{display:block;width:100%;height:140px;object-fit:cover;background:#efede6}
     .material-card .card-body{padding:20px}
     .material-card h3{margin:0 0 8px;font-size:1.08rem}
     .material-card p{margin:0;color:#5d6056;font:.86rem/1.55 Arial,sans-serif}
     .activities{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
     .activity-card{padding:0;overflow:hidden}
-    .activity-card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#efede6}
+    .activity-card img{display:block;width:100%;height:170px;object-fit:cover;background:#efede6}
     .activity-card .card-body{padding:22px}
     .activity-card span{display:inline-block;margin-bottom:10px;color:#7d8957;font:700 .7rem Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase}
     .activity-card h3{margin:0 0 9px;font-size:1.18rem}
@@ -1140,6 +1140,8 @@ export default {
       .hero{padding:42px 24px}
       .section{padding:48px 24px}
       .three-grid,.materials,.activities,.tools-grid,.path,.check-grid{grid-template-columns:1fr}
+      .activity-card img{height:150px}
+      .material-card img{height:130px}
       .nav{padding-left:20px;padding-right:20px}
       .accordion-section{
         width:100%;
