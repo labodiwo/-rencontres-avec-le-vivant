@@ -1139,17 +1139,17 @@ export default {
     .resource-rail h2{margin:0 0 8px;font-size:1.35rem;font-weight:500;line-height:1.15}
     .resource-intro{margin:0 0 16px;color:#66695f;font:.82rem/1.5 Arial,sans-serif}
     .resource-list{display:grid;gap:10px}
-    .resource-card{display:block;padding:13px 14px;background:#FFF8F1;border:1px solid #e2dfd7;border-radius:8px;color:#292b23;text-decoration:none}
+    .resource-card{display:block;padding:13px 14px;background:#FFFDF9;border:1px solid #E2DED5;border-left:3px solid #D8B4A6;border-radius:8px;color:#292b23;text-decoration:none}
     .resource-card:hover{border-color:#C97968;background:#fff}
-    .resource-type{display:block;margin-bottom:5px;color:#A96651;font:700 .65rem Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase}
+    .resource-type{display:block;margin-bottom:5px;color:#B56F5A;font:700 .65rem Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase}
     .resource-card strong{display:block;margin-bottom:5px;font-size:.96rem;line-height:1.25}
     .resource-card small{display:block;color:#696c62;font:.76rem/1.45 Arial,sans-serif}
     .resource-groups{display:grid;gap:9px}
-    .resource-group{border:1px solid #D8C8B8;border-radius:8px;background:#FFFDF8;overflow:hidden}
-    .resource-group summary{cursor:pointer;list-style:none;padding:12px 13px;font:700 .78rem Arial,sans-serif;color:#4f5741}
-    .resource-group summary{background:#F3F1EB}
+    .resource-group{border:1px solid #DED8CF;border-radius:8px;background:#FFFDF9;overflow:hidden}
+    .resource-group summary{cursor:pointer;list-style:none;padding:12px 13px;background:#F4F2EC;font:700 .78rem Arial,sans-serif;color:#4f5741}
+    
     .resource-group summary::-webkit-details-marker{display:none}
-    .resource-group summary::after{content:"+";float:right;color:#C97968;font-size:1rem}
+    .resource-group summary::after{content:"+";float:right;color:#C97968;font-size:1rem;font-weight:700}
     .resource-group[open] summary::after{content:"–"}
     .resource-group .resource-list{padding:0 9px 10px}
     .resource-group .resource-card{margin-top:8px}
