@@ -985,8 +985,46 @@ export default {
     .nav-wrap{position:sticky;top:0;z-index:10;background:#fffefa;border-bottom:1px solid #e3dfd5}
     .nav{max-width:1080px;margin:auto;padding:10px 5%;display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin}
     .nav a{flex:0 0 auto;padding:9px 12px;border-radius:999px;text-decoration:none;background:#f0eee7;color:#4c533d;font:700 .76rem Arial,sans-serif}
-    section{scroll-margin-top:76px}
+    section,.accordion-section{scroll-margin-top:76px}
     .section{padding:64px 6%}
+    .accordion-section{
+      display:block;
+      padding:0;
+      border:0;
+      border-top:1px solid #dfdcd2;
+      background:#f8f6f1;
+    }
+    .accordion-section.alt{background:#eeece5}
+    .accordion-section > summary{
+      list-style:none;
+      cursor:pointer;
+      max-width:980px;
+      margin:0 auto;
+      padding:26px 6%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      color:#34382e;
+      font-size:clamp(1.35rem,2.5vw,1.8rem);
+      font-weight:600;
+    }
+    .accordion-section > summary::-webkit-details-marker{display:none}
+    .accordion-icon{
+      flex:0 0 auto;
+      width:34px;
+      height:34px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:#7d8957;
+      color:#fff;
+      font:700 1.25rem/1 Arial,sans-serif;
+      transition:transform .2s ease;
+    }
+    .accordion-section[open] .accordion-icon{transform:rotate(45deg)}
+    .accordion-content{padding:0 6% 64px}
+    .accordion-content > .inner{max-width:980px;margin:auto}
     .section.alt{background:#eeece5}
     .inner{max-width:980px;margin:auto}
     .heading{max-width:720px;margin-bottom:32px}
@@ -1050,6 +1088,8 @@ export default {
       .section{padding:48px 24px}
       .three-grid,.materials,.activities,.path,.check-grid{grid-template-columns:1fr}
       .nav{padding-left:20px;padding-right:20px}
+      .accordion-section > summary{padding:22px 24px}
+      .accordion-content{padding:0 24px 48px}
     }
   </style>
 </head>
@@ -1109,7 +1149,12 @@ export default {
       </div>
     </section>
 
-    <section class="section alt" id="securite">
+    <details class="accordion-section section alt" id="securite">
+      <summary>
+        <span>Âge & sécurité</span>
+        <span class="accordion-icon" aria-hidden="true">+</span>
+      </summary>
+      <div class="accordion-content">
       <div class="inner">
         <div class="heading">
           <p class="eyebrow">Âge & sécurité</p>
@@ -1138,9 +1183,16 @@ export default {
           </article>
         </div>
       </div>
-    </section>
+    
+      </div>
+    </details>
 
-    <section class="section" id="oiseaux">
+    <details class="accordion-section section" id="oiseaux">
+      <summary>
+        <span>Réglementation oiseaux</span>
+        <span class="accordion-icon" aria-hidden="true">+</span>
+      </summary>
+      <div class="accordion-content">
       <div class="inner">
         <div class="heading">
           <p class="eyebrow">Respect du vivant</p>
@@ -1175,9 +1227,16 @@ export default {
           <a href="https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000054806424" target="_blank" rel="noopener noreferrer">Arrêté du 29 octobre 2009 · article 3</a>
         </div>
       </div>
-    </section>
+    
+      </div>
+    </details>
 
-    <section class="section alt" id="prevoir">
+    <details class="accordion-section section alt" id="prevoir">
+      <summary>
+        <span>À prévoir dans votre structure</span>
+        <span class="accordion-icon" aria-hidden="true">+</span>
+      </summary>
+      <div class="accordion-content">
       <div class="inner">
         <div class="heading">
           <p class="eyebrow">À préparer dans votre structure</p>
@@ -1224,9 +1283,16 @@ export default {
           </p>
         </div>
       </div>
-    </section>
+    
+      </div>
+    </details>
 
-    <section class="section" id="malle">
+    <details class="accordion-section section" id="malle">
+      <summary>
+        <span>Dans la malle</span>
+        <span class="accordion-icon" aria-hidden="true">+</span>
+      </summary>
+      <div class="accordion-content">
       <div class="inner">
         <div class="heading">
           <p class="eyebrow">Découvrir la malle</p>
@@ -1240,9 +1306,16 @@ export default {
           <article class="material-card"><h3>Livres & images</h3><p>Albums, imagiers et supports visuels pour introduire ou prolonger les découvertes.</p></article>
         </div>
       </div>
-    </section>
+    
+      </div>
+    </details>
 
-    <section class="section alt" id="activites">
+    <details class="accordion-section section alt" id="activites">
+      <summary>
+        <span>Animations</span>
+        <span class="accordion-icon" aria-hidden="true">+</span>
+      </summary>
+      <div class="accordion-content">
       <div class="inner">
         <div class="heading">
           <p class="eyebrow">Préparer les animations</p>
@@ -1261,9 +1334,16 @@ export default {
           <article class="activity-card"><span>Bouger</span><h3>Conte moteur</h3><p>Entrer dans l’univers des oiseaux par le corps, les gestes et différentes façons de se déplacer.</p><small>Fiche détaillée à intégrer.</small></article>
         </div>
       </div>
-    </section>
+    
+      </div>
+    </details>
 
-    <section class="section" id="dehors">
+    <details class="accordion-section section" id="dehors">
+      <summary>
+        <span>Observer dehors</span>
+        <span class="accordion-icon" aria-hidden="true">+</span>
+      </summary>
+      <div class="accordion-content">
       <div class="inner">
         <div class="heading">
           <p class="eyebrow">Je poursuis dehors</p>
@@ -1302,7 +1382,9 @@ export default {
           <article><strong>Je poursuis dehors</strong><p>Je retrouve dans l’environnement réel une question née avec la malle.</p></article>
         </div>
       </div>
-    </section>
+    
+      </div>
+    </details>
   </main>
 
   <footer class="footer-note">
