@@ -906,14 +906,21 @@ export default {
 
     if (url.pathname === "/acces-pedagogique") {
       const token = url.searchParams.get("cle") || "";
-      const response = await getReservationsStub(env).fetch(
-        new Request("https://reservations.internal/verify-pedagogical-access", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ token }),
-        }),
-      );
-      const valid = response.ok;
+      const previewDemoAccess =
+        env.PREVIEW_MODE === "true" && token === "demo-preview";
+
+      let valid = previewDemoAccess;
+
+      if (!previewDemoAccess) {
+        const response = await getReservationsStub(env).fetch(
+          new Request("https://reservations.internal/verify-pedagogical-access", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ token }),
+          }),
+        );
+        valid = response.ok;
+      }
 
       if (!valid) {
         return new Response(`<!doctype html>
