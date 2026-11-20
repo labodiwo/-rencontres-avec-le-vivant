@@ -941,7 +941,6 @@ export default {
   </style>
 </head>
 <body>
-  <div class="resource-layout">
   <main>
     <p class="eyebrow">Rencontres avec le vivant · Les oiseaux</p>
     <h1>Lien expiré ou invalide</h1>
@@ -1204,6 +1203,7 @@ export default {
     </nav>
   </div>
 
+  <div class="resource-layout">
   <main>
     <section class="section" id="commencer">
       <div class="inner">
