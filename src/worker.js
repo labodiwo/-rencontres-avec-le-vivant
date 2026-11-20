@@ -1083,11 +1083,15 @@ export default {
     .optional h3{margin:0 0 8px;font-size:1.08rem}
     .optional p{margin:0;color:#5e6158;font:.88rem/1.6 Arial,sans-serif}
     .materials{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-    .material-card{padding:20px}
+    .material-card{padding:0;overflow:hidden}
+    .material-card img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:#efede6}
+    .material-card .card-body{padding:20px}
     .material-card h3{margin:0 0 8px;font-size:1.08rem}
     .material-card p{margin:0;color:#5d6056;font:.86rem/1.55 Arial,sans-serif}
     .activities{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-    .activity-card{padding:22px}
+    .activity-card{padding:0;overflow:hidden}
+    .activity-card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#efede6}
+    .activity-card .card-body{padding:22px}
     .activity-card span{display:inline-block;margin-bottom:10px;color:#7d8957;font:700 .7rem Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase}
     .activity-card h3{margin:0 0 9px;font-size:1.18rem}
     .activity-card p{margin:0;color:#5d6056;font:.88rem/1.6 Arial,sans-serif}
@@ -1347,10 +1351,22 @@ export default {
           <p>Vous pourrez choisir de sortir seulement une partie de la malle selon votre séance.</p>
         </div>
         <div class="materials">
-          <article class="material-card"><h3>Mini-monde</h3><p>Habitats, figurines, éléments de décor et objets pour jouer, raconter et observer.</p></article>
-          <article class="material-card"><h3>Œufs & nids</h3><p>Reproductions et supports de manipulation pour comparer, associer et questionner.</p></article>
-          <article class="material-card"><h3>Écoute</h3><p>Enceintes et ressources sonores pour travailler l’attention, la direction et la distance.</p></article>
-          <article class="material-card"><h3>Livres & images</h3><p>Albums, imagiers et supports visuels pour introduire ou prolonger les découvertes.</p></article>
+          <article class="material-card">
+            <img src="/images/mini-monde-oiseaux.png" alt="Mini-monde de la malle Les oiseaux" loading="lazy">
+            <div class="card-body"><h3>Mini-monde</h3><p>Habitats, figurines, éléments de décor et objets pour jouer, raconter et observer.</p></div>
+          </article>
+          <article class="material-card">
+            <img src="/images/P1110660.JPG" alt="Œufs utilisés dans la malle pédagogique" loading="lazy">
+            <div class="card-body"><h3>Œufs & nids</h3><p>Reproductions et supports de manipulation pour comparer, associer et questionner.</p></div>
+          </article>
+          <article class="material-card">
+            <img src="/images/Cartes-oiseaux.png" alt="Cartes pédagogiques de la malle Les oiseaux" loading="lazy">
+            <div class="card-body"><h3>Cartes & supports</h3><p>Cartes pédagogiques, supports d’observation et ressources à utiliser dans plusieurs animations.</p></div>
+          </article>
+          <article class="material-card">
+            <img src="/images/Livres-oiseaux.png" alt="Albums et livres sur les oiseaux présents dans la malle" loading="lazy">
+            <div class="card-body"><h3>Livres & images</h3><p>Albums, imagiers et supports visuels pour introduire ou prolonger les découvertes.</p></div>
+          </article>
         </div>
       </div>
     
@@ -1374,10 +1390,13 @@ export default {
         </div>
         <div class="activities">
           <article class="activity-card">
+            <img src="/images/mini-monde-oiseaux.png" alt="Mini-monde utilisé pour l’animation Dans le monde des oiseaux" loading="lazy">
+            <div class="card-body">
             <span>Animation 1</span>
             <h3>Dans le monde des oiseaux</h3>
             <p>Entrer dans l’univers des oiseaux par le jeu et l’imaginaire, manipuler le mini-monde et laisser les enfants inventer librement.</p>
             <small>Mini-monde · album ou histoire · exploration libre · prolongement dehors.</small>
+            </div>
           </article>
           <article class="activity-card">
             <span>Animation 2</span>
@@ -1386,16 +1405,22 @@ export default {
             <small>Écoute · direction du son · près/loin · prolongement dehors.</small>
           </article>
           <article class="activity-card">
+            <img src="/images/Cartes-oiseaux.png" alt="Supports d’observation utilisés autour des indices laissés par les oiseaux" loading="lazy">
+            <div class="card-body">
             <span>Animation 3</span>
             <h3>Les oiseaux sont passés par ici…</h3>
             <p>Découvrir les indices de présence laissés par les oiseaux, explorer les matières naturelles et créer ses propres traces.</p>
             <small>Boîte d’indices · argile · peinture à la terre · recherche d’indices dehors.</small>
+            </div>
           </article>
           <article class="activity-card">
+            <img src="/images/Livres-oiseaux.png" alt="Livres et supports utilisés pour introduire les mouvements des oiseaux" loading="lazy">
+            <div class="card-body">
             <span>Animation 4</span>
             <h3>Comme des oiseaux</h3>
             <p>Observer différentes manières de se déplacer chez les oiseaux et les expérimenter avec son corps.</p>
             <small>Conte en mouvement · cartes de déplacement · peinture du mouvement · observation dehors.</small>
+            </div>
           </article>
           <article class="activity-card">
             <span>Animation 5</span>
