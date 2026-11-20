@@ -54,6 +54,7 @@
               Demandes <span id="new-count" class="count" hidden></span>
             </button>
             <button type="button" class="tab" data-tab="availability">Disponibilités</button>
+            <button type="button" class="tab" data-tab="pedagogical">Page pédagogique</button>
           </div>
 
           <div class="dashboard-summary" aria-label="Résumé des réservations">
@@ -148,6 +149,42 @@
             <div id="admin-weeks" class="weeks" aria-live="polite"></div>
             <p id="save-status" class="status save-status" role="status"></p>
           </section>
+
+          <section id="tab-pedagogical" class="tab-panel" hidden>
+            <div class="section-heading">
+              <p class="section-eyebrow">Contenu de l’espace privé</p>
+              <h2>Page pédagogique</h2>
+              <p>
+                Modifiez les textes affichés dans « Préparer votre rencontre avec les oiseaux ».
+                La mise en page et les règles de sécurité restent verrouillées.
+              </p>
+            </div>
+
+            <div class="editor-note">
+              Les textes actuels restent les valeurs par défaut. Le bouton « Restaurer » remet
+              simplement le champ à son texte initial.
+            </div>
+
+            <div id="pedagogical-fields" class="pedagogical-fields"></div>
+
+            <div class="resources-editor">
+              <div class="resources-editor-head">
+                <div>
+                  <p class="section-eyebrow">Bibliothèque</p>
+                  <h3>Ressources</h3>
+                  <p>Ajoutez, modifiez ou retirez les articles, podcasts, vidéos et outils proposés dans la colonne de droite.</p>
+                </div>
+                <button type="button" id="add-resource-button" class="small-button">Ajouter une ressource</button>
+              </div>
+              <div id="resources-editor-list" class="resources-editor-list"></div>
+            </div>
+
+            <div class="editor-actions">
+              <button type="button" id="save-pedagogical-button">Enregistrer la page pédagogique</button>
+              <button type="button" id="reset-resources-button" class="secondary-action">Restaurer les ressources initiales</button>
+              <span id="pedagogical-status" class="inline-status" role="status"></span>
+            </div>
+          </section>
         </div>
       </section>
     </main>
@@ -171,11 +208,151 @@
       const summaryUpcoming = document.getElementById("summary-upcoming");
       const exportCsvButton = document.getElementById("export-csv-button");
       const logoutButton = document.getElementById("logout-button");
+      const pedagogicalFields = document.getElementById("pedagogical-fields");
+      const resourcesEditorList = document.getElementById("resources-editor-list");
+      const addResourceButton = document.getElementById("add-resource-button");
+      const savePedagogicalButton = document.getElementById("save-pedagogical-button");
+      const resetResourcesButton = document.getElementById("reset-resources-button");
+      const pedagogicalStatus = document.getElementById("pedagogical-status");
 
       let adminKey = "";
       let availability = {};
       let reservations = [];
       let currentFilter = "active";
+      let pedagogicalContentLoaded = false;
+      let pedagogicalResources = [];
+
+      const pedagogicalSchema = [
+        ["heroTitle", "En-tête", "Titre principal", "Préparer votre rencontre avec les oiseaux"],
+        ["heroIntro", "En-tête", "Introduction", "Cet espace vous accompagne avant l’arrivée de la malle. Il n’est pas nécessaire de tout lire ni de tout faire : découvrez le matériel, choisissez les propositions qui correspondent à votre groupe et gardez de la place pour les observations des enfants."],
+
+        ["startTitle", "Commencer", "Titre", "Un outil à adapter, pas un programme à suivre"],
+        ["startIntro", "Commencer", "Texte d’introduction", "La malle a été conçue pour pouvoir être utilisée par une équipe qui n’est pas spécialiste des oiseaux ou de l’éducation à l’environnement. Les fiches sont des points de départ : vous pouvez raccourcir, prolonger, déplacer ou laisser de côté une proposition selon votre groupe."],
+        ["guideTitle", "Commencer", "Titre · Livret papier", "Le livret complet sera dans la malle"],
+        ["guideText", "Commencer", "Texte · Livret papier", "Cet espace en ligne vous permet de découvrir et de préparer les animations avant la remise de la malle. Le livret pédagogique complet, avec l’ensemble des contenus et des fiches, sera également fourni en version papier dans la malle."],
+        ["usageTitle", "Commencer", "Titre · Usage", "Usage réservé à votre location"],
+        ["usageText", "Commencer", "Texte · Usage", "Les activités découvertes avec la malle peuvent bien sûr être reprises et adaptées par votre équipe dans votre structure après la location. En revanche, les fiches, supports visuels et outils pédagogiques originaux présentés dans cet espace ne doivent pas être diffusés publiquement, copiés ou partagés tels quels sans autorisation préalable."],
+        ["postureTitle", "Commencer", "Titre · Posture", "La posture proposée"],
+        ["posture1", "Commencer", "Posture · paragraphe 1", "Prendre le temps d’écouter, de regarder et de laisser les enfants manipuler."],
+        ["posture2", "Commencer", "Posture · paragraphe 2", "Une question inattendue, une peur, une observation ou un détour peuvent devenir une partie intéressante de la séance."],
+        ["postureStrong", "Commencer", "Phrase mise en avant", "Observez les enfants autant que les oiseaux."],
+        ["quick1", "Commencer", "Repère 1", "Public principal : 3–5 ans"],
+        ["quick2", "Commencer", "Repère 2", "Activités modulables et utilisables séparément"],
+        ["quick3", "Commencer", "Repère 3", "Jeu libre possible avec une partie du matériel"],
+        ["quick4", "Commencer", "Repère 4", "Prolongements dehors encouragés"],
+
+        ["safetyTitle", "Âge & sécurité", "Titre", "À lire avant toute utilisation"],
+        ["safetyWarningTitle", "Âge & sécurité", "Avertissement", "La malle ne convient pas aux enfants de moins de 3 ans."],
+        ["safetyWarningText", "Âge & sécurité", "Texte de sécurité", "Certains éléments comportent de petites pièces. L’utilisation se fait toujours sous la surveillance d’un adulte. L’équipe reste responsable de l’encadrement, de l’organisation de l’espace et de l’adaptation des propositions au groupe accueilli."],
+        ["safetyBefore", "Âge & sécurité", "Avant la séance", "Repérez le matériel utilisé, prévoyez un espace stable et retirez les éléments qui ne seront pas nécessaires."],
+        ["safetyDuring", "Âge & sécurité", "Pendant la séance", "Présentez le matériel progressivement et restez attentif aux manipulations, en particulier avec les petites pièces."],
+        ["safetyOutside", "Âge & sécurité", "Dehors", "Les règles habituelles de votre structure continuent de s’appliquer : encadrement, lieu, météo, déplacements et sécurité du groupe."],
+
+        ["regulationTitle", "Réglementation oiseaux", "Titre", "Observer les oiseaux sans les prélever ni les déranger"],
+        ["regulationIntro", "Réglementation oiseaux", "Introduction", "La réglementation varie selon les espèces. Pour les oiseaux bénéficiant d’un statut de protection, la loi protège notamment les individus, leurs œufs, leurs nids et, selon les cas, leurs sites de reproduction et aires de repos."],
+
+        ["prevoirTitle", "À prévoir", "Titre", "Ce qui n’est pas fourni avec la malle"],
+        ["prevoirIntro", "À prévoir", "Introduction", "La majorité du matériel pédagogique est déjà réunie dans la malle. Quelques éléments courants restent à prévoir selon les activités choisies."],
+
+        ["malleTitle", "Dans la malle", "Titre", "Les grandes familles de matériel"],
+        ["malleIntro", "Dans la malle", "Introduction", "Vous pourrez choisir de sortir seulement une partie de la malle selon votre séance."],
+        ["material1Title", "Dans la malle", "Mini-monde · titre", "Mini-monde"],
+        ["material1Text", "Dans la malle", "Mini-monde · texte", "Habitats, figurines, éléments de décor et objets pour jouer, raconter et observer."],
+        ["material2Title", "Dans la malle", "Œufs & nids · titre", "Œufs & nids"],
+        ["material2Text", "Dans la malle", "Œufs & nids · texte", "Reproductions et supports de manipulation pour comparer, associer et questionner."],
+        ["material3Title", "Dans la malle", "Cartes · titre", "Cartes & supports"],
+        ["material3Text", "Dans la malle", "Cartes · texte", "Cartes pédagogiques, supports d’observation et ressources à utiliser dans plusieurs animations."],
+        ["material4Title", "Dans la malle", "Livres · titre", "Livres & images"],
+        ["material4Text", "Dans la malle", "Livres · texte", "Albums, imagiers et supports visuels pour introduire ou prolonger les découvertes."],
+
+        ["activitiesTitle", "Animations", "Titre", "Quelques portes d’entrée"],
+        ["activitiesIntro", "Animations", "Introduction", "Les fiches détaillées seront ajoutées ici progressivement. Vous pourrez choisir une activité isolée ou construire un petit parcours sur plusieurs jours."],
+        ["activity1Title", "Animations", "Animation 1 · titre", "Dans le monde des oiseaux"],
+        ["activity1Text", "Animations", "Animation 1 · texte", "Entrer dans l’univers des oiseaux par le jeu et l’imaginaire, manipuler le mini-monde et laisser les enfants inventer librement."],
+        ["activity2Title", "Animations", "Animation 2 · titre", "À l’écoute des oiseaux… et du monde qui nous entoure"],
+        ["activity2Text", "Animations", "Animation 2 · texte", "Prendre le temps d’écouter, repérer d’où vient un son et découvrir quelques cris et chants d’oiseaux."],
+        ["activity3Title", "Animations", "Animation 3 · titre", "Les oiseaux sont passés par ici…"],
+        ["activity3Text", "Animations", "Animation 3 · texte", "Découvrir les indices de présence laissés par les oiseaux, explorer les matières naturelles et créer ses propres traces."],
+        ["activity4Title", "Animations", "Animation 4 · titre", "Comme des oiseaux"],
+        ["activity4Text", "Animations", "Animation 4 · texte", "Observer différentes manières de se déplacer chez les oiseaux et les expérimenter avec son corps."],
+        ["activity5Title", "Animations", "Animation 5 · titre", "Balade avec les oiseaux"],
+        ["activity5Text", "Animations", "Animation 5 · texte", "Faire de la balade elle-même une expérience : marcher lentement, écouter, suivre du regard, chercher des indices et garder une trace."],
+        ["toolsTitle", "Animations", "Outils complémentaires · titre", "À utiliser librement pour compléter vos animations"],
+        ["toolsIntro", "Animations", "Outils complémentaires · texte", "Ces outils ne constituent pas des animations supplémentaires : ils peuvent soutenir une séance, enrichir le jeu libre ou vous aider à créer votre propre proposition."],
+
+        ["outdoorTitle", "Observer dehors", "Titre", "Observer sans devoir tout connaître"],
+        ["outdoorIntro", "Observer dehors", "Introduction", "Il n’est pas nécessaire de savoir nommer chaque espèce. L’objectif est d’aider les enfants à remarquer quelque chose qu’ils n’avaient peut-être pas vu ou entendu auparavant."],
+
+        ["resourceTitle", "Ressources", "Titre de la colonne", "Pour nourrir sa curiosité"],
+        ["resourceIntro", "Ressources", "Introduction", "Une petite bibliothèque à explorer selon vos envies. Elle pourra s’enrichir au fil du temps."],
+        ["prevoir1Title", "À prévoir", "Élément 1 · titre", "Argile"],
+        ["prevoir1Text", "À prévoir", "Élément 1 · texte", "À prévoir pour l’animation « Les oiseaux sont passés par ici… »."],
+        ["prevoir2Title", "À prévoir", "Élément 2 · titre", "Protections pour les enfants"],
+        ["prevoir2Text", "À prévoir", "Élément 2 · texte", "Blouses, tabliers ou protections équivalentes à prévoir de manière générale pour les activités salissantes."],
+        ["prevoir3Title", "À prévoir", "Élément 3 · titre", "Papier pour la peinture"],
+        ["prevoir3Text", "À prévoir", "Élément 3 · texte", "À prévoir pour « Les oiseaux sont passés par ici… » et « Comme des oiseaux »."],
+        ["prevoir4Title", "À prévoir", "Élément 4 · titre", "Pinceaux"],
+        ["prevoir4Text", "À prévoir", "Élément 4 · texte", "À prévoir pour les activités de peinture, notamment « Les oiseaux sont passés par ici… » et « Comme des oiseaux »."],
+        ["prevoir5Title", "À prévoir", "Élément 5 · titre", "Peinture"],
+        ["prevoir5Text", "À prévoir", "Élément 5 · texte", "À prévoir pour « Les oiseaux sont passés par ici… » et « Comme des oiseaux »."],
+        ["prevoir6Title", "À prévoir", "Élément 6 · titre", "Téléphone ou appareil photo"],
+        ["prevoir6Text", "À prévoir", "Élément 6 · texte", "Utile pour photographier des observations, garder une trace d’une découverte ou prolonger certaines propositions dehors."],
+        ["prevoirOptionalTitle", "À prévoir", "Encadré final · titre", "À vérifier sur chaque fiche"],
+        ["prevoirOptionalText", "À prévoir", "Encadré final · texte", "Chaque proposition précisera clairement ce qui se trouve dans la malle, ce que votre structure doit prévoir et ce qui reste facultatif. Cette liste générale pourra donc être affinée activité par activité."],
+
+        ["regulationRules", "Réglementation oiseaux", "Règles (une ligne par règle)", "On observe sans capturer.\nOn ne touche pas aux nids ni aux œufs trouvés dehors.\nOn ne prélève pas un nid pour le rapporter dans la structure.\nOn ne déplace pas un oiseau pour mieux l’observer.\nOn garde ses distances avec un nid occupé et on s’éloigne si notre présence semble perturber les oiseaux.\nOn privilégie les photographies, reproductions, figurines, sons et observations à distance."],
+
+        ["activity1Small", "Animations", "Animation 1 · repères", "Mini-monde · album ou histoire · exploration libre · prolongement dehors."],
+        ["activity2Small", "Animations", "Animation 2 · repères", "Écoute · direction du son · près/loin · prolongement dehors."],
+        ["activity3Small", "Animations", "Animation 3 · repères", "Boîte d’indices · argile · peinture à la terre · recherche d’indices dehors."],
+        ["activity4Small", "Animations", "Animation 4 · repères", "Conte en mouvement · cartes de déplacement · peinture du mouvement · observation dehors."],
+        ["activity5Small", "Animations", "Animation 5 · repères", "Animation principalement extérieure · sans matériel spécifique de la malle."],
+
+        ["tool1Title", "Outils complémentaires", "Outil 1 · titre", "Le mini-monde"],
+        ["tool1Text", "Outils complémentaires", "Outil 1 · texte", "Un espace de jeu et d’imaginaire ouvert, à installer et enrichir avec quelques éléments de l’environnement."],
+        ["tool2Title", "Outils complémentaires", "Outil 2 · titre", "L’œuf, l’oiseau et son nid"],
+        ["tool2Text", "Outils complémentaires", "Outil 2 · texte", "Un jeu d’association pour observer, comparer et découvrir la diversité des œufs et des lieux de nidification."],
+        ["tool3Title", "Outils complémentaires", "Outil 3 · titre", "La boîte des indices photos"],
+        ["tool3Text", "Outils complémentaires", "Outil 3 · texte", "Des photographies d’indices de présence pour observer, questionner et mener de petites enquêtes."],
+        ["tool4Title", "Outils complémentaires", "Outil 4 · titre", "Les cartes de déplacement des oiseaux"],
+        ["tool4Text", "Outils complémentaires", "Outil 4 · texte", "Des cartes à intégrer dans des jeux connus ou à utiliser pour inventer vos propres propositions motrices."],
+        ["tool5Title", "Outils complémentaires", "Outil 5 · titre", "L’exposition photos à compléter"],
+        ["tool5Text", "Outils complémentaires", "Outil 5 · texte", "Des photographies à exposer pendant la semaine et à enrichir avec les observations et créations des enfants."],
+        ["tool6Title", "Outils complémentaires", "Outil 6 · titre", "Les cartes des ressentis"],
+        ["tool6Text", "Outils complémentaires", "Outil 6 · texte", "Un support facultatif pour aider les enfants à exprimer un ressenti, une émotion ou une impression en fin d’activité."],
+        ["tool7Title", "Outils complémentaires", "Outil 7 · titre", "L’application Merlin Bird"],
+        ["tool7Text", "Outils complémentaires", "Outil 7 · texte", "Un outil complémentaire pour accompagner certaines écoutes et observations lorsque vous souhaitez aller plus loin."],
+
+        ["outdoorSearchTitle", "Observer dehors", "Colonne 1 · titre", "On peut chercher…"],
+        ["outdoorSearchItems", "Observer dehors", "Colonne 1 · éléments (une ligne par élément)", "un son proche ou lointain ;\nun oiseau posé, qui marche, saute ou vole ;\nune trace au sol ;\nun endroit où un oiseau pourrait se cacher ou se reposer ;\nun comportement qui intrigue les enfants."],
+        ["outdoorQuestionsTitle", "Observer dehors", "Colonne 2 · titre", "Quelques questions possibles"],
+        ["outdoorQuestionItems", "Observer dehors", "Colonne 2 · questions (une ligne par question)", "Qu’est-ce que tu as remarqué ?\nQu’est-ce qui t’a surpris ?\nQu’est-ce que tu entends ?\nComment l’oiseau se déplace-t-il ?\nQu’aimerais-tu regarder encore ?"],
+        ["path1Title", "Observer dehors", "Parcours 1 · titre", "Je découvre"],
+        ["path1Text", "Observer dehors", "Parcours 1 · texte", "Une histoire, une image, un objet ou une première observation."],
+        ["path2Title", "Observer dehors", "Parcours 2 · titre", "J’expérimente"],
+        ["path2Text", "Observer dehors", "Parcours 2 · texte", "Je manipule, j’écoute, je bouge, je compare ou je crée."],
+        ["path3Title", "Observer dehors", "Parcours 3 · titre", "Je poursuis dehors"],
+        ["path3Text", "Observer dehors", "Parcours 3 · texte", "Je retrouve dans l’environnement réel une question née avec la malle."],
+
+        ["footerText", "Bas de page", "Texte", "Cet espace accompagne la malle « Les oiseaux ». Le lien est personnel à votre location et expire automatiquement après la période prévue."]
+      ];
+
+      const defaultResources = [
+        { category:"listen", source:"France Inter", title:"Les oiseaux de proximité", description:"Un épisode de La Terre au carré consacré aux oiseaux que l’on peut rencontrer près de chez soi.", url:"https://podcasts.apple.com/la/podcast/gold-les-oiseaux-de-proximit%C3%A9-un-%C3%A9pisode-culte-de/id294060079?i=1000801920001" },
+        { category:"read", source:"Courrier international · MIT Technology Review", title:"Les oiseaux ne s’entendent plus dans un monde devenu trop bruyant", description:"Un article sur la pollution sonore et la manière dont le bruit humain perturbe la communication et le chant des oiseaux.", url:"https://www.courrierinternational.com/long-format/pollution-sonore-les-oiseaux-ne-s-entendent-plus-dans-un-monde-devenu-trop-bruyant_243737" },
+        { category:"explore", source:"LPO", title:"Observatoire Oiseaux des jardins", description:"Observer, apprendre à reconnaître et participer à un programme de sciences participatives.", url:"https://www.lpo.fr/s-engager-a-nos-cotes/sciences-participatives/observatoire-oiseaux-des-jardins" },
+        { category:"field", source:"Application · LPO", title:"OisApp", description:"Pour découvrir et identifier les oiseaux de France métropolitaine. Certaines fonctions automatiques sont proposées avec abonnement.", url:"https://www.lpo.fr/decouvrir-la-nature/sur-le-web/applis" },
+        { category:"field", source:"Application · Cornell Lab", title:"Merlin Bird ID", description:"Très pratique pour accompagner une écoute ou une observation et tenter d’identifier un oiseau à partir du son, d’une photo ou de quelques critères.", url:"https://merlin.allaboutbirds.org/" }
+      ];
+
+      const resourceCategories = {
+        listen:"À écouter",
+        read:"À lire",
+        explore:"À explorer",
+        field:"À utiliser sur le terrain",
+        watch:"À regarder",
+        children:"Avec les enfants"
+      };
 
       const today = new Date();
       today.setHours(12, 0, 0, 0);
@@ -769,6 +946,158 @@
         }
       };
 
+
+      const renderPedagogicalFields = (savedFields = {}) => {
+        const sections = new Map();
+        pedagogicalSchema.forEach(([key, section, label, defaultValue]) => {
+          if (!sections.has(section)) sections.set(section, []);
+          sections.get(section).push([key, label, defaultValue]);
+        });
+
+        pedagogicalFields.innerHTML = Array.from(sections.entries()).map(([section, fields]) => `
+          <details class="editor-section">
+            <summary>${escapeHtml(section)}</summary>
+            <div class="editor-section-body">
+              ${fields.map(([key, label, defaultValue]) => `
+                <div class="editor-field">
+                  <div class="editor-field-head">
+                    <label for="ped-${escapeHtml(key)}">${escapeHtml(label)}</label>
+                    <button type="button" class="restore-field" data-restore-field="${escapeHtml(key)}">Restaurer</button>
+                  </div>
+                  <textarea id="ped-${escapeHtml(key)}" data-ped-field="${escapeHtml(key)}" rows="${String((savedFields[key] || defaultValue).length > 180 ? 4 : 2)}">${escapeHtml(savedFields[key] || defaultValue)}</textarea>
+                </div>
+              `).join("")}
+            </div>
+          </details>
+        `).join("");
+
+        pedagogicalFields.querySelectorAll("[data-restore-field]").forEach((button) => {
+          button.addEventListener("click", () => {
+            const item = pedagogicalSchema.find(([key]) => key === button.dataset.restoreField);
+            if (!item) return;
+            const input = document.querySelector('[data-ped-field="' + CSS.escape(item[0]) + '"]');
+            if (input) input.value = item[3];
+          });
+        });
+      };
+
+      const renderResourceEditor = () => {
+        if (!pedagogicalResources.length) {
+          resourcesEditorList.innerHTML = '<div class="empty-card">Aucune ressource. Utilisez « Ajouter une ressource ».</div>';
+          return;
+        }
+
+        resourcesEditorList.innerHTML = pedagogicalResources.map((item, index) => `
+          <article class="resource-edit-card" data-resource-index="${index}">
+            <div class="resource-edit-grid">
+              <label>Catégorie
+                <select data-resource-field="category">
+                  ${Object.entries(resourceCategories).map(([value,label]) => `<option value="${value}" ${item.category === value ? "selected" : ""}>${escapeHtml(label)}</option>`).join("")}
+                </select>
+              </label>
+              <label>Source
+                <input type="text" data-resource-field="source" value="${escapeHtml(item.source || "")}" />
+              </label>
+              <label class="wide">Titre
+                <input type="text" data-resource-field="title" value="${escapeHtml(item.title || "")}" />
+              </label>
+              <label class="wide">Description
+                <textarea rows="3" data-resource-field="description">${escapeHtml(item.description || "")}</textarea>
+              </label>
+              <label class="wide">Lien
+                <input type="url" data-resource-field="url" value="${escapeHtml(item.url || "")}" placeholder="https://…" />
+              </label>
+            </div>
+            <button type="button" class="delete-button resource-delete" data-delete-resource="${index}">Supprimer cette ressource</button>
+          </article>
+        `).join("");
+
+        resourcesEditorList.querySelectorAll("[data-delete-resource]").forEach((button) => {
+          button.addEventListener("click", () => {
+            pedagogicalResources.splice(Number(button.dataset.deleteResource), 1);
+            renderResourceEditor();
+          });
+        });
+      };
+
+      const collectResourceEditor = () => {
+        return Array.from(resourcesEditorList.querySelectorAll(".resource-edit-card")).map((card) => {
+          const get = (name) => card.querySelector('[data-resource-field="' + name + '"]')?.value.trim() || "";
+          return {
+            category: get("category"),
+            source: get("source"),
+            title: get("title"),
+            description: get("description"),
+            url: get("url")
+          };
+        }).filter((item) => item.title && item.url);
+      };
+
+      const loadPedagogicalContent = async () => {
+        const response = await fetch("/api/admin/pedagogical-content", {
+          headers: { "x-admin-key": adminKey },
+          cache: "no-store"
+        });
+        const result = await response.json();
+        if (!response.ok || !result.ok) {
+          throw new Error(result.error || "Impossible de charger la page pédagogique.");
+        }
+
+        const content = result.content || {};
+        renderPedagogicalFields(content.fields || {});
+        pedagogicalResources = Array.isArray(content.resources) && content.resources.length
+          ? content.resources.map((item) => ({ ...item }))
+          : defaultResources.map((item) => ({ ...item }));
+        renderResourceEditor();
+        pedagogicalContentLoaded = true;
+      };
+
+      const savePedagogicalContent = async () => {
+        pedagogicalStatus.textContent = "Enregistrement…";
+
+        const fields = {};
+        pedagogicalSchema.forEach(([key,, ,defaultValue]) => {
+          const input = document.querySelector('[data-ped-field="' + CSS.escape(key) + '"]');
+          if (!input) return;
+          const value = input.value.trim();
+          if (value && value !== defaultValue) fields[key] = value;
+        });
+
+        pedagogicalResources = collectResourceEditor();
+
+        try {
+          const response = await fetch("/api/admin/pedagogical-content", {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              "x-admin-key": adminKey
+            },
+            body: JSON.stringify({ fields, resources: pedagogicalResources })
+          });
+          const result = await response.json();
+          if (!response.ok || !result.ok) {
+            throw new Error(result.error || "Enregistrement impossible.");
+          }
+          pedagogicalStatus.textContent = "Page pédagogique enregistrée.";
+        } catch (error) {
+          pedagogicalStatus.textContent = error.message || "Enregistrement impossible.";
+        }
+      };
+
+      addResourceButton.addEventListener("click", () => {
+        pedagogicalResources = collectResourceEditor();
+        pedagogicalResources.push({ category:"read", source:"", title:"", description:"", url:"" });
+        renderResourceEditor();
+      });
+
+      resetResourcesButton.addEventListener("click", () => {
+        pedagogicalResources = defaultResources.map((item) => ({ ...item }));
+        renderResourceEditor();
+        pedagogicalStatus.textContent = "Ressources initiales restaurées. Pensez à enregistrer.";
+      });
+
+      savePedagogicalButton.addEventListener("click", savePedagogicalContent);
+
       const showTab = (name) => {
         document.querySelectorAll(".tab").forEach((button) => {
           button.classList.toggle("active", button.dataset.tab === name);
@@ -780,7 +1109,18 @@
       };
 
       document.querySelectorAll(".tab").forEach((button) => {
-        button.addEventListener("click", () => showTab(button.dataset.tab));
+        button.addEventListener("click", async () => {
+          showTab(button.dataset.tab);
+          if (button.dataset.tab === "pedagogical" && !pedagogicalContentLoaded) {
+            pedagogicalStatus.textContent = "Chargement…";
+            try {
+              await loadPedagogicalContent();
+              pedagogicalStatus.textContent = "";
+            } catch (error) {
+              pedagogicalStatus.textContent = error.message || "Chargement impossible.";
+            }
+          }
+        });
       });
 
       document.querySelectorAll(".filter").forEach((button) => {
@@ -888,6 +1228,11 @@
         availability = {};
         reservations = [];
         currentFilter = "active";
+        pedagogicalContentLoaded = false;
+        pedagogicalResources = [];
+        pedagogicalFields.innerHTML = "";
+        resourcesEditorList.innerHTML = "";
+        pedagogicalStatus.textContent = "";
         passwordInput.value = "";
         loginStatus.textContent = "";
         saveStatus.textContent = "";
@@ -1643,6 +1988,172 @@
         .status-actions { grid-template-columns:1fr; }
       }
 
+
+      .editor-note {
+        margin: 0 0 24px;
+        padding: 15px 17px;
+        border-left: 4px solid #7d8957;
+        background: #fffefa;
+        color: #5e6158;
+        font: .86rem/1.55 Arial, Helvetica, sans-serif;
+      }
+
+      .pedagogical-fields {
+        display: grid;
+        gap: 12px;
+      }
+
+      .editor-section {
+        border: 1px solid #dedbd2;
+        border-radius: 9px;
+        background: #fffefa;
+        overflow: hidden;
+      }
+
+      .editor-section > summary {
+        padding: 16px 18px;
+        cursor: pointer;
+        font-weight: 700;
+      }
+
+      .editor-section-body {
+        display: grid;
+        gap: 18px;
+        padding: 2px 18px 20px;
+      }
+
+      .editor-field-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 7px;
+      }
+
+      .editor-field label,
+      .resource-edit-card label {
+        font: 700 .78rem Arial, Helvetica, sans-serif;
+        color: #55584e;
+      }
+
+      .editor-field textarea,
+      .resource-edit-card input,
+      .resource-edit-card textarea,
+      .resource-edit-card select {
+        width: 100%;
+        margin-top: 7px;
+        padding: 11px 12px;
+        border: 1px solid #cac7bd;
+        border-radius: 6px;
+        background: #fff;
+        color: #292b23;
+        line-height: 1.5;
+      }
+
+      .restore-field {
+        padding: 5px 8px;
+        border: 1px solid #d7d1c5;
+        border-radius: 5px;
+        background: #fff;
+        color: #6a6d63;
+        cursor: pointer;
+        font: 700 .7rem Arial, Helvetica, sans-serif;
+      }
+
+      .resources-editor {
+        margin-top: 34px;
+        padding-top: 28px;
+        border-top: 1px solid #ddd8ce;
+      }
+
+      .resources-editor-head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 18px;
+      }
+
+      .resources-editor-head h3 {
+        margin: 0 0 6px;
+        font-size: 1.65rem;
+        font-weight: 500;
+      }
+
+      .resources-editor-head p:last-child {
+        margin: 0;
+        color: #686b61;
+      }
+
+      .resources-editor-list {
+        display: grid;
+        gap: 14px;
+      }
+
+      .resource-edit-card {
+        padding: 18px;
+        border: 1px solid #ddd9cf;
+        border-radius: 9px;
+        background: #fffefa;
+      }
+
+      .resource-edit-grid {
+        display: grid;
+        grid-template-columns: minmax(160px,.7fr) minmax(220px,1fr);
+        gap: 14px;
+      }
+
+      .resource-edit-grid .wide {
+        grid-column: 1 / -1;
+      }
+
+      .resource-delete {
+        margin-top: 14px;
+      }
+
+      .editor-actions {
+        position: sticky;
+        bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 28px;
+        padding: 14px;
+        border: 1px solid #d7d3c9;
+        border-radius: 9px;
+        background: rgba(255,254,250,.96);
+        box-shadow: 0 8px 25px rgba(35,35,28,.08);
+      }
+
+      .editor-actions > button:first-child {
+        min-height: 44px;
+        padding: 10px 16px;
+        border: 0;
+        border-radius: 6px;
+        background: #7d8957;
+        color: #fff;
+        cursor: pointer;
+        font-weight: 700;
+      }
+
+      .secondary-action {
+        min-height: 44px;
+        padding: 10px 14px;
+        border: 1px solid #9a968b;
+        border-radius: 6px;
+        background: #fff;
+        color: #55584e;
+        cursor: pointer;
+        font-weight: 700;
+      }
+
+      @media (max-width: 720px) {
+        .resources-editor-head { align-items: stretch; flex-direction: column; }
+        .resource-edit-grid { grid-template-columns: 1fr; }
+        .resource-edit-grid .wide { grid-column: auto; }
+        .editor-actions { position: static; }
+      }
       @media (max-width:520px) {
         .admin-session-bar {
           align-items: stretch;
