@@ -52,6 +52,27 @@ import SiteFooter from "../components/SiteFooter.astro";
           </figcaption>
         </figure>
 
+        <section class="youtube-memory" aria-labelledby="youtube-memory-title">
+          <div class="youtube-memory-copy">
+            <p class="eyebrow">Déjà l’envie de partager</p>
+            <h2 id="youtube-memory-title">Des ateliers créatifs partagés en vidéo</h2>
+            <p>
+              Pendant plusieurs années, j’ai aussi partagé des tutoriels d’ateliers créatifs sur la chaîne YouTube Labodiwo.
+              Cette expérience fait partie de mon parcours : imaginer une activité, la tester, l’expliquer simplement et donner envie à d’autres de se l’approprier.
+            </p>
+            <a href="https://www.youtube.com/@Labodiwo" target="_blank" rel="noopener noreferrer">Voir la chaîne Labodiwo →</a>
+          </div>
+
+          <div class="youtube-memory-videos" aria-label="Quelques anciennes vidéos de la chaîne Labodiwo">
+            <a href="https://www.youtube.com/watch?v=ZUWS1bLCwPk" target="_blank" rel="noopener noreferrer">
+              <img src="https://i.ytimg.com/vi/ZUWS1bLCwPk/hqdefault.jpg" alt="Miniature du tutoriel de boucles d’oreilles en macramé" loading="lazy" />
+            </a>
+            <a href="https://www.youtube.com/watch?v=3o8On486zGA" target="_blank" rel="noopener noreferrer">
+              <img src="https://i.ytimg.com/vi/3o8On486zGA/hqdefault.jpg" alt="Miniature du tutoriel de décoration de Noël en macramé" loading="lazy" />
+            </a>
+          </div>
+        </section>
+
         <section class="training-story">
           <p class="eyebrow">Une formation qui a marqué le projet</p>
           <h2>Faire vivre une approche de l’éducation à l’environnement</h2>
@@ -122,13 +143,20 @@ import SiteFooter from "../components/SiteFooter.astro";
       .field-note figcaption span{display:block;margin-bottom:9px;color:#74785e;font:700 .7rem Arial,Helvetica,sans-serif;letter-spacing:.1em;text-transform:uppercase}
       .field-note figcaption strong{display:block;font-size:1.35rem;line-height:1.25;font-weight:500}
       .field-note figcaption p{margin:14px 0 0;color:#5b5c52;font:.91rem/1.65 Arial,Helvetica,sans-serif}
+      .youtube-memory{max-width:980px;margin:58px 0 0;padding:34px 36px;display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,.9fr);gap:34px;align-items:center;background:#f1eee8;border-radius:8px}
+      .youtube-memory-copy h2{margin:0 0 16px;font-size:clamp(1.8rem,3vw,2.45rem);font-weight:500;line-height:1.15}
+      .youtube-memory-copy p:not(.eyebrow){margin:0;color:#55574d;line-height:1.7}
+      .youtube-memory-copy a{display:inline-block;margin-top:16px;color:#596243;font-weight:600;text-underline-offset:4px}
+      .youtube-memory-videos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+      .youtube-memory-videos a{display:block;overflow:hidden;border-radius:6px;background:#ddd}
+      .youtube-memory-videos img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
       .training-story{max-width:880px;margin:58px 0 0;padding:36px 38px;background:#dfe3cf;border-radius:8px}.training-story h2{margin:0 0 20px;font-size:clamp(1.8rem,3vw,2.5rem);font-weight:500;line-height:1.12}.training-story p:not(.eyebrow){margin:0 0 16px;line-height:1.72;color:#4f5248}.training-story p:last-child{margin-bottom:0}.training-highlight{font-size:1.15rem;color:#3f4930!important}
       .cards{margin-top:55px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}.cards article{padding:30px;background:#f1eee8;border-radius:8px}.cards span{display:block;margin-bottom:20px;color:#87906b;font-size:1.7rem}.cards h3{margin:0 0 14px;font-size:1.35rem;font-weight:500}.cards p{margin:0;color:#5b5c52;font: .91rem/1.65 Arial,Helvetica,sans-serif}
       .image-ethics{max-width:880px;margin:56px 0 0;padding:34px 38px;border-left:4px solid #7d8957;background:#f1eee8;border-radius:6px}.image-ethics h2{margin:0 0 20px;font-size:clamp(1.8rem,3vw,2.5rem);font-weight:500;line-height:1.18}.image-ethics p:not(.eyebrow){color:#4f5248;line-height:1.72}.image-ethics p:last-child{margin-bottom:0}
       .quote{padding:70px 24px;background:#dfe3cf;text-align:center}.quote blockquote{max-width:820px;margin:0 auto;font-size:clamp(1.6rem,3vw,2.6rem);line-height:1.25;font-style:italic}
       .cta{padding:70px 24px;background:#596243;color:#fff;text-align:center}.cta h2{margin:0 0 24px;font-size:clamp(2rem,3vw,3rem);font-weight:500}.cta a{display:inline-block;padding:12px 18px;background:#7d8957;color:#fff;border-radius:4px;text-decoration:none;font-weight:600}
       footer{padding:46px 5.5%;background:#303428;color:#f5f2e9;text-align:center}.footer-brand{color:inherit;text-decoration:none;font-size:1.35rem}footer p{color:rgba(255,255,255,.7)}footer small{color:rgba(255,255,255,.5);font-family:Arial,Helvetica,sans-serif}
-      @media(max-width:900px){.site-header{flex-direction:column;align-items:flex-start}nav{justify-content:flex-start}.cards{grid-template-columns:1fr}.field-note{grid-template-columns:1fr}.field-note img{min-height:220px;max-height:330px}}@media(max-width:650px){.site-header{padding:16px 22px}.hero{padding:45px 24px;min-height:280px}.content{width:88%;padding:55px 0}}
+      @media(max-width:900px){.site-header{flex-direction:column;align-items:flex-start}nav{justify-content:flex-start}.cards{grid-template-columns:1fr}.field-note{grid-template-columns:1fr}.field-note img{min-height:220px;max-height:330px}.youtube-memory{grid-template-columns:1fr}.youtube-memory-videos{max-width:560px}}@media(max-width:650px){.site-header{padding:16px 22px}.hero{padding:45px 24px;min-height:280px}.content{width:88%;padding:55px 0}}
     </style>
   </body>
 </html>
