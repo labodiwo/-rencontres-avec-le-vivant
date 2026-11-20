@@ -1147,12 +1147,7 @@ export default {
     .resource-groups{display:grid;gap:9px}
     .resource-group{border:1px solid #D8C8B8;border-radius:8px;background:#FFFDF8;overflow:hidden}
     .resource-group summary{cursor:pointer;list-style:none;padding:12px 13px;font:700 .78rem Arial,sans-serif;color:#4f5741}
-    .resource-group:nth-child(1) summary{background:#F4E3A8}
-    .resource-group:nth-child(2) summary{background:#F4D8D0}
-    .resource-group:nth-child(3) summary{background:#DDE9EA}
-    .resource-group:nth-child(4) summary{background:#E7EEDC}
-    .resource-group:nth-child(5) summary{background:#F6E0D8}
-    .resource-group:nth-child(6) summary{background:#EFE3F2}
+    .resource-group summary{background:#F3F1EB}
     .resource-group summary::-webkit-details-marker{display:none}
     .resource-group summary::after{content:"+";float:right;color:#C97968;font-size:1rem}
     .resource-group[open] summary::after{content:"–"}
