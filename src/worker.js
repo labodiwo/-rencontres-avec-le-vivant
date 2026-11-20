@@ -1177,6 +1177,9 @@ export default {
     .legal-note a{color:#66724F;font-weight:700}
     .check-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
     .check-item{padding:16px 18px;background:#FFFDF8;border:1px solid #dfdcd2;border-radius:8px}
+    .check-item-with-image{display:grid;grid-template-columns:72px minmax(0,1fr);gap:14px;align-items:center}
+    .check-thumb{display:block;width:72px;height:72px;object-fit:contain;border-radius:8px;background:#fff}
+    .check-copy{min-width:0}
     .check-item strong{display:block;margin-bottom:5px}
     .check-item span{color:#61645a;font:.86rem/1.5 Arial,sans-serif}
     .optional{margin-top:20px;padding:18px;border-radius:8px;background:#EFE6D8}
@@ -1438,9 +1441,12 @@ export default {
         </div>
 
         <div class="check-grid">
-          <div class="check-item">
-            <strong>Argile</strong>
-            <span>À prévoir pour l’animation « Les oiseaux sont passés par ici… ».</span>
+          <div class="check-item check-item-with-image">
+            <img class="check-thumb" src="/images/argile-rouge.png" alt="Pain d’argile rouge" loading="lazy">
+            <div class="check-copy">
+              <strong>Argile</strong>
+              <span>À prévoir pour l’animation « Les oiseaux sont passés par ici… ».</span>
+            </div>
           </div>
           <div class="check-item">
             <strong>Protections pour les enfants</strong>
