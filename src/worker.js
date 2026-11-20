@@ -197,6 +197,53 @@ export class BlogStore extends DurableObject {
       return json({ ok: true, posts: sortedPosts() });
     }
 
+    if (request.method === "GET" && url.pathname === "/pedagogical-content") {
+      const content = (await this.ctx.storage.get("pedagogicalContent")) || {
+        fields: {},
+        resources: [],
+      };
+      return json({ ok: true, content });
+    }
+
+    if (request.method === "POST" && url.pathname === "/pedagogical-content") {
+      const body = await request.json();
+      const rawFields =
+        body && typeof body.fields === "object" && !Array.isArray(body.fields)
+          ? body.fields
+          : {};
+
+      const fields = {};
+      Object.entries(rawFields)
+        .slice(0, 120)
+        .forEach(([key, value]) => {
+          const safeKey = clean(key, 80).replace(/[^a-zA-Z0-9_-]/g, "");
+          if (safeKey) fields[safeKey] = cleanMultiline(value, 6000);
+        });
+
+      const resources = Array.isArray(body.resources)
+        ? body.resources.slice(0, 60).map((item) => {
+            const urlValue = clean(item?.url, 1000);
+            const safeUrl = /^https?:\/\//i.test(urlValue) ? urlValue : "";
+            return {
+              category: clean(item?.category, 80),
+              source: clean(item?.source, 120),
+              title: clean(item?.title, 220),
+              description: cleanMultiline(item?.description, 1200),
+              url: safeUrl,
+            };
+          }).filter((item) => item.title && item.url)
+        : [];
+
+      const content = {
+        fields,
+        resources,
+        updatedAt: new Date().toISOString(),
+      };
+
+      await this.ctx.storage.put("pedagogicalContent", content);
+      return json({ ok: true, content });
+    }
+
     if (request.method === "POST" && url.pathname === "/images") {
       const contentType = clean(request.headers.get("content-type"), 100);
 
@@ -882,6 +929,39 @@ export default {
             body: await request.text(),
           }),
         );
+      }
+
+      return json({ ok: false, error: "Méthode non autorisée." }, 405);
+    }
+
+    if (url.pathname === "/api/pedagogical-content") {
+      if (request.method !== "GET") {
+        return json({ ok: false, error: "Méthode non autorisée." }, 405);
+      }
+      return getBlogStub(env).fetch("https://blog.internal/pedagogical-content");
+    }
+
+    if (url.pathname === "/api/admin/pedagogical-content") {
+      if (!env.ADMIN_KEY || !safeEqual(request.headers.get("x-admin-key") || "", env.ADMIN_KEY)) {
+        return json({ ok: false, error: "Accès administrateur refusé." }, 401);
+      }
+
+      const stub = getBlogStub(env);
+
+      if (request.method === "GET") {
+        return stub.fetch("https://blog.internal/pedagogical-content");
+      }
+
+      if (request.method === "POST") {
+        const contentType = request.headers.get("content-type") || "";
+        if (!contentType.includes("application/json")) {
+          return json({ ok: false, error: "Format de requête invalide." }, 415);
+        }
+        return stub.fetch(new Request("https://blog.internal/pedagogical-content", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: await request.text(),
+        }));
       }
 
       return json({ ok: false, error: "Méthode non autorisée." }, 405);
@@ -1660,6 +1740,121 @@ export default {
 
   <script>
     (() => {
+      const textMap = {
+        heroTitle: ".hero h1",
+        heroIntro: ".hero-inner > p:not(.eyebrow)",
+        startTitle: "#commencer .heading h2",
+        startIntro: "#commencer .heading p:last-child",
+        guideTitle: ".guide-note strong",
+        guideText: ".guide-note p",
+        usageTitle: ".usage-note strong",
+        usageText: ".usage-note p",
+        postureTitle: ".welcome-card h3",
+        posture1: ".welcome-card p:nth-of-type(1)",
+        posture2: ".welcome-card p:nth-of-type(2)",
+        postureStrong: ".welcome-card p:nth-of-type(3) strong",
+        quick1: ".quick-list li:nth-child(1)",
+        quick2: ".quick-list li:nth-child(2)",
+        quick3: ".quick-list li:nth-child(3)",
+        quick4: ".quick-list li:nth-child(4)",
+        safetyTitle: "#securite .heading h2",
+        safetyWarningTitle: "#securite .warning strong",
+        safetyWarningText: "#securite .warning p",
+        safetyBefore: "#securite .three-grid article:nth-child(1) p",
+        safetyDuring: "#securite .three-grid article:nth-child(2) p",
+        safetyOutside: "#securite .three-grid article:nth-child(3) p",
+        regulationTitle: "#oiseaux .heading h2",
+        regulationIntro: "#oiseaux .heading p:last-child",
+        prevoirTitle: "#prevoir .heading h2",
+        prevoirIntro: "#prevoir .heading p:last-child",
+        malleTitle: "#malle .heading h2",
+        malleIntro: "#malle .heading p:last-child",
+        material1Title: "#malle .material-card:nth-child(1) h3",
+        material1Text: "#malle .material-card:nth-child(1) p",
+        material2Title: "#malle .material-card:nth-child(2) h3",
+        material2Text: "#malle .material-card:nth-child(2) p",
+        material3Title: "#malle .material-card:nth-child(3) h3",
+        material3Text: "#malle .material-card:nth-child(3) p",
+        material4Title: "#malle .material-card:nth-child(4) h3",
+        material4Text: "#malle .material-card:nth-child(4) p",
+        activitiesTitle: "#activites .heading h2",
+        activitiesIntro: "#activites .heading p:last-child",
+        activity1Title: "#activites .activity-card:nth-child(1) h3",
+        activity1Text: "#activites .activity-card:nth-child(1) p",
+        activity2Title: "#activites .activity-card:nth-child(2) h3",
+        activity2Text: "#activites .activity-card:nth-child(2) p",
+        activity3Title: "#activites .activity-card:nth-child(3) h3",
+        activity3Text: "#activites .activity-card:nth-child(3) p",
+        activity4Title: "#activites .activity-card:nth-child(4) h3",
+        activity4Text: "#activites .activity-card:nth-child(4) p",
+        activity5Title: "#activites .activity-card:nth-child(5) h3",
+        activity5Text: "#activites .activity-card:nth-child(5) p",
+        toolsTitle: ".tools-heading h3",
+        toolsIntro: ".tools-heading p:last-child",
+        outdoorTitle: "#dehors .heading h2",
+        outdoorIntro: "#dehors .heading p:last-child",
+        resourceTitle: "#resource-title",
+        resourceIntro: ".resource-intro",
+        footerText: ".footer-note p"
+      };
+
+      const categoryLabels = {
+        listen: "À écouter",
+        read: "À lire",
+        explore: "À explorer",
+        field: "À utiliser sur le terrain",
+        watch: "À regarder",
+        children: "Avec les enfants"
+      };
+
+      const renderResources = (resources) => {
+        if (!Array.isArray(resources) || !resources.length) return;
+        const container = document.querySelector(".resource-groups");
+        if (!container) return;
+
+        const groups = {};
+        Object.keys(categoryLabels).forEach((key) => groups[key] = []);
+        resources.forEach((resource) => {
+          const category = categoryLabels[resource.category] ? resource.category : "explore";
+          groups[category].push(resource);
+        });
+
+        container.innerHTML = Object.entries(categoryLabels).map(([key, label], index) => {
+          const items = groups[key];
+          const body = items.length
+            ? '<div class="resource-list">' + items.map((item) => {
+                const source = String(item.source || "").replace(/[<>&]/g, "");
+                const title = String(item.title || "").replace(/[<>&]/g, "");
+                const description = String(item.description || "").replace(/[<>&]/g, "");
+                const href = /^https?:\/\//i.test(item.url || "") ? item.url : "#";
+                return '<a class="resource-card" href="' + href.replace(/"/g, "%22") + '" target="_blank" rel="noopener noreferrer">' +
+                  '<span class="resource-type">' + source + '</span>' +
+                  '<strong>' + title + '</strong>' +
+                  '<small>' + description + '</small>' +
+                '</a>';
+              }).join("") + '</div>'
+            : '<div class="resource-empty">Aucune ressource pour le moment.</div>';
+
+          return '<details class="resource-group"' + (index === 0 || key === "field" ? " open" : "") + '>' +
+            '<summary>' + label + '</summary>' + body + '</details>';
+        }).join("");
+      };
+
+      fetch("/api/pedagogical-content", { cache: "no-store" })
+        .then((response) => response.ok ? response.json() : null)
+        .then((result) => {
+          const content = result?.content;
+          if (!content) return;
+          Object.entries(content.fields || {}).forEach(([key, value]) => {
+            const selector = textMap[key];
+            if (!selector || !value) return;
+            const node = document.querySelector(selector);
+            if (node) node.textContent = value;
+          });
+          renderResources(content.resources);
+        })
+        .catch(() => {});
+
       const copyBlockedMessage = "Les supports de cet espace ne sont pas destinés à être copiés ou diffusés tels quels.";
 
       document.addEventListener("contextmenu", (event) => {
