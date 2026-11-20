@@ -1144,7 +1144,15 @@ export default {
     .resource-type{display:block;margin-bottom:5px;color:#7d8957;font:700 .65rem Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase}
     .resource-card strong{display:block;margin-bottom:5px;font-size:.96rem;line-height:1.25}
     .resource-card small{display:block;color:#696c62;font:.76rem/1.45 Arial,sans-serif}
-    .resource-more{margin:14px 0 0;color:#777a70;font:.74rem/1.45 Arial,sans-serif}
+    .resource-groups{display:grid;gap:9px}
+    .resource-group{border:1px solid #dfdcd2;border-radius:8px;background:#fffefa;overflow:hidden}
+    .resource-group summary{cursor:pointer;list-style:none;padding:12px 13px;font:700 .78rem Arial,sans-serif;color:#4f5741}
+    .resource-group summary::-webkit-details-marker{display:none}
+    .resource-group summary::after{content:"+";float:right;color:#87906b;font-size:1rem}
+    .resource-group[open] summary::after{content:"–"}
+    .resource-group .resource-list{padding:0 9px 10px}
+    .resource-group .resource-card{margin-top:8px}
+    .resource-empty{padding:0 13px 13px;color:#777a70;font:.74rem/1.45 Arial,sans-serif}
     .footer-note{padding:30px 6%;background:#596243;color:#fffdf8;text-align:center}
     .footer-note p{max-width:760px;margin:0 auto;line-height:1.65}
     @media(max-width:850px){
@@ -1576,35 +1584,69 @@ export default {
     <aside class="resource-rail" aria-labelledby="resource-title">
       <p class="eyebrow">Pour aller plus loin</p>
       <h2 id="resource-title">Pour nourrir sa curiosité</h2>
-      <p class="resource-intro">Quelques ressources à écouter, lire ou explorer selon vos envies.</p>
+      <p class="resource-intro">Une petite bibliothèque à explorer selon vos envies. Elle pourra s’enrichir au fil du temps.</p>
 
-      <div class="resource-list">
-        <a class="resource-card" href="https://podcasts.apple.com/la/podcast/gold-les-oiseaux-de-proximit%C3%A9-un-%C3%A9pisode-culte-de/id294060079?i=1000801920001" target="_blank" rel="noopener noreferrer">
-          <span class="resource-type">À écouter · France Inter</span>
-          <strong>Les oiseaux de proximité</strong>
-          <small>Un épisode de La Terre au carré consacré aux oiseaux que l’on peut rencontrer près de chez soi.</small>
-        </a>
+      <div class="resource-groups">
+        <details class="resource-group" open>
+          <summary>À écouter</summary>
+          <div class="resource-list">
+            <a class="resource-card" href="https://podcasts.apple.com/la/podcast/gold-les-oiseaux-de-proximit%C3%A9-un-%C3%A9pisode-culte-de/id294060079?i=1000801920001" target="_blank" rel="noopener noreferrer">
+              <span class="resource-type">France Inter</span>
+              <strong>Les oiseaux de proximité</strong>
+              <small>Un épisode de La Terre au carré consacré aux oiseaux que l’on peut rencontrer près de chez soi.</small>
+            </a>
+          </div>
+        </details>
 
-        <a class="resource-card" href="https://www.huffingtonpost.fr/life/video/dans-sur-le-front-sur-france-5-hugo-clement-mene-l-enquete-sur-les-oiseaux_197133.html" target="_blank" rel="noopener noreferrer">
-          <span class="resource-type">À lire · Le HuffPost</span>
-          <strong>Où sont passés nos oiseaux ?</strong>
-          <small>Bruit, bâtiments, pesticides, agriculture… un point de départ pour réfléchir aux pressions qui touchent les oiseaux.</small>
-        </a>
+        <details class="resource-group">
+          <summary>À lire</summary>
+          <div class="resource-list">
+            <a class="resource-card" href="https://www.huffingtonpost.fr/life/video/dans-sur-le-front-sur-france-5-hugo-clement-mene-l-enquete-sur-les-oiseaux_197133.html" target="_blank" rel="noopener noreferrer">
+              <span class="resource-type">Le HuffPost</span>
+              <strong>Où sont passés nos oiseaux ?</strong>
+              <small>Bruit, bâtiments, pesticides, agriculture… un point de départ pour réfléchir aux pressions qui touchent les oiseaux.</small>
+            </a>
+          </div>
+        </details>
 
-        <a class="resource-card" href="https://www.lpo.fr/s-engager-a-nos-cotes/sciences-participatives/observatoire-oiseaux-des-jardins" target="_blank" rel="noopener noreferrer">
-          <span class="resource-type">À explorer · LPO</span>
-          <strong>Observatoire Oiseaux des jardins</strong>
-          <small>Observer, apprendre à reconnaître et participer à un programme de sciences participatives.</small>
-        </a>
+        <details class="resource-group">
+          <summary>À explorer</summary>
+          <div class="resource-list">
+            <a class="resource-card" href="https://www.lpo.fr/s-engager-a-nos-cotes/sciences-participatives/observatoire-oiseaux-des-jardins" target="_blank" rel="noopener noreferrer">
+              <span class="resource-type">LPO</span>
+              <strong>Observatoire Oiseaux des jardins</strong>
+              <small>Observer, apprendre à reconnaître et participer à un programme de sciences participatives.</small>
+            </a>
+          </div>
+        </details>
 
-        <a class="resource-card" href="https://www.lpo.fr/la-lpo-en-actions/education-a-l-environnement/ressources-pedagogiques/outils-pedagogiques/oisapp" target="_blank" rel="noopener noreferrer">
-          <span class="resource-type">Outil · LPO</span>
-          <strong>OisApp</strong>
-          <small>Une application d’identification des oiseaux de France métropolitaine, utilisable aussi sur le terrain.</small>
-        </a>
+        <details class="resource-group" open>
+          <summary>À utiliser sur le terrain</summary>
+          <div class="resource-list">
+            <a class="resource-card" href="https://www.lpo.fr/decouvrir-la-nature/sur-le-web/applis" target="_blank" rel="noopener noreferrer">
+              <span class="resource-type">Application · LPO</span>
+              <strong>OisApp</strong>
+              <small>Pour découvrir et identifier les oiseaux de France métropolitaine. Certaines fonctions automatiques sont proposées avec abonnement.</small>
+            </a>
+
+            <a class="resource-card" href="https://merlin.allaboutbirds.org/" target="_blank" rel="noopener noreferrer">
+              <span class="resource-type">Application · Cornell Lab</span>
+              <strong>Merlin Bird ID</strong>
+              <small>Très pratique pour accompagner une écoute ou une observation et tenter d’identifier un oiseau à partir du son, d’une photo ou de quelques critères.</small>
+            </a>
+          </div>
+        </details>
+
+        <details class="resource-group">
+          <summary>À regarder</summary>
+          <div class="resource-empty">D’autres vidéos et documentaires pourront être ajoutés ici progressivement.</div>
+        </details>
+
+        <details class="resource-group">
+          <summary>Avec les enfants</summary>
+          <div class="resource-empty">Albums, prolongements et ressources pédagogiques pourront venir compléter cette rubrique.</div>
+        </details>
       </div>
-
-      <p class="resource-more">Cette sélection pourra évoluer au fil des découvertes et des nouvelles ressources.</p>
     </aside>
   </div>
 
