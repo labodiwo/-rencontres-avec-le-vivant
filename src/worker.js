@@ -1082,9 +1082,6 @@ export default {
     .welcome-card p:last-child{margin-bottom:0}
     .quick-list{display:grid;gap:10px;margin:0;padding:0;list-style:none}
     .quick-list li{padding:13px 14px;background:#E7EEDC;border-radius:7px;font:700 .86rem/1.45 Arial,sans-serif}
-    .quick-list li:nth-child(2){background:#F4E3A8}
-    .quick-list li:nth-child(3){background:#DDE9EA}
-    .quick-list li:nth-child(4){background:#F4D8D0}
     .warning{padding:22px 24px;border:1px solid #d4ae72;border-radius:10px;background:#fff3df}
     .warning strong{display:block;margin-bottom:8px;color:#77511d;font-family:Arial,sans-serif}
     .warning p{margin:0;line-height:1.6}
