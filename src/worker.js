@@ -989,24 +989,27 @@ export default {
     .section{padding:64px 6%}
     .accordion-section{
       display:block;
+      width:min(1100px,88%);
+      margin:16px auto;
       padding:0;
-      border:0;
-      border-top:1px solid #dfdcd2;
-      background:#f8f6f1;
+      border:1px solid #dfdcd2;
+      border-radius:12px;
+      overflow:hidden;
+      background:#fffefa;
+      box-shadow:0 6px 20px rgba(50,50,35,.035);
     }
-    .accordion-section.alt{background:#eeece5}
+    .accordion-section.alt{background:#f3f1eb}
     .accordion-section > summary{
       list-style:none;
       cursor:pointer;
-      max-width:980px;
-      margin:0 auto;
-      padding:26px 6%;
+      margin:0;
+      padding:24px 28px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:20px;
       color:#34382e;
-      font-size:clamp(1.35rem,2.5vw,1.8rem);
+      font-size:clamp(1.25rem,2vw,1.65rem);
       font-weight:600;
     }
     .accordion-section > summary::-webkit-details-marker{display:none}
@@ -1023,8 +1026,11 @@ export default {
       transition:transform .2s ease;
     }
     .accordion-section[open] .accordion-icon{transform:rotate(45deg)}
-    .accordion-content{padding:0 6% 64px}
-    .accordion-content > .inner{max-width:980px;margin:auto}
+    .accordion-content{
+      padding:6px 28px 34px;
+      border-top:1px solid #e7e3da;
+    }
+    .accordion-content > .inner{max-width:none;margin:0}
     .section.alt{background:#eeece5}
     .inner{max-width:980px;margin:auto}
     .heading{max-width:720px;margin-bottom:32px}
@@ -1095,6 +1101,14 @@ export default {
       .section{padding:48px 24px}
       .three-grid,.materials,.activities,.tools-grid,.path,.check-grid{grid-template-columns:1fr}
       .nav{padding-left:20px;padding-right:20px}
+      .accordion-section{
+        width:100%;
+        margin:0;
+        border-left:0;
+        border-right:0;
+        border-radius:0;
+        box-shadow:none;
+      }
       .accordion-section > summary{padding:22px 24px}
       .accordion-content{padding:0 24px 48px}
     }
