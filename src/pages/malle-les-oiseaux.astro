@@ -164,6 +164,45 @@ import SiteFooter from "../components/SiteFooter.astro";
 
 
 
+      <!-- LOCATION EN PRATIQUE -->
+      <section class="rental-practical">
+        <div class="rental-practical-inner">
+          <div class="rental-practical-heading">
+            <p class="eyebrow">La location en pratique</p>
+            <h2>Une malle prête à être utilisée par votre équipe</h2>
+            <p>
+              La malle est conçue pour être prise en main de façon autonome :
+              il n’est pas nécessaire d’être spécialiste des oiseaux ni de
+              l’éducation à l’environnement.
+            </p>
+          </div>
+
+          <div class="rental-practical-grid">
+            <article>
+              <span>1 semaine</span>
+              <strong>200 €</strong>
+            </article>
+            <article>
+              <span>2 semaines</span>
+              <strong>370 €</strong>
+            </article>
+            <article>
+              <span>4 semaines</span>
+              <strong>520 €</strong>
+              <small>environ un mois</small>
+            </article>
+          </div>
+
+          <div class="rental-practical-details">
+            <p><strong>Inclus :</strong> la malle, le matériel et les supports pédagogiques.</p>
+            <p><strong>En option :</strong> accompagnement d’équipe de 1 h 30 · + 140 €.</p>
+            <p><strong>Remise :</strong> le vendredi précédant le début de la location.</p>
+            <p><strong>Zone desservie actuellement :</strong> Pays de la Loire.</p>
+          </div>
+        </div>
+      </section>
+
+
       <!-- RÉSERVATION -->
       <section class="reservation-cta reservation-cta-top">
         <div class="reservation-cta-inner">
@@ -980,6 +1019,90 @@ import SiteFooter from "../components/SiteFooter.astro";
       }
 
 
+      /* LOCATION EN PRATIQUE */
+
+      .rental-practical {
+        padding: 65px 5.5%;
+        background: #f9f7f6;
+      }
+
+      .rental-practical-inner {
+        max-width: 980px;
+        margin: 0 auto;
+      }
+
+      .rental-practical-heading {
+        max-width: 720px;
+        margin: 0 auto 30px;
+        text-align: center;
+      }
+
+      .rental-practical-heading h2 {
+        margin: 0 0 16px;
+        font-size: clamp(2rem, 3vw, 2.8rem);
+        font-weight: 500;
+      }
+
+      .rental-practical-heading p:last-child {
+        margin: 0;
+        line-height: 1.65;
+      }
+
+      .rental-practical-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .rental-practical-grid article {
+        padding: 22px 18px;
+        border-radius: 8px;
+        background: #eef0e7;
+        text-align: center;
+      }
+
+      .rental-practical-grid span,
+      .rental-practical-grid strong,
+      .rental-practical-grid small {
+        display: block;
+      }
+
+      .rental-practical-grid span {
+        margin-bottom: 7px;
+        color: #5f654f;
+        font: 700 .76rem Arial, Helvetica, sans-serif;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+      }
+
+      .rental-practical-grid strong {
+        font-size: 1.65rem;
+        font-weight: 500;
+      }
+
+      .rental-practical-grid small {
+        margin-top: 5px;
+        color: #777a6f;
+        font: .76rem Arial, Helvetica, sans-serif;
+      }
+
+      .rental-practical-details {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px 24px;
+        padding: 22px 24px;
+        border: 1px solid #dedbd2;
+        border-radius: 8px;
+        background: #fffefa;
+      }
+
+      .rental-practical-details p {
+        margin: 0;
+        font: .9rem/1.55 Arial, Helvetica, sans-serif;
+      }
+
+
       /* RÉSERVATION */
 
       .reservation-cta {
@@ -1169,7 +1292,9 @@ import SiteFooter from "../components/SiteFooter.astro";
 
         .contents-grid,
         .format-grid,
-        .practical-grid {
+        .practical-grid,
+        .rental-practical-grid,
+        .rental-practical-details {
           grid-template-columns: 1fr;
         }
 
