@@ -1795,7 +1795,54 @@ export default {
         outdoorIntro: "#dehors .heading p:last-child",
         resourceTitle: "#resource-title",
         resourceIntro: ".resource-intro",
+        prevoir1Title: "#prevoir .check-item:nth-child(1) strong",
+        prevoir1Text: "#prevoir .check-item:nth-child(1) span",
+        prevoir2Title: "#prevoir .check-item:nth-child(2) strong",
+        prevoir2Text: "#prevoir .check-item:nth-child(2) span",
+        prevoir3Title: "#prevoir .check-item:nth-child(3) strong",
+        prevoir3Text: "#prevoir .check-item:nth-child(3) span",
+        prevoir4Title: "#prevoir .check-item:nth-child(4) strong",
+        prevoir4Text: "#prevoir .check-item:nth-child(4) span",
+        prevoir5Title: "#prevoir .check-item:nth-child(5) strong",
+        prevoir5Text: "#prevoir .check-item:nth-child(5) span",
+        prevoir6Title: "#prevoir .check-item:nth-child(6) strong",
+        prevoir6Text: "#prevoir .check-item:nth-child(6) span",
+        prevoirOptionalTitle: "#prevoir .optional h3",
+        prevoirOptionalText: "#prevoir .optional p",
+        activity1Small: "#activites .activity-card:nth-child(1) small",
+        activity2Small: "#activites .activity-card:nth-child(2) small",
+        activity3Small: "#activites .activity-card:nth-child(3) small",
+        activity4Small: "#activites .activity-card:nth-child(4) small",
+        activity5Small: "#activites .activity-card:nth-child(5) small",
+        tool1Title: ".tool-card:nth-child(1) h4",
+        tool1Text: ".tool-card:nth-child(1) p",
+        tool2Title: ".tool-card:nth-child(2) h4",
+        tool2Text: ".tool-card:nth-child(2) p",
+        tool3Title: ".tool-card:nth-child(3) h4",
+        tool3Text: ".tool-card:nth-child(3) p",
+        tool4Title: ".tool-card:nth-child(4) h4",
+        tool4Text: ".tool-card:nth-child(4) p",
+        tool5Title: ".tool-card:nth-child(5) h4",
+        tool5Text: ".tool-card:nth-child(5) p",
+        tool6Title: ".tool-card:nth-child(6) h4",
+        tool6Text: ".tool-card:nth-child(6) p",
+        tool7Title: ".tool-card:nth-child(7) h4",
+        tool7Text: ".tool-card:nth-child(7) p",
+        outdoorSearchTitle: "#dehors .observe:nth-child(1) h3",
+        outdoorQuestionsTitle: "#dehors .observe:nth-child(2) h3",
+        path1Title: "#dehors .path article:nth-child(1) strong",
+        path1Text: "#dehors .path article:nth-child(1) p",
+        path2Title: "#dehors .path article:nth-child(2) strong",
+        path2Text: "#dehors .path article:nth-child(2) p",
+        path3Title: "#dehors .path article:nth-child(3) strong",
+        path3Text: "#dehors .path article:nth-child(3) p",
         footerText: ".footer-note p"
+      };
+
+      const listMap = {
+        regulationRules: "#oiseaux .rule-box ul",
+        outdoorSearchItems: "#dehors .observe:nth-child(1) ul",
+        outdoorQuestionItems: "#dehors .observe:nth-child(2) ul"
       };
 
       const categoryLabels = {
@@ -1846,10 +1893,26 @@ export default {
           const content = result?.content;
           if (!content) return;
           Object.entries(content.fields || {}).forEach(([key, value]) => {
+            if (!value) return;
             const selector = textMap[key];
-            if (!selector || !value) return;
-            const node = document.querySelector(selector);
-            if (node) node.textContent = value;
+            if (selector) {
+              const node = document.querySelector(selector);
+              if (node) node.textContent = value;
+              return;
+            }
+
+            const listSelector = listMap[key];
+            if (listSelector) {
+              const list = document.querySelector(listSelector);
+              if (list) {
+                list.innerHTML = String(value)
+                  .split("\n")
+                  .map((item) => item.trim())
+                  .filter(Boolean)
+                  .map((item) => "<li>" + item.replace(/[<>&]/g, "") + "</li>")
+                  .join("");
+              }
+            }
           });
           renderResources(content.resources);
         })
