@@ -1037,6 +1037,24 @@ export default {
     .heading h2{margin:0 0 14px;font-size:clamp(2rem,4vw,3rem);font-weight:500;line-height:1.08}
     .heading p{margin:0;line-height:1.7;color:#55584e}
     .welcome{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:start}
+    .guide-note{
+      margin:0 0 24px;
+      padding:18px 20px;
+      border:1px solid #d8ddc8;
+      border-radius:9px;
+      background:#edf0e6;
+    }
+    .guide-note strong{
+      display:block;
+      margin-bottom:7px;
+      color:#4f593f;
+      font-family:Arial,Helvetica,sans-serif;
+    }
+    .guide-note p{
+      margin:0;
+      color:#575b50;
+      font:.88rem/1.6 Arial,Helvetica,sans-serif;
+    }
     .welcome-card,.info-card,.material-card,.activity-card{background:#fffefa;border:1px solid #dfdcd2;border-radius:10px}
     .welcome-card{padding:28px}
     .welcome-card h3{margin:0 0 12px;font-size:1.35rem}
@@ -1153,6 +1171,14 @@ export default {
             une proposition selon votre groupe.
           </p>
         </div>
+        <div class="guide-note">
+          <strong>Le livret complet sera dans la malle</strong>
+          <p>
+            Cet espace en ligne vous permet de découvrir et de préparer les animations avant la remise de la malle.
+            Le livret pédagogique complet, avec l’ensemble des contenus et des fiches, sera également fourni en version papier dans la malle.
+          </p>
+        </div>
+
         <div class="welcome">
           <div class="welcome-card">
             <h3>La posture proposée</h3>
