@@ -1189,12 +1189,30 @@ export default {
         </div>
 
         <div class="check-grid">
-          <div class="check-item"><strong>Eau</strong><span>Pour les activités qui nécessitent de mouiller, nettoyer ou préparer une matière.</span></div>
-          <div class="check-item"><strong>Protections de table</strong><span>Nappe, vieux drap ou protection habituelle de votre structure pour les activités salissantes.</span></div>
-          <div class="check-item"><strong>Tabliers ou vêtements adaptés</strong><span>À prévoir notamment pour les expérimentations avec des matières végétales.</span></div>
-          <div class="check-item"><strong>Accès à un espace extérieur</strong><span>Cour, jardin, parc ou simple trajet de proximité pour prolonger certaines observations.</span></div>
-          <div class="check-item"><strong>Végétaux courants, selon l’activité</strong><span>Uniquement lorsque la fiche le prévoit, en choisissant des éléments autorisés et sans prélever d’espèces protégées.</span></div>
-          <div class="check-item"><strong>Un appareil Bluetooth, si besoin</strong><span>Téléphone ou tablette de la structure pour lancer certaines ressources sonores avec les enceintes de la malle.</span></div>
+          <div class="check-item">
+            <strong>Argile</strong>
+            <span>À prévoir pour l’animation « Les oiseaux sont passés par ici… ».</span>
+          </div>
+          <div class="check-item">
+            <strong>Protections pour les enfants</strong>
+            <span>Blouses, tabliers ou protections équivalentes à prévoir de manière générale pour les activités salissantes.</span>
+          </div>
+          <div class="check-item">
+            <strong>Papier pour la peinture</strong>
+            <span>À prévoir pour « Les oiseaux sont passés par ici… » et « Comme des oiseaux ».</span>
+          </div>
+          <div class="check-item">
+            <strong>Pinceaux</strong>
+            <span>À prévoir pour les activités de peinture, notamment « Les oiseaux sont passés par ici… » et « Comme des oiseaux ».</span>
+          </div>
+          <div class="check-item">
+            <strong>Peinture</strong>
+            <span>À prévoir pour « Les oiseaux sont passés par ici… » et « Comme des oiseaux ».</span>
+          </div>
+          <div class="check-item">
+            <strong>Téléphone ou appareil photo</strong>
+            <span>Utile pour photographier des observations, garder une trace d’une découverte ou prolonger certaines propositions dehors.</span>
+          </div>
         </div>
 
         <div class="optional">
