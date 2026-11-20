@@ -1602,10 +1602,10 @@ export default {
         <details class="resource-group">
           <summary>À lire</summary>
           <div class="resource-list">
-            <a class="resource-card" href="https://www.huffingtonpost.fr/life/video/dans-sur-le-front-sur-france-5-hugo-clement-mene-l-enquete-sur-les-oiseaux_197133.html" target="_blank" rel="noopener noreferrer">
-              <span class="resource-type">Le HuffPost</span>
-              <strong>Où sont passés nos oiseaux ?</strong>
-              <small>Bruit, bâtiments, pesticides, agriculture… un point de départ pour réfléchir aux pressions qui touchent les oiseaux.</small>
+            <a class="resource-card" href="https://www.courrierinternational.com/long-format/pollution-sonore-les-oiseaux-ne-s-entendent-plus-dans-un-monde-devenu-trop-bruyant_243737" target="_blank" rel="noopener noreferrer">
+              <span class="resource-type">Courrier international · MIT Technology Review</span>
+              <strong>Les oiseaux ne s’entendent plus dans un monde devenu trop bruyant</strong>
+              <small>Un article sur la pollution sonore et la manière dont le bruit humain perturbe la communication et le chant des oiseaux.</small>
             </a>
           </div>
         </details>
