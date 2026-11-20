@@ -14,7 +14,7 @@ const isActive = (href) => pathname === href || (href === "/blog" && pathname ==
 
 <header class="site-header">
   <a class="brand" href="/" aria-label="Rencontres avec le vivant — Accueil">
-    <img class="brand-logo" src="/images/logo-rencontres.jpg" alt="" aria-hidden="true" />
+    <img class="brand-logo" src="/images/Sans titre-6.png" alt="" aria-hidden="true" />
 
     <span class="brand-text">
       <span>Rencontres</span>
@@ -80,7 +80,7 @@ const isActive = (href) => pathname === href || (href === "/blog" && pathname ==
     background: #fff;
   }
   .brand { display:flex; align-items:center; color:#29271f; text-decoration:none; flex:0 0 auto; }
-  .brand-logo { width:72px; height:72px; flex:0 0 auto; margin-right:11px; object-fit:cover; border-radius:50%; }
+  .brand-logo { width:88px; height:72px; flex:0 0 auto; margin-right:11px; object-fit:contain; object-position:center; border-radius:0; background:transparent; }
   .brand-text { display:flex; flex-direction:column; color:#5a4a3f; font-family:Georgia,"Times New Roman",serif; font-size:1.55rem; line-height:1.05; }
   .brand-text span:last-child { margin-top:4px; color:#657954; font-family:Arial,Helvetica,sans-serif; font-size:.72rem; letter-spacing:.16em; }
   .menu-toggle {
@@ -137,7 +137,7 @@ const isActive = (href) => pathname === href || (href === "/blog" && pathname ==
       gap: 0 12px;
     }
     .brand { min-width: 0; flex: 0 1 auto; }
-    .brand-logo { width: 52px; height: 52px; margin-right: 9px; }
+    .brand-logo { width: 64px; height: 52px; margin-right: 9px; object-fit:contain; }
     .brand-text { font-size: clamp(1.04rem, 3.4vw, 1.32rem); }
     .brand-text span:last-child { font-size: .62rem; letter-spacing: .1em; }
     .menu-toggle { display: inline-flex; flex: 0 0 auto; margin-left: auto; }
@@ -177,7 +177,7 @@ const isActive = (href) => pathname === href || (href === "/blog" && pathname ==
   }
   @media (max-width: 370px) {
     .site-header { padding-inline: 12px; }
-    .brand-logo { width: 44px; height: 44px; }
+    .brand-logo { width: 54px; height: 44px; object-fit:contain; }
     .brand-text { font-size: 1rem; }
     .brand-text span:last-child { font-size: .55rem; }
     .menu-toggle { padding: 8px 10px; }
