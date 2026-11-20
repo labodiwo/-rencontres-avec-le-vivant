@@ -941,6 +941,7 @@ export default {
   </style>
 </head>
 <body>
+  <div class="resource-layout">
   <main>
     <p class="eyebrow">Rencontres avec le vivant · Les oiseaux</p>
     <h1>Lien expiré ou invalide</h1>
@@ -1132,11 +1133,30 @@ export default {
     .observe h3{margin-top:0}
     .observe ul{margin:0;padding-left:20px}
     .observe li{margin:8px 0}
+    .resource-layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:22px;align-items:start;max-width:1480px;margin:0 auto}
+    .resource-layout > main{min-width:0}
+    .resource-rail{position:sticky;top:118px;margin:18px 22px 28px 0;padding:20px 18px;background:#f3f1eb;border:1px solid #dfdcd2;border-radius:12px}
+    .resource-rail .eyebrow{margin-bottom:7px}
+    .resource-rail h2{margin:0 0 8px;font-size:1.35rem;font-weight:500;line-height:1.15}
+    .resource-intro{margin:0 0 16px;color:#66695f;font:.82rem/1.5 Arial,sans-serif}
+    .resource-list{display:grid;gap:10px}
+    .resource-card{display:block;padding:13px 14px;background:#fffefa;border:1px solid #e2dfd7;border-radius:8px;color:#292b23;text-decoration:none}
+    .resource-card:hover{border-color:#9aa37a;background:#fff}
+    .resource-type{display:block;margin-bottom:5px;color:#7d8957;font:700 .65rem Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase}
+    .resource-card strong{display:block;margin-bottom:5px;font-size:.96rem;line-height:1.25}
+    .resource-card small{display:block;color:#696c62;font:.76rem/1.45 Arial,sans-serif}
+    .resource-more{margin:14px 0 0;color:#777a70;font:.74rem/1.45 Arial,sans-serif}
     .footer-note{padding:30px 6%;background:#596243;color:#fffdf8;text-align:center}
     .footer-note p{max-width:760px;margin:0 auto;line-height:1.65}
+    @media(max-width:1100px){
+      .resource-layout{display:block}
+      .resource-rail{position:static;width:min(1100px,88%);margin:18px auto 38px}
+      .resource-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
     @media(max-width:800px){
       .welcome,.outdoor{grid-template-columns:1fr}
       .three-grid,.materials{grid-template-columns:repeat(2,1fr)}
+      .resource-list{grid-template-columns:1fr}
     }
     @media(max-width:600px){
       .hero{padding:42px 24px}
@@ -1552,6 +1572,41 @@ export default {
       </div>
     </details>
   </main>
+
+    <aside class="resource-rail" aria-labelledby="resource-title">
+      <p class="eyebrow">Pour aller plus loin</p>
+      <h2 id="resource-title">Pour nourrir sa curiosité</h2>
+      <p class="resource-intro">Quelques ressources à écouter, lire ou explorer selon vos envies.</p>
+
+      <div class="resource-list">
+        <a class="resource-card" href="https://podcasts.apple.com/la/podcast/gold-les-oiseaux-de-proximit%C3%A9-un-%C3%A9pisode-culte-de/id294060079?i=1000801920001" target="_blank" rel="noopener noreferrer">
+          <span class="resource-type">À écouter · France Inter</span>
+          <strong>Les oiseaux de proximité</strong>
+          <small>Un épisode de La Terre au carré consacré aux oiseaux que l’on peut rencontrer près de chez soi.</small>
+        </a>
+
+        <a class="resource-card" href="https://www.huffingtonpost.fr/life/video/dans-sur-le-front-sur-france-5-hugo-clement-mene-l-enquete-sur-les-oiseaux_197133.html" target="_blank" rel="noopener noreferrer">
+          <span class="resource-type">À lire · Le HuffPost</span>
+          <strong>Où sont passés nos oiseaux ?</strong>
+          <small>Bruit, bâtiments, pesticides, agriculture… un point de départ pour réfléchir aux pressions qui touchent les oiseaux.</small>
+        </a>
+
+        <a class="resource-card" href="https://www.lpo.fr/s-engager-a-nos-cotes/sciences-participatives/observatoire-oiseaux-des-jardins" target="_blank" rel="noopener noreferrer">
+          <span class="resource-type">À explorer · LPO</span>
+          <strong>Observatoire Oiseaux des jardins</strong>
+          <small>Observer, apprendre à reconnaître et participer à un programme de sciences participatives.</small>
+        </a>
+
+        <a class="resource-card" href="https://www.lpo.fr/la-lpo-en-actions/education-a-l-environnement/ressources-pedagogiques/outils-pedagogiques/oisapp" target="_blank" rel="noopener noreferrer">
+          <span class="resource-type">Outil · LPO</span>
+          <strong>OisApp</strong>
+          <small>Une application d’identification des oiseaux de France métropolitaine, utilisable aussi sur le terrain.</small>
+        </a>
+      </div>
+
+      <p class="resource-more">Cette sélection pourra évoluer au fil des découvertes et des nouvelles ressources.</p>
+    </aside>
+  </div>
 
   <footer class="footer-note">
     <p>
