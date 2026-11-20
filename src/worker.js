@@ -1068,6 +1068,13 @@ export default {
     .activity-card h3{margin:0 0 9px;font-size:1.18rem}
     .activity-card p{margin:0;color:#5d6056;font:.88rem/1.6 Arial,sans-serif}
     .activity-card small{display:block;margin-top:12px;color:#777a70;font:.76rem/1.5 Arial,sans-serif}
+    .tools-heading{max-width:720px;margin:42px 0 22px}
+    .tools-heading h3{margin:0 0 10px;font-size:1.5rem;font-weight:500}
+    .tools-heading p:last-child{margin:0;color:#5d6056;font:.9rem/1.6 Arial,sans-serif}
+    .tools-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .tool-card{padding:20px;background:#f8f6f1;border:1px solid #dfdcd2;border-radius:9px}
+    .tool-card h4{margin:0 0 8px;font-size:1.08rem}
+    .tool-card p{margin:0;color:#5d6056;font:.86rem/1.55 Arial,sans-serif}
     .path{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
     .path article{text-align:center;padding:22px 18px;background:#fffefa;border-radius:9px}
     .path strong{display:block;margin-bottom:9px;color:#596243}
@@ -1086,7 +1093,7 @@ export default {
     @media(max-width:600px){
       .hero{padding:42px 24px}
       .section{padding:48px 24px}
-      .three-grid,.materials,.activities,.path,.check-grid{grid-template-columns:1fr}
+      .three-grid,.materials,.activities,.tools-grid,.path,.check-grid{grid-template-columns:1fr}
       .nav{padding-left:20px;padding-right:20px}
       .accordion-section > summary{padding:22px 24px}
       .accordion-content{padding:0 24px 48px}
@@ -1326,12 +1333,76 @@ export default {
           </p>
         </div>
         <div class="activities">
-          <article class="activity-card"><span>Observer</span><h3>Traces au sol et dans le vol</h3><p>Repérer différentes façons de se déplacer et apprendre à regarder les indices laissés autour de nous.</p><small>Fiche détaillée à intégrer.</small></article>
-          <article class="activity-card"><span>Écouter</span><h3>Les sons des oiseaux</h3><p>Écouter, localiser un son et expérimenter les notions de près/loin ou gauche/droite.</p><small>Fiche détaillée à intégrer.</small></article>
-          <article class="activity-card"><span>Habiter</span><h3>Créer un refuge</h3><p>À partir d’une histoire et du mini-monde, réfléchir à ce dont un oiseau peut avoir besoin.</p><small>Fiche détaillée à intégrer.</small></article>
-          <article class="activity-card"><span>Comparer</span><h3>Œufs et nids</h3><p>Observer des différences de formes, tailles, couleurs et associer des éléments par le jeu.</p><small>Fiche détaillée à intégrer.</small></article>
-          <article class="activity-card"><span>Créer</span><h3>Peinture végétale</h3><p>Expérimenter des couleurs et matières issues d’éléments végétaux choisis pour l’activité.</p><small>Fiche détaillée à intégrer.</small></article>
-          <article class="activity-card"><span>Bouger</span><h3>Conte moteur</h3><p>Entrer dans l’univers des oiseaux par le corps, les gestes et différentes façons de se déplacer.</p><small>Fiche détaillée à intégrer.</small></article>
+          <article class="activity-card">
+            <span>Animation 1</span>
+            <h3>Dans le monde des oiseaux</h3>
+            <p>Entrer dans l’univers des oiseaux par le jeu et l’imaginaire, manipuler le mini-monde et laisser les enfants inventer librement.</p>
+            <small>Mini-monde · album ou histoire · exploration libre · prolongement dehors.</small>
+          </article>
+          <article class="activity-card">
+            <span>Animation 2</span>
+            <h3>À l’écoute des oiseaux… et du monde qui nous entoure</h3>
+            <p>Prendre le temps d’écouter, repérer d’où vient un son et découvrir quelques cris et chants d’oiseaux.</p>
+            <small>Écoute · direction du son · près/loin · prolongement dehors.</small>
+          </article>
+          <article class="activity-card">
+            <span>Animation 3</span>
+            <h3>Les oiseaux sont passés par ici…</h3>
+            <p>Découvrir les indices de présence laissés par les oiseaux, explorer les matières naturelles et créer ses propres traces.</p>
+            <small>Boîte d’indices · argile · peinture à la terre · recherche d’indices dehors.</small>
+          </article>
+          <article class="activity-card">
+            <span>Animation 4</span>
+            <h3>Comme des oiseaux</h3>
+            <p>Observer différentes manières de se déplacer chez les oiseaux et les expérimenter avec son corps.</p>
+            <small>Conte en mouvement · cartes de déplacement · peinture du mouvement · observation dehors.</small>
+          </article>
+          <article class="activity-card">
+            <span>Animation 5</span>
+            <h3>Balade avec les oiseaux</h3>
+            <p>Faire de la balade elle-même une expérience : marcher lentement, écouter, suivre du regard, chercher des indices et garder une trace.</p>
+            <small>Animation principalement extérieure · sans matériel spécifique de la malle.</small>
+          </article>
+        </div>
+
+        <div class="tools-heading">
+          <p class="eyebrow">Les autres outils de la malle</p>
+          <h3>À utiliser librement pour compléter vos animations</h3>
+          <p>
+            Ces outils ne constituent pas des animations supplémentaires : ils peuvent soutenir une séance,
+            enrichir le jeu libre ou vous aider à créer votre propre proposition.
+          </p>
+        </div>
+
+        <div class="tools-grid">
+          <article class="tool-card">
+            <h4>Le mini-monde</h4>
+            <p>Un espace de jeu et d’imaginaire ouvert, à installer et enrichir avec quelques éléments de l’environnement.</p>
+          </article>
+          <article class="tool-card">
+            <h4>L’œuf, l’oiseau et son nid</h4>
+            <p>Un jeu d’association pour observer, comparer et découvrir la diversité des œufs et des lieux de nidification.</p>
+          </article>
+          <article class="tool-card">
+            <h4>La boîte des indices photos</h4>
+            <p>Des photographies d’indices de présence pour observer, questionner et mener de petites enquêtes.</p>
+          </article>
+          <article class="tool-card">
+            <h4>Les cartes de déplacement des oiseaux</h4>
+            <p>Des cartes à intégrer dans des jeux connus ou à utiliser pour inventer vos propres propositions motrices.</p>
+          </article>
+          <article class="tool-card">
+            <h4>L’exposition photos à compléter</h4>
+            <p>Des photographies à exposer pendant la semaine et à enrichir avec les observations et créations des enfants.</p>
+          </article>
+          <article class="tool-card">
+            <h4>Les cartes des ressentis</h4>
+            <p>Un support facultatif pour aider les enfants à exprimer un ressenti, une émotion ou une impression en fin d’activité.</p>
+          </article>
+          <article class="tool-card">
+            <h4>L’application Merlin Bird</h4>
+            <p>Un outil complémentaire pour accompagner certaines écoutes et observations lorsque vous souhaitez aller plus loin.</p>
+          </article>
         </div>
       </div>
     
