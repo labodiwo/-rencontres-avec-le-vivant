@@ -974,6 +974,8 @@ export default {
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{margin:0;background:#f8f6f1;color:#292b23;font-family:Georgia,"Times New Roman",serif}
+    body.private-protected{-webkit-user-select:none;user-select:none}
+    a,button,summary{-webkit-user-select:none;user-select:none}
     a{color:inherit}
     .hero{padding:54px 6% 48px;background:#596243;color:#fffdf8}
     .hero-inner{max-width:980px;margin:auto}
@@ -1156,7 +1158,7 @@ export default {
     }
   </style>
 </head>
-<body>
+<body class="private-protected">
   <header class="hero">
     <div class="hero-inner">
       <p class="eyebrow">Rencontres avec le vivant · Espace pédagogique privé</p>
@@ -1557,6 +1559,34 @@ export default {
       et expire automatiquement après la période prévue.
     </p>
   </footer>
+
+  <script>
+    (() => {
+      const copyBlockedMessage = "Les supports de cet espace ne sont pas destinés à être copiés ou diffusés tels quels.";
+
+      document.addEventListener("contextmenu", (event) => {
+        event.preventDefault();
+      });
+
+      document.addEventListener("copy", (event) => {
+        event.preventDefault();
+      });
+
+      document.addEventListener("cut", (event) => {
+        event.preventDefault();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        const modifier = event.ctrlKey || event.metaKey;
+        if (!modifier) return;
+
+        const key = event.key.toLowerCase();
+        if (["c", "x", "a", "s", "p"].includes(key)) {
+          event.preventDefault();
+        }
+      });
+    })();
+  </script>
 </body>
 </html>`, {
         status: 200,
