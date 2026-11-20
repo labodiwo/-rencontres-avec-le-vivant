@@ -1148,7 +1148,7 @@ export default {
     .resource-more{margin:14px 0 0;color:#777a70;font:.74rem/1.45 Arial,sans-serif}
     .footer-note{padding:30px 6%;background:#596243;color:#fffdf8;text-align:center}
     .footer-note p{max-width:760px;margin:0 auto;line-height:1.65}
-    @media(max-width:1100px){
+    @media(max-width:850px){
       .resource-layout{display:block}
       .resource-rail{position:static;width:min(1100px,88%);margin:18px auto 38px}
       .resource-list{grid-template-columns:repeat(2,minmax(0,1fr))}
