@@ -91,9 +91,9 @@ import SiteFooter from "../components/SiteFooter.astro";
             <span>2 semaines</span>
             <strong>370 €</strong>
           </button>
-          <button type="button" class="duration-option" data-duration="4" data-price="640">
+          <button type="button" class="duration-option" data-duration="4" data-price="520">
             <span>4 semaines</span>
-            <strong>640 €</strong>
+            <strong>520 €</strong>
           </button>
         </div>
 
@@ -184,7 +184,7 @@ import SiteFooter from "../components/SiteFooter.astro";
               <select id="duration" name="duration" required>
                 <option value="1">1 semaine · 200 €</option>
                 <option value="2">2 semaines · 370 €</option>
-                <option value="4">4 semaines · 640 €</option>
+                <option value="4">4 semaines · 520 €</option>
               </select>
             </div>
 
@@ -405,7 +405,7 @@ import SiteFooter from "../components/SiteFooter.astro";
       const basePrices = {
         1: 200,
         2: 370,
-        4: 640,
+        4: 520,
       };
 
       const formulaSupplements = {
@@ -760,7 +760,7 @@ import SiteFooter from "../components/SiteFooter.astro";
                   ? "1 semaine · 200 € avant éventuel accompagnement"
                   : selectedDuration === 2
                     ? "2 semaines consécutives · 370 € avant éventuel accompagnement"
-                    : "4 semaines consécutives · 640 € avant éventuel accompagnement";
+                    : "4 semaines consécutives · 520 € avant éventuel accompagnement";
               selectionSummary.hidden = false;
 
               renderCalendar();
