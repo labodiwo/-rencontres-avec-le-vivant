@@ -1055,6 +1055,24 @@ export default {
       color:#575b50;
       font:.88rem/1.6 Arial,Helvetica,sans-serif;
     }
+    .usage-note{
+      margin:0 0 24px;
+      padding:18px 20px;
+      border:1px solid #d8c9b8;
+      border-radius:9px;
+      background:#f6f0e8;
+    }
+    .usage-note strong{
+      display:block;
+      margin-bottom:7px;
+      color:#6a5744;
+      font-family:Arial,Helvetica,sans-serif;
+    }
+    .usage-note p{
+      margin:0;
+      color:#5d554d;
+      font:.88rem/1.6 Arial,Helvetica,sans-serif;
+    }
     .welcome-card,.info-card,.material-card,.activity-card{background:#fffefa;border:1px solid #dfdcd2;border-radius:10px}
     .welcome-card{padding:28px}
     .welcome-card h3{margin:0 0 12px;font-size:1.35rem}
@@ -1180,6 +1198,14 @@ export default {
           <p>
             Cet espace en ligne vous permet de découvrir et de préparer les animations avant la remise de la malle.
             Le livret pédagogique complet, avec l’ensemble des contenus et des fiches, sera également fourni en version papier dans la malle.
+          </p>
+        </div>
+
+        <div class="usage-note">
+          <strong>Usage réservé à votre location</strong>
+          <p>
+            Les fiches, supports et outils pédagogiques présentés dans cet espace sont destinés à préparer et mener les animations avec votre groupe pendant la période de location.
+            Ils ne doivent pas être diffusés, partagés publiquement, reproduits ou réutilisés en dehors de ce cadre sans autorisation préalable.
           </p>
         </div>
 
