@@ -973,7 +973,7 @@ export default {
   <style>
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
-    body{margin:0;background:#F7F1E7;color:#2C2A25;font-family:Georgia,"Times New Roman",serif}
+    body{margin:0;background:#FBFAF7;color:#2C2A25;font-family:Georgia,"Times New Roman",serif}
     body.private-protected{-webkit-user-select:none;user-select:none}
     a,button,summary{-webkit-user-select:none;user-select:none}
     a{color:inherit}
