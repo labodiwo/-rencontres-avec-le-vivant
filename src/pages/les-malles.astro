@@ -112,6 +112,26 @@ import SiteFooter from "../components/SiteFooter.astro";
       </section>
 
 
+      <!-- POSITIONNEMENT -->
+      <section class="toolbox-positioning">
+        <div class="toolbox-positioning-inner">
+          <p class="eyebrow">Pour les professionnels de l’animation</p>
+          <h2>Des boîtes à outils pour faire vivre l’éducation à l’environnement</h2>
+          <p>
+            Vous avez besoin d’outils pour faire vivre l’éducation à l’environnement avec votre groupe ?
+          </p>
+          <p>
+            Les malles <strong>Rencontres avec le vivant</strong> réunissent du matériel, des supports
+            et des propositions pédagogiques à utiliser, adapter et faire évoluer selon votre groupe
+            et votre manière d’animer.
+          </p>
+          <p class="toolbox-signature">
+            Le but n’est pas de vous dire comment faire. <strong>C’est de vous donner de quoi faire.</strong>
+          </p>
+        </div>
+      </section>
+
+
       <!-- POURQUOI LOUER -->
       <section class="rental-benefits">
 
@@ -802,6 +822,42 @@ import SiteFooter from "../components/SiteFooter.astro";
 
       .intro-lead {
         font-size: 1.15rem;
+      }
+
+
+      /* POSITIONNEMENT */
+
+      .toolbox-positioning {
+        padding: 62px 5.5%;
+        background: #dfe3cf;
+      }
+
+      .toolbox-positioning-inner {
+        max-width: 820px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .toolbox-positioning h2 {
+        max-width: 700px;
+        margin: 0 auto 20px;
+        font-size: clamp(2rem, 3.2vw, 2.9rem);
+        line-height: 1.08;
+        font-weight: 500;
+      }
+
+      .toolbox-positioning p:not(.eyebrow) {
+        max-width: 720px;
+        margin: 0 auto 14px;
+        line-height: 1.7;
+      }
+
+      .toolbox-positioning .toolbox-signature {
+        margin-top: 24px;
+        padding-top: 22px;
+        border-top: 1px solid rgba(89, 98, 67, .28);
+        font-size: 1.14rem;
+        color: #3f4930;
       }
 
 
