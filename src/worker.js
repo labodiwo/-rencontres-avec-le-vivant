@@ -1102,8 +1102,8 @@ export default {
       border-radius:50%;
       display:grid;
       place-items:center;
-      background:#7d8957;
-      color:#fff;
+      background:#dfe3cf;
+      color:#4f5741;
       font:700 1.25rem/1 Arial,sans-serif;
       transition:transform .2s ease;
     }
