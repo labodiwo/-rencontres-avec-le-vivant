@@ -1429,7 +1429,7 @@ export default {
       <div class="accordion-content">
       <div class="inner">
         <div class="heading">
-          <p class="eyebrow">À préparer dans votre structure</p>
+          
           <h2>Ce qui n’est pas fourni avec la malle</h2>
           <p>
             La majorité du matériel pédagogique est déjà réunie dans la malle.
