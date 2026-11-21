@@ -1170,20 +1170,31 @@ import SiteFooter from "../components/SiteFooter.astro";
       }
 
       .audience-inner {
-        max-width: 760px;
-
+        max-width: 1120px;
         margin: 0 auto;
       }
 
+      .audience h2 {
+        max-width: 980px;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: clamp(2rem, 3vw, 3.1rem);
+        line-height: 1.08;
+        text-wrap: balance;
+      }
+
       .audience p {
-        line-height: 1.65;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.75;
       }
 
 
       .age-warning {
-        max-width: 720px;
-        margin: 28px auto 0;
-        padding: 18px 20px;
+        max-width: 860px;
+        margin: 32px auto 0;
+        padding: 20px 22px;
         border: 1px solid #d2ad74;
         border-radius: 7px;
         background: #fff3df;
