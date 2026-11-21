@@ -1433,7 +1433,8 @@ export default {
           <h2>Ce qui n’est pas fourni avec la malle</h2>
           <p>
             La majorité du matériel pédagogique est déjà réunie dans la malle.
-            Quelques éléments courants restent à prévoir selon les activités choisies.
+            Seuls quelques consommables courants, généralement déjà présents dans les structures,
+            restent à prévoir selon les activités choisies.
           </p>
         </div>
 
