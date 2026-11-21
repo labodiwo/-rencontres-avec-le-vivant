@@ -526,14 +526,14 @@ import SiteFooter from "../components/SiteFooter.astro";
           </p>
 
           <h2>
-            Pensés pour les structures qui accueillent des enfants, mais aussi pour les animateurs et animatrices indépendants qui interviennent auprès de différents groupes
+            Pensés pour les professionnels de l’animation
           </h2>
 
           <p>
             Les malles peuvent être utilisées dans des accueils de loisirs,
-            maisons de quartier, centres sociaux, médiathèques,
-            écoles ou autres lieux éducatifs. 
-            Elles peuvent être également utilisées dans le cadre familial.
+            maisons de quartier, centres sociaux, médiathèques, écoles ou autres lieux éducatifs,
+            mais aussi par des animateurs et animatrices indépendants qui interviennent auprès de différents groupes.
+            Elles peuvent également être utilisées dans le cadre familial.
           </p>
 
           <p>
@@ -784,7 +784,7 @@ import SiteFooter from "../components/SiteFooter.astro";
         padding: 45px 5.5%;
       }
 
-      .intro-layout { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(290px, 0.8fr); align-items: center; gap: 48px; }
+      .intro-layout { max-width: 1220px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.72fr); align-items: center; gap: 42px; }
       .intro-feature { background: #f1eee8; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 28px rgba(40, 44, 30, .07); }
       .intro-feature img { display: block; width: 100%; aspect-ratio: 1.5 / 1; object-fit: cover; }
       .intro-feature-content { padding: 23px 25px 27px; }
@@ -1170,20 +1170,31 @@ import SiteFooter from "../components/SiteFooter.astro";
       }
 
       .audience-inner {
-        max-width: 760px;
-
+        max-width: 1120px;
         margin: 0 auto;
       }
 
+      .audience h2 {
+        max-width: 1120px;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: clamp(2rem, 2.7vw, 2.7rem);
+        line-height: 1.1;
+        text-wrap: balance;
+      }
+
       .audience p {
-        line-height: 1.65;
+        max-width: 1000px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.8;
       }
 
 
       .age-warning {
-        max-width: 720px;
-        margin: 28px auto 0;
-        padding: 18px 20px;
+        max-width: 860px;
+        margin: 32px auto 0;
+        padding: 20px 22px;
         border: 1px solid #d2ad74;
         border-radius: 7px;
         background: #fff3df;
@@ -1298,7 +1309,7 @@ import SiteFooter from "../components/SiteFooter.astro";
 
         .intro h2 {
           max-width: none;
-          font-size: clamp(1.9rem, 2.35vw, 2.45rem);
+          font-size: clamp(1.8rem, 2.15vw, 2.25rem);
           white-space: nowrap;
         }
 
