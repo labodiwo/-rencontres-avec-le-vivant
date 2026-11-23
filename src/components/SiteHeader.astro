@@ -1,12 +1,12 @@
 <!-- production-refresh-logo-jpeg -->
 ---
 const nav = [
-  { label: "Louer une malle", href: "/louer-une-malle", cta: true },
-  { label: "Les malles", href: "/les-malles" },
+    { label: "Les malles", href: "/les-malles" },
   { label: "À propos", href: "/a-propos" },
   { label: "FAQ", href: "/faq" },
   { label: "Blog", href: "/blog" },
   { label: "Me contacter", href: "/contact" },
+  { label: "Réserver une malle", href: "/louer-une-malle", cta: true },
 ];
 
 const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
@@ -40,6 +40,7 @@ const isActive = (href) => pathname === href || (href === "/blog" && pathname ==
         class={item.cta ? "nav-cta" : undefined}
         aria-current={isActive(item.href) ? "page" : undefined}
       >
+        {item.cta && <svg class="calendar-icon" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/><path d="M8 14h2M14 14h2M8 18h2"/></svg>}
         {item.label}
       </a>
     ))}
@@ -109,6 +110,10 @@ const isActive = (href) => pathname === href || (href === "/blog" && pathname ==
   }
 
   nav .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
     padding: 10px 15px;
     border: 2px solid #596243;
     border-radius: 6px;
@@ -116,6 +121,8 @@ const isActive = (href) => pathname === href || (href === "/blog" && pathname ==
     color: #fff;
     font-weight: 700;
   }
+
+  nav .nav-cta .calendar-icon { flex: 0 0 auto; }
 
   nav .nav-cta:hover,
   nav .nav-cta[aria-current="page"] {
