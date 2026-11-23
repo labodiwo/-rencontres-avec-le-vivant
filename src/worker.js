@@ -1102,8 +1102,8 @@ export default {
       border-radius:50%;
       display:grid;
       place-items:center;
-      background:#7d8957;
-      color:#fff;
+      background:#dfe3cf;
+      color:#4f5741;
       font:700 1.25rem/1 Arial,sans-serif;
       transition:transform .2s ease;
     }
@@ -1429,11 +1429,12 @@ export default {
       <div class="accordion-content">
       <div class="inner">
         <div class="heading">
-          <p class="eyebrow">À préparer dans votre structure</p>
+          
           <h2>Ce qui n’est pas fourni avec la malle</h2>
           <p>
             La majorité du matériel pédagogique est déjà réunie dans la malle.
-            Quelques éléments courants restent à prévoir selon les activités choisies.
+            Seuls quelques consommables courants, généralement déjà présents dans les structures,
+            restent à prévoir selon les activités choisies.
           </p>
         </div>
 
