@@ -55,6 +55,7 @@
             </button>
             <button type="button" class="tab" data-tab="availability">Disponibilités</button>
             <button type="button" class="tab" data-tab="pedagogical">Page pédagogique</button>
+            <button type="button" class="tab" data-tab="blog">Blog</button>
           </div>
 
           <div class="dashboard-summary" aria-label="Résumé des réservations">
@@ -185,6 +186,20 @@
               <span id="pedagogical-status" class="inline-status" role="status"></span>
             </div>
           </section>
+
+          <section id="tab-blog" class="tab-panel" hidden>
+            <div class="section-heading">
+              <p class="section-eyebrow">Contenus du site</p>
+              <h2>Blog</h2>
+              <p>Créez, modifiez et publiez vos articles depuis le même espace d’administration.</p>
+            </div>
+            <iframe
+              id="blog-admin-frame"
+              class="blog-admin-frame"
+              src="/gestion-blog?embed=1"
+              title="Gestion du blog"
+            ></iframe>
+          </section>
         </div>
       </section>
     </main>
@@ -214,6 +229,7 @@
       const savePedagogicalButton = document.getElementById("save-pedagogical-button");
       const resetResourcesButton = document.getElementById("reset-resources-button");
       const pedagogicalStatus = document.getElementById("pedagogical-status");
+      const blogAdminFrame = document.getElementById("blog-admin-frame");
 
       let adminKey = "";
       let availability = {};
@@ -1098,6 +1114,29 @@
 
       savePedagogicalButton.addEventListener("click", savePedagogicalContent);
 
+      const sendBlogAdminAuth = () => {
+        if (!adminKey || !blogAdminFrame?.contentWindow) return;
+        blogAdminFrame.contentWindow.postMessage(
+          { type: "labodiwo-admin-auth", key: adminKey },
+          window.location.origin,
+        );
+      };
+
+      blogAdminFrame?.addEventListener("load", sendBlogAdminAuth);
+
+      window.addEventListener("message", (event) => {
+        if (
+          event.origin !== window.location.origin ||
+          event.data?.type !== "labodiwo-blog-resize" ||
+          !blogAdminFrame
+        ) return;
+
+        const height = Number(event.data.height);
+        if (Number.isFinite(height) && height > 300) {
+          blogAdminFrame.style.height = Math.min(Math.max(height + 8, 900), 4200) + "px";
+        }
+      });
+
       const showTab = (name) => {
         document.querySelectorAll(".tab").forEach((button) => {
           button.classList.toggle("active", button.dataset.tab === name);
@@ -1106,6 +1145,13 @@
         document.querySelectorAll(".tab-panel").forEach((panel) => {
           panel.hidden = panel.id !== `tab-${name}`;
         });
+
+        if (name === "blog") {
+          history.replaceState(null, "", "#blog");
+          sendBlogAdminAuth();
+        } else if (window.location.hash === "#blog") {
+          history.replaceState(null, "", window.location.pathname + window.location.search);
+        }
       };
 
       document.querySelectorAll(".tab").forEach((button) => {
@@ -1119,6 +1165,10 @@
             } catch (error) {
               pedagogicalStatus.textContent = error.message || "Chargement impossible.";
             }
+          }
+
+          if (button.dataset.tab === "blog") {
+            sendBlogAdminAuth();
           }
         });
       });
@@ -1267,7 +1317,9 @@
           loginCard.hidden = true;
           adminPanel.hidden = false;
           loginStatus.textContent = "";
-          showTab("planning");
+          const initialTab = window.location.hash === "#blog" ? "blog" : "planning";
+          showTab(initialTab);
+          if (initialTab === "blog") sendBlogAdminAuth();
         } catch (error) {
           adminKey = "";
           loginStatus.textContent = error.message || "Mot de passe incorrect.";
@@ -1296,6 +1348,18 @@
     </script>
 
     <style is:global>
+      .admin-cross-link{
+        display:inline-block;
+        margin-top:18px;
+        padding:10px 14px;
+        border:1px solid rgba(255,255,255,.55);
+        border-radius:5px;
+        color:#fff;
+        text-decoration:none;
+        font:700 .86rem Arial,Helvetica,sans-serif;
+      }
+      .admin-cross-link:hover{background:rgba(255,255,255,.1)}
+      .admin-cross-link:focus-visible{outline:3px solid #dfe3cf;outline-offset:4px}
       * { box-sizing: border-box; }
 
       body {
@@ -1478,6 +1542,15 @@
         background:#9b6a21;
         color:#fff;
         font:700 .72rem Arial,Helvetica,sans-serif;
+      }
+
+      .blog-admin-frame {
+        display: block;
+        width: 100%;
+        min-height: 900px;
+        border: 0;
+        border-radius: 9px;
+        background: transparent;
       }
 
       .dashboard-summary {
