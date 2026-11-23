@@ -65,9 +65,9 @@
               <small>demande(s) reçue(s)</small>
             </div>
             <div class="summary-card">
-              <span>Confirmées</span>
+              <span>Payées</span>
               <strong id="summary-confirmed">0</strong>
-              <small>location(s) à venir</small>
+              <small>réservation(s) confirmée(s)</small>
             </div>
             <div class="summary-card">
               <span>À venir</span>
@@ -396,16 +396,18 @@
 
       const statusLabels = {
         new: "Demande reçue",
-        confirmed: "Réservation confirmée",
-        paid: "Payée",
+        confirmed: "Demande validée",
+        awaiting_payment: "En attente de paiement",
+        paid: "Payée / confirmée",
         completed: "Terminée",
         cancelled: "Annulée",
       };
 
       const statusDescriptions = {
-        new: "À traiter · les dates restent indiquées comme demande en cours.",
-        confirmed: "Dates bloquées comme réservées dans le calendrier.",
-        paid: "Réservation confirmée et règlement reçu.",
+        new: "À traiter · la demande n’est pas encore validée.",
+        confirmed: "Demande validée · vous pouvez maintenant envoyer le lien de paiement.",
+        awaiting_payment: "Lien de paiement envoyé · la réservation sera confirmée dès réception du règlement.",
+        paid: "Paiement reçu · la réservation est confirmée.",
         completed: "Location terminée et dossier clos.",
         cancelled: "Réservation annulée · les dates sont libérées.",
       };
@@ -606,11 +608,39 @@
               </div>
             </div>
 
+            <div class="payment-panel">
+              <div class="payment-panel-head">
+                <div>
+                  <span class="section-eyebrow">Règlement</span>
+                  <strong>Paiement de la location</strong>
+                </div>
+                <span class="payment-state payment-state-${escapeHtml(item.status)}">
+                  ${item.status === "paid" ? "Paiement reçu" : item.status === "awaiting_payment" ? "En attente" : "À préparer"}
+                </span>
+              </div>
+              <p>
+                ${item.status === "new"
+                  ? "Validez d’abord la demande et enregistrez la fiche."
+                  : item.status === "confirmed"
+                    ? "La demande est validée. Vous pouvez créer et envoyer le lien de paiement sécurisé."
+                    : item.status === "awaiting_payment"
+                      ? "Le lien de paiement a été envoyé à la structure. Vous pouvez en générer un nouveau si nécessaire."
+                      : item.status === "paid"
+                        ? "Le règlement a été reçu : la réservation est maintenant confirmée."
+                        : "Aucune action de paiement n’est nécessaire pour ce dossier."}
+              </p>
+              ${item.paymentSentAt ? `<p class="payment-meta">Dernier lien envoyé le ${escapeHtml(new Date(item.paymentSentAt).toLocaleString("fr-FR"))}.</p>` : ""}
+              ${item.paidAt ? `<p class="payment-meta"><strong>Payé le ${escapeHtml(new Date(item.paidAt).toLocaleString("fr-FR"))}.</strong></p>` : ""}
+              ${["confirmed","awaiting_payment"].includes(item.status) ? `<button type="button" data-send-payment="${escapeHtml(item.id)}">Créer et envoyer le lien de paiement</button>` : ""}
+              ${item.paymentUrl && item.status === "awaiting_payment" ? `<a class="payment-link" href="${escapeHtml(item.paymentUrl)}" target="_blank" rel="noopener">Ouvrir le lien de paiement</a>` : ""}
+              <div data-payment-result="${escapeHtml(item.id)}" class="access-result" role="status"></div>
+            </div>
+
             <div class="pedagogical-access">
-              <strong>Accès au livret numérique</strong>
-              <p>Créez un lien privé après confirmation. Il expire trois jours après la fin de la location. La création d’un nouveau lien invalide le précédent.</p>
+              <strong>Accès à l’espace pédagogique</strong>
+              <p>Créez le lien privé après réception du paiement. Il expire trois jours après la fin de la location.</p>
               <p>${item.pedagogicalAccess ? "Lien actif jusqu’au " + escapeHtml(formatDateShort(item.pedagogicalAccess.expiresAt?.slice(0,10))) + " (UTC), sauf annulation." : "Aucun lien créé."}</p>
-              ${["confirmed","paid"].includes(item.status) ? `<button type="button" data-create-access="${escapeHtml(item.id)}">Créer / renouveler le lien</button>` : ""}
+              ${item.status === "paid" ? `<button type="button" data-create-access="${escapeHtml(item.id)}">Créer / renouveler le lien</button>` : ""}
               ${item.pedagogicalAccess ? `<button type="button" class="delete-button" data-revoke-access="${escapeHtml(item.id)}">Désactiver le lien</button>` : ""}
               <div data-access-result="${escapeHtml(item.id)}" class="access-result" role="status"></div>
             </div>
@@ -635,6 +665,9 @@
           });
         });
 
+        requestsList.querySelectorAll("[data-send-payment]").forEach(button => {
+          button.addEventListener("click", () => sendPaymentLink(button.dataset.sendPayment));
+        });
         requestsList.querySelectorAll("[data-create-access]").forEach(button => {
           button.addEventListener("click", () => manageAccess(button.dataset.createAccess, "create"));
         });
@@ -655,7 +688,7 @@
           (item) => !["completed", "cancelled"].includes(item.status)
         );
         const confirmed = active.filter(
-          (item) => ["confirmed", "paid"].includes(item.status)
+          (item) => item.status === "paid"
         );
 
         summaryNew.textContent = String(
@@ -719,6 +752,46 @@
         updateSummary();
         renderPlanning();
         renderRequests();
+      };
+
+      const sendPaymentLink = async (id) => {
+        const reservation = reservations.find((item) => item.id === id);
+        const output = document.querySelector('[data-payment-result="' + CSS.escape(id) + '"]');
+        if (!reservation || !output) return;
+
+        if (!["confirmed", "awaiting_payment"].includes(reservation.status)) {
+          output.textContent = "Validez d’abord la demande.";
+          return;
+        }
+
+        if (!confirm("Créer un nouveau lien Stripe et l’envoyer par e-mail à la structure ?")) return;
+
+        output.textContent = "Création du lien de paiement…";
+
+        try {
+          const response = await fetch("/api/admin/payment", {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              "x-admin-key": adminKey,
+            },
+            body: JSON.stringify({ id }),
+          });
+          const result = await response.json();
+          if (!response.ok || !result.ok) {
+            throw new Error(result.error || "Le lien de paiement n’a pas pu être créé.");
+          }
+
+          await loadReservations();
+          const fresh = document.querySelector('[data-payment-result="' + CSS.escape(id) + '"]');
+          if (fresh) {
+            fresh.textContent = result.emailSent
+              ? "Lien de paiement créé et envoyé par e-mail."
+              : "Lien créé, mais l’e-mail n’a pas pu être envoyé automatiquement.";
+          }
+        } catch (error) {
+          output.textContent = error.message || "Erreur lors de la création du paiement.";
+        }
       };
 
       const manageAccess = async (id, action) => {
@@ -2271,6 +2344,50 @@
         .week-card { padding:15px 14px; }
         .status-actions button { min-height:46px; }
       }
-    </style>
+    
+      .payment-panel {
+        margin-top: 18px;
+        padding: 18px;
+        border: 1px solid #d7d5ca;
+        border-radius: 7px;
+        background: #f7f6ef;
+      }
+      .payment-panel-head {
+        display:flex;
+        align-items:flex-start;
+        justify-content:space-between;
+        gap:16px;
+        margin-bottom:8px;
+      }
+      .payment-panel-head strong { display:block; margin-top:3px; font-size:1.05rem; }
+      .payment-panel p { margin:8px 0; line-height:1.55; }
+      .payment-meta { color:#66695f; font-size:.86rem; }
+      .payment-state {
+        flex:0 0 auto;
+        padding:6px 9px;
+        border-radius:999px;
+        background:#ece9df;
+        font:700 .72rem Arial,Helvetica,sans-serif;
+      }
+      .payment-state-paid { background:#dfe8d8; color:#3f5738; }
+      .payment-state-awaiting_payment { background:#fff0ce; color:#755922; }
+      .payment-panel button,
+      .payment-link {
+        display:inline-flex;
+        align-items:center;
+        margin-top:8px;
+        margin-right:8px;
+        padding:10px 13px;
+        border:0;
+        border-radius:4px;
+        background:#536653;
+        color:white;
+        text-decoration:none;
+        font-weight:700;
+        cursor:pointer;
+      }
+      .payment-link { background:#fff; color:#536653; border:1px solid #9ca791; }
+      .status-awaiting_payment { background:#fff0ce; color:#755922; }
+</style>
   </body>
 </html>
