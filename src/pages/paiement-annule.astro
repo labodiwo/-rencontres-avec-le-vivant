@@ -1,0 +1,50 @@
+---
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/images/logo.jpeg" type="image/jpeg" />
+    <title>Paiement non finalisé · Rencontres avec le vivant</title>
+  </head>
+  <body>
+    <SiteHeader />
+    <main class="payment-result">
+      <div class="card">
+        <p class="eyebrow">Réservation</p>
+        <h1>Le paiement n’a pas été finalisé</h1>
+        <p>
+          Aucun règlement n’a été confirmé. Votre demande reste en attente et
+          votre réservation n’est pas encore définitive.
+        </p>
+        <p>
+          Vous pouvez utiliser à nouveau le lien reçu par e-mail s’il est toujours
+          valide, ou nous contacter si vous rencontrez une difficulté.
+        </p>
+        <div class="actions">
+          <a href="/contact" class="button">Nous contacter</a>
+          <a href="/" class="secondary">Retour à l’accueil</a>
+        </div>
+      </div>
+    </main>
+    <SiteFooter />
+    <style>
+      :global(*){box-sizing:border-box}
+      :global(body){margin:0;background:#f9f7f2;color:#292b23;font-family:Georgia,"Times New Roman",serif}
+      .payment-result{min-height:65vh;padding:72px 24px;display:grid;place-items:center}
+      .card{width:min(680px,100%);padding:42px;border:1px solid #dedbd2;border-radius:10px;background:#fff;text-align:center}
+      .eyebrow{margin:0 0 8px;color:#657954;font:700 .72rem Arial,sans-serif;letter-spacing:.11em;text-transform:uppercase}
+      h1{margin:0 0 18px;font-size:clamp(2rem,4vw,3.2rem);font-weight:500}
+      p{line-height:1.65}
+      .actions{margin-top:22px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+      .button,.secondary{display:inline-block;padding:12px 18px;border-radius:4px;text-decoration:none;font-weight:700}
+      .button{background:#536653;color:white}
+      .secondary{border:1px solid #9ca791;color:#536653;background:#fff}
+    </style>
+  </body>
+</html>
