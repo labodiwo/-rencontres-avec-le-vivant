@@ -8,6 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <title>Gestion du blog · Rencontres avec le vivant</title>
+    <script is:inline>
+      const blogAdminParams = new URLSearchParams(window.location.search);
+      if (blogAdminParams.get("embed") === "1") {
+        document.documentElement.classList.add("embedded-blog-admin");
+      } else {
+        window.location.replace("/gestion-disponibilites#blog");
+      }
+    </script>
   </head>
 
   <body>
@@ -16,7 +24,6 @@
         <p class="eyebrow">Espace privé</p>
         <h1>Gestion du blog</h1>
         <p>Créez, modifiez et publiez vos articles sans toucher au code du site.</p>
-        <a class="admin-cross-link" href="/gestion-disponibilites">Réservations et disponibilités →</a>
       </section>
 
       <section class="wrap">
@@ -695,9 +702,66 @@
         resetForm();
         form.scrollIntoView({ behavior: "smooth", block: "start" });
       });
+
+      const embeddedMode =
+        new URLSearchParams(window.location.search).get("embed") === "1";
+
+      const reportEmbeddedHeight = () => {
+        if (!embeddedMode || window.parent === window) return;
+        const height = Math.max(
+          document.body.scrollHeight,
+          document.documentElement.scrollHeight,
+        );
+        window.parent.postMessage(
+          { type: "labodiwo-blog-resize", height },
+          window.location.origin,
+        );
+      };
+
+      if (embeddedMode) {
+        window.addEventListener("message", async (event) => {
+          if (
+            event.origin !== window.location.origin ||
+            event.data?.type !== "labodiwo-admin-auth"
+          ) return;
+
+          const receivedKey = String(event.data?.key || "");
+          if (!receivedKey) return;
+
+          adminKey = receivedKey;
+          loginStatus.textContent = "";
+
+          try {
+            await loadPosts();
+            loginCard.hidden = true;
+            panel.hidden = false;
+
+            if (!fields.date.value) {
+              resetForm();
+              restoreLocalDraft();
+            }
+
+            requestAnimationFrame(reportEmbeddedHeight);
+          } catch (error) {
+            adminKey = "";
+            panel.hidden = true;
+          }
+        });
+
+        if ("ResizeObserver" in window) {
+          const observer = new ResizeObserver(() => reportEmbeddedHeight());
+          observer.observe(document.body);
+        }
+
+        window.addEventListener("load", reportEmbeddedHeight);
+      }
     </script>
 
     <style>
+      :global(html.embedded-blog-admin) :global(body){background:transparent}
+      :global(html.embedded-blog-admin) .hero,
+      :global(html.embedded-blog-admin) .login-card{display:none!important}
+      :global(html.embedded-blog-admin) .wrap{width:100%;padding:0 0 20px}
       .admin-cross-link{display:inline-block;margin-top:18px;padding:10px 14px;border:1px solid rgba(255,255,255,.55);border-radius:5px;color:#fff;text-decoration:none;font:700 .86rem Arial,Helvetica,sans-serif}.admin-cross-link:hover{background:rgba(255,255,255,.1)}.admin-cross-link:focus-visible{outline:3px solid #dfe3cf;outline-offset:4px}
       :global(*){box-sizing:border-box}:global(body){margin:0;background:#f9f7f2;color:#292b23;font-family:Georgia,"Times New Roman",serif}.hero{padding:65px 24px 55px;background:#596243;color:#fff;text-align:center}.eyebrow{margin:0 0 10px;color:#74785e;font:700 .73rem Arial,Helvetica,sans-serif;letter-spacing:.11em;text-transform:uppercase}.hero .eyebrow{color:rgba(255,255,255,.72)}.hero h1{margin:0 0 15px;font-size:clamp(2.7rem,6vw,4.8rem);font-weight:500}.hero p:last-child{max-width:650px;margin:0 auto;line-height:1.6}.wrap{width:min(980px,90%);margin:0 auto;padding:55px 0 85px}
       .login-card{max-width:520px;margin:0 auto;padding:32px;background:#fffefa;border:1px solid #dedbd2;border-radius:9px}.login-card h2{margin:0 0 10px;font-size:1.8rem;font-weight:500}.login-card label,.field label{display:block;margin-bottom:8px;font:600 .84rem Arial,Helvetica,sans-serif}.login-card input,.field input,.field textarea,.field select{width:100%;padding:13px 14px;border:1px solid #cac7bd;border-radius:4px;background:#fff;font:1rem Arial,Helvetica,sans-serif}.login-card button,.post-form button,.topbar button,.post-actions button{min-height:44px;padding:10px 16px;border:0;border-radius:4px;background:#7d8957;color:#fff;cursor:pointer;font-weight:700}.login-card button{width:100%;margin-top:14px}
