@@ -61,6 +61,58 @@ const slugify = (value) =>
     .replace(/^-+|-+$/g, "")
     .slice(0, 90);
 
+const getReservationAmountCents = (reservation) => {
+  const duration = Number(reservation?.duration);
+  const base = { 1: 20000, 2: 37000, 4: 52000 }[duration];
+  if (!base) return 0;
+  const supplement =
+    String(reservation?.formula || "").toLowerCase().includes("accompagnement")
+      ? 14000
+      : 0;
+  return base + supplement;
+};
+
+const hexFromBuffer = (buffer) =>
+  Array.from(new Uint8Array(buffer), (byte) =>
+    byte.toString(16).padStart(2, "0"),
+  ).join("");
+
+const verifyStripeSignature = async (payload, signatureHeader, secret) => {
+  if (!signatureHeader || !secret) return false;
+
+  const parts = String(signatureHeader)
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  const timestampPart = parts.find((part) => part.startsWith("t="));
+  const signatures = parts
+    .filter((part) => part.startsWith("v1="))
+    .map((part) => part.slice(3));
+
+  const timestamp = Number(timestampPart?.slice(2));
+  if (!Number.isFinite(timestamp) || !signatures.length) return false;
+
+  const now = Math.floor(Date.now() / 1000);
+  if (Math.abs(now - timestamp) > 300) return false;
+
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const digest = await crypto.subtle.sign(
+    "HMAC",
+    key,
+    new TextEncoder().encode(`${timestamp}.${payload}`),
+  );
+  const expected = hexFromBuffer(digest);
+
+  return signatures.some((signature) => safeEqual(signature, expected));
+};
+
 const getAvailabilityStub = (env) => {
   const id = env.AVAILABILITY.idFromName("calendar");
   return env.AVAILABILITY.get(id);
@@ -501,13 +553,13 @@ export class ReservationsStore extends DurableObject {
       );
 
       const expiredUnsuccessful =
-        ["new", "cancelled"].includes(reservation.status) &&
+        ["new", "confirmed", "awaiting_payment", "cancelled"].includes(reservation.status) &&
         Number.isFinite(referenceDate) &&
         referenceDate < oneYearCutoff;
 
       let clientRelationshipEndedAt = NaN;
       if (
-        ["confirmed", "paid", "completed"].includes(reservation.status) &&
+        ["paid", "completed"].includes(reservation.status) &&
         /^\d{4}-\d{2}-\d{2}$/.test(reservation.weekIso || "")
       ) {
         const duration = Math.max(
@@ -524,7 +576,7 @@ export class ReservationsStore extends DurableObject {
       // Fallback pour les anciennes fiches sans date de location exploitable.
       if (
         !Number.isFinite(clientRelationshipEndedAt) &&
-        ["confirmed", "paid", "completed"].includes(reservation.status)
+        ["paid", "completed"].includes(reservation.status)
       ) {
         clientRelationshipEndedAt = referenceDate;
       }
@@ -574,8 +626,8 @@ export class ReservationsStore extends DurableObject {
         await this.ctx.storage.put("reservations", reservations);
         return json({ ok: true });
       }
-      if (action !== "create" || !["confirmed", "paid"].includes(reservation.status)) {
-        return json({ ok: false, error: "Confirmez d’abord la réservation." }, 400);
+      if (action !== "create" || reservation.status !== "paid") {
+        return json({ ok: false, error: "Le paiement doit être reçu avant de créer l’accès." }, 400);
       }
       if (!reservation.weekIso) {
         return json({ ok: false, error: "Enregistrez d’abord la date de début de location." }, 400);
@@ -611,7 +663,7 @@ export class ReservationsStore extends DurableObject {
       const valid = Object.values(reservations).some(r =>
         r.pedagogicalAccess?.tokenHash === hash &&
         Date.parse(r.pedagogicalAccess.expiresAt) > Date.now() &&
-        ["confirmed", "paid", "completed"].includes(r.status)
+        ["paid", "completed"].includes(r.status)
       );
       return json({ ok: valid }, valid ? 200 : 403);
     }
@@ -629,6 +681,12 @@ export class ReservationsStore extends DurableObject {
 
       const reservation = {
         pedagogicalAccess: previous.pedagogicalAccess || null,
+        paymentStatus: clean(body.paymentStatus ?? previous.paymentStatus, 30),
+        paymentSessionId: clean(body.paymentSessionId ?? previous.paymentSessionId, 180),
+        paymentIntentId: clean(body.paymentIntentId ?? previous.paymentIntentId, 180),
+        paymentUrl: clean(body.paymentUrl ?? previous.paymentUrl, 2000),
+        paymentSentAt: clean(body.paymentSentAt ?? previous.paymentSentAt, 40),
+        paidAt: clean(body.paidAt ?? previous.paidAt, 40),
         id,
         kit: clean(body.kit || previous.kit, 120),
         week: clean(body.week || previous.week, 220),
@@ -662,7 +720,7 @@ export class ReservationsStore extends DurableObject {
       };
 
       if (
-        !["new", "confirmed", "paid", "completed", "cancelled"].includes(
+        !["new", "confirmed", "awaiting_payment", "paid", "completed", "cancelled"].includes(
           reservation.status,
         )
       ) {
@@ -699,6 +757,141 @@ export class ReservationsStore extends DurableObject {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    if (url.pathname === "/api/stripe/webhook") {
+      if (request.method !== "POST") {
+        return json({ ok: false, error: "Méthode non autorisée." }, 405);
+      }
+      if (!env.STRIPE_WEBHOOK_SECRET) {
+        return json({ ok: false, error: "Webhook Stripe non configuré." }, 503);
+      }
+
+      const payload = await request.text();
+      const signature = request.headers.get("stripe-signature") || "";
+      const valid = await verifyStripeSignature(
+        payload,
+        signature,
+        env.STRIPE_WEBHOOK_SECRET,
+      );
+      if (!valid) {
+        return json({ ok: false, error: "Signature Stripe invalide." }, 400);
+      }
+
+      let event;
+      try {
+        event = JSON.parse(payload);
+      } catch {
+        return json({ ok: false, error: "Événement Stripe invalide." }, 400);
+      }
+
+      const session = event?.data?.object || {};
+      const paidEvent =
+        event?.type === "checkout.session.async_payment_succeeded" ||
+        (event?.type === "checkout.session.completed" &&
+          session.payment_status === "paid");
+
+      if (paidEvent) {
+        const reservationId = clean(
+          session?.metadata?.reservation_id || session.client_reference_id,
+          80,
+        );
+        const stub = getReservationsStub(env);
+        const currentResponse = await stub.fetch(
+          "https://reservations.internal/reservations",
+        );
+        const current = await currentResponse.json();
+        const reservation = (current.reservations || []).find(
+          (item) => item.id === reservationId,
+        );
+
+        if (reservation) {
+          const expectedAmount = getReservationAmountCents(reservation);
+          const amountMatches =
+            Number(session.amount_total) === expectedAmount &&
+            String(session.currency || "").toLowerCase() === "eur";
+
+          if (!amountMatches) {
+            console.error("Montant Stripe inattendu pour la réservation", reservationId);
+            return json({ ok: false, error: "Montant de paiement incohérent." }, 400);
+          }
+
+          const wasAlreadyPaid = reservation.status === "paid";
+          const paidAt = reservation.paidAt || new Date().toISOString();
+
+          await stub.fetch(
+            new Request("https://reservations.internal/reservations", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({
+                ...reservation,
+                status: "paid",
+                paymentStatus: "paid",
+                paymentSessionId: clean(session.id, 180),
+                paymentIntentId: clean(session.payment_intent, 180),
+                paymentUrl: "",
+                paidAt,
+              }),
+            }),
+          );
+
+          if (reservation.weekIso) {
+            const duration = Math.max(
+              1,
+              Math.min(4, Number(reservation.duration) || 1),
+            );
+            const start = new Date(reservation.weekIso + "T12:00:00");
+            const availabilityStub = getAvailabilityStub(env);
+            for (let index = 0; index < duration; index += 1) {
+              const date = new Date(start);
+              date.setDate(start.getDate() + index * 7);
+              await availabilityStub.fetch(
+                new Request("https://availability.internal/availability", {
+                  method: "POST",
+                  headers: { "content-type": "application/json" },
+                  body: JSON.stringify({
+                    week: date.toISOString().slice(0, 10),
+                    status: "booked",
+                  }),
+                }),
+              );
+            }
+          }
+
+          if (!wasAlreadyPaid && env.EMAIL && reservation.email) {
+            try {
+              await env.EMAIL.send({
+                to: reservation.email,
+                from: {
+                  email: "reservations@labodiwo.com",
+                  name: "Rencontres avec le vivant",
+                },
+                subject: "Votre réservation est confirmée",
+                text: [
+                  `Bonjour ${reservation.name || ""},`,
+                  "",
+                  "Nous avons bien reçu votre règlement.",
+                  "Votre réservation de la malle pédagogique est désormais confirmée.",
+                  "",
+                  `Période : ${reservation.week || "À confirmer"}`,
+                  `Formule : ${reservation.formula || "Autonome"}`,
+                  `Montant réglé : ${(expectedAmount / 100).toFixed(2).replace(".", ",")} €`,
+                  "",
+                  "Nous reviendrons vers vous avec les informations pratiques de remise de la malle et l’accès pédagogique prévu pour votre location.",
+                  "",
+                  "À bientôt,",
+                  "Rencontres avec le vivant",
+                  "https://labodiwo.com",
+                ].join("\n"),
+              });
+            } catch (error) {
+              console.error("E-mail de confirmation de paiement non envoyé", error);
+            }
+          }
+        }
+      }
+
+      return json({ ok: true });
+    }
 
     if (url.pathname.startsWith("/api/admin/")) {
       if (!env.ADMIN_KEY) {
@@ -1958,6 +2151,159 @@ export default {
       });
     }
 
+    if (url.pathname === "/api/admin/payment") {
+      if (request.method !== "POST") {
+        return json({ ok: false, error: "Méthode non autorisée." }, 405);
+      }
+      if (!env.STRIPE_SECRET_KEY) {
+        return json(
+          {
+            ok: false,
+            error:
+              "Stripe n’est pas encore connecté. Ajoutez la clé secrète Stripe dans Cloudflare pour activer les paiements.",
+          },
+          503,
+        );
+      }
+
+      const body = await request.json();
+      const id = clean(body.id, 80);
+      const stub = getReservationsStub(env);
+      const currentResponse = await stub.fetch(
+        "https://reservations.internal/reservations",
+      );
+      const current = await currentResponse.json();
+      const reservation = (current.reservations || []).find(
+        (item) => item.id === id,
+      );
+
+      if (!reservation) {
+        return json({ ok: false, error: "Réservation introuvable." }, 404);
+      }
+      if (!["confirmed", "awaiting_payment"].includes(reservation.status)) {
+        return json(
+          { ok: false, error: "Validez d’abord la demande avant d’envoyer le paiement." },
+          400,
+        );
+      }
+      if (!reservation.conditionsAccepted) {
+        return json(
+          { ok: false, error: "Les conditions de location doivent avoir été acceptées." },
+          400,
+        );
+      }
+      if (!isEmail(reservation.email)) {
+        return json({ ok: false, error: "Adresse e-mail client invalide." }, 400);
+      }
+
+      const amount = getReservationAmountCents(reservation);
+      if (!amount) {
+        return json({ ok: false, error: "Montant de location invalide." }, 400);
+      }
+
+      const params = new URLSearchParams();
+      params.set("mode", "payment");
+      params.set("customer_email", reservation.email);
+      params.set("client_reference_id", reservation.id);
+      params.set("success_url", `${url.origin}/paiement-confirme`);
+      params.set("cancel_url", `${url.origin}/paiement-annule`);
+      params.set("line_items[0][price_data][currency]", "eur");
+      params.set("line_items[0][price_data][unit_amount]", String(amount));
+      params.set(
+        "line_items[0][price_data][product_data][name]",
+        `Location malle pédagogique · ${reservation.duration || "1"} semaine(s)`,
+      );
+      params.set("line_items[0][quantity]", "1");
+      params.set("metadata[reservation_id]", reservation.id);
+
+      const stripeResponse = await fetch(
+        "https://api.stripe.com/v1/checkout/sessions",
+        {
+          method: "POST",
+          headers: {
+            authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
+            "content-type": "application/x-www-form-urlencoded",
+          },
+          body: params,
+        },
+      );
+      const session = await stripeResponse.json();
+
+      if (!stripeResponse.ok || !session?.id || !session?.url) {
+        console.error("Erreur création Stripe Checkout", session);
+        return json(
+          { ok: false, error: "Stripe n’a pas pu créer le lien de paiement." },
+          502,
+        );
+      }
+
+      const sentAt = new Date().toISOString();
+      const updateResponse = await stub.fetch(
+        new Request("https://reservations.internal/reservations", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            ...reservation,
+            status: "awaiting_payment",
+            paymentStatus: "pending",
+            paymentSessionId: session.id,
+            paymentUrl: session.url,
+            paymentSentAt: sentAt,
+          }),
+        }),
+      );
+      const updated = await updateResponse.json();
+      if (!updateResponse.ok || !updated.ok) {
+        return json({ ok: false, error: "Le paiement a été créé mais la fiche n’a pas pu être mise à jour." }, 500);
+      }
+
+      let emailSent = false;
+      if (env.EMAIL) {
+        try {
+          await env.EMAIL.send({
+            to: reservation.email,
+            from: {
+              email: "reservations@labodiwo.com",
+              name: "Rencontres avec le vivant",
+            },
+            subject: "Paiement de votre réservation · Rencontres avec le vivant",
+            text: [
+              `Bonjour ${reservation.name || ""},`,
+              "",
+              "Votre demande de réservation a été validée.",
+              "",
+              `Période : ${reservation.week || "À confirmer"}`,
+              `Formule : ${reservation.formula || "Autonome"}`,
+              `Montant à régler : ${(amount / 100).toFixed(2).replace(".", ",")} €`,
+              "",
+              "Vous pouvez régler votre location de manière sécurisée avec Stripe en utilisant le lien suivant :",
+              session.url,
+              "",
+              "La réservation deviendra définitive après réception du paiement.",
+              "Aucune caution n’est demandée. Les conditions de location restent consultables ici :",
+              "https://labodiwo.com/conditions-location",
+              "",
+              "À bientôt,",
+              "Rencontres avec le vivant",
+              "https://labodiwo.com",
+              "",
+              "Ceci est un e-mail automatique, merci de ne pas y répondre.",
+            ].join("\n"),
+          });
+          emailSent = true;
+        } catch (error) {
+          console.error("Lien de paiement créé mais e-mail non envoyé", error);
+        }
+      }
+
+      return json({
+        ok: true,
+        checkoutUrl: session.url,
+        emailSent,
+        reservation: updated.reservation,
+      });
+    }
+
     if (url.pathname === "/api/admin/reservations") {
       if (!env.ADMIN_KEY) {
         return json(
@@ -2012,7 +2358,7 @@ export default {
 
           if (!Number.isNaN(start.getTime())) {
             const availabilityStatus =
-              status === "confirmed" || status === "paid" || status === "completed"
+              status === "paid" || status === "completed"
                 ? "booked"
                 : status === "cancelled"
                   ? "available"

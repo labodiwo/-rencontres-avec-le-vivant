@@ -1,0 +1,47 @@
+---
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/images/logo.jpeg" type="image/jpeg" />
+    <title>Paiement reçu · Rencontres avec le vivant</title>
+  </head>
+  <body>
+    <SiteHeader />
+    <main class="payment-result">
+      <div class="card">
+        <div class="icon" aria-hidden="true">✓</div>
+        <p class="eyebrow">Réservation</p>
+        <h1>Merci, votre paiement a bien été effectué</h1>
+        <p>
+          Votre réservation est désormais confirmée. Un e-mail récapitulatif
+          vous sera envoyé avec les prochaines informations utiles pour votre location.
+        </p>
+        <p class="note">
+          Si vous venez tout juste de régler, la confirmation peut nécessiter quelques
+          instants avant d’apparaître dans notre système.
+        </p>
+        <a href="/" class="button">Retour à l’accueil</a>
+      </div>
+    </main>
+    <SiteFooter />
+    <style>
+      :global(*){box-sizing:border-box}
+      :global(body){margin:0;background:#f9f7f2;color:#292b23;font-family:Georgia,"Times New Roman",serif}
+      .payment-result{min-height:65vh;padding:72px 24px;display:grid;place-items:center}
+      .card{width:min(680px,100%);padding:42px;border:1px solid #dedbd2;border-radius:10px;background:#fff;text-align:center}
+      .icon{width:54px;height:54px;margin:0 auto 18px;display:grid;place-items:center;border-radius:50%;background:#dfe8d8;color:#3f5738;font:700 1.5rem Arial,sans-serif}
+      .eyebrow{margin:0 0 8px;color:#657954;font:700 .72rem Arial,sans-serif;letter-spacing:.11em;text-transform:uppercase}
+      h1{margin:0 0 18px;font-size:clamp(2rem,4vw,3.2rem);font-weight:500}
+      p{line-height:1.65}
+      .note{color:#6e7067;font-size:.92rem}
+      .button{display:inline-block;margin-top:16px;padding:12px 18px;border-radius:4px;background:#536653;color:white;text-decoration:none;font-weight:700}
+    </style>
+  </body>
+</html>
