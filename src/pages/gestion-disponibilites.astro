@@ -19,6 +19,7 @@
           Retrouvez votre planning, les demandes reçues et les disponibilités
           de la malle au même endroit.
         </p>
+        <a class="admin-cross-link" href="/gestion-blog">Gérer le blog →</a>
       </section>
 
       <section class="admin-wrap">
@@ -1296,6 +1297,18 @@
     </script>
 
     <style is:global>
+      .admin-cross-link{
+        display:inline-block;
+        margin-top:18px;
+        padding:10px 14px;
+        border:1px solid rgba(255,255,255,.55);
+        border-radius:5px;
+        color:#fff;
+        text-decoration:none;
+        font:700 .86rem Arial,Helvetica,sans-serif;
+      }
+      .admin-cross-link:hover{background:rgba(255,255,255,.1)}
+      .admin-cross-link:focus-visible{outline:3px solid #dfe3cf;outline-offset:4px}
       * { box-sizing: border-box; }
 
       body {
