@@ -1310,7 +1310,7 @@ export default {
           <strong>Le livret complet sera dans la malle</strong>
           <p>
             Cet espace en ligne vous permet de découvrir et de préparer les animations avant la remise de la malle.
-            Le livret pédagogique complet, avec l’ensemble des contenus et des fiches, sera également fourni en version papier dans la malle.
+            Le livret pédagogique et les supports sont accessibles au format numérique dans cet espace privé.
           </p>
         </div>
 
