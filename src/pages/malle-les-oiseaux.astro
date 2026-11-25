@@ -303,6 +303,33 @@ import SiteFooter from "../components/SiteFooter.astro";
       </section>
 
 
+      <section class="cycle-learning" id="cycle-1">
+        <div class="cycle-inner">
+          <div class="section-heading">
+            <p class="eyebrow">En lien avec les apprentissages du cycle 1</p>
+            <h2>Grandir et apprendre au contact du vivant</h2>
+            <p>Pensée pour les enfants de 3 à 5 ans, la malle pédagogique « Les oiseaux » propose des expériences qui s’inscrivent dans la continuité des apprentissages de l’école maternelle.</p>
+            <p>À travers le jeu libre, l’observation, la manipulation, l’écoute, le mouvement et la création, les enfants mobilisent différentes compétences tout en découvrant le monde qui les entoure.</p>
+          </div>
+          <div class="cycle-grid">
+            <article><h3>Découvrir le vivant</h3><p>Observer les oiseaux, leurs habitats et leurs traces ; manipuler et expérimenter.</p></article>
+            <article><h3>Développer le langage</h3><p>Écouter des récits, nommer, décrire et partager ses découvertes.</p></article>
+            <article><h3>Explorer le mouvement</h3><p>Imiter les déplacements des oiseaux et varier ses gestes grâce au conte moteur.</p></article>
+            <article><h3>S’exprimer et créer</h3><p>Explorer les traces picturales, les rythmes, les gestes et les sons.</p></article>
+            <article><h3>Se repérer dans le temps et l’espace</h3><p>Localiser un chant, distinguer le proche du lointain et situer les oiseaux dans le mini-monde.</p></article>
+            <article><h3>Comparer et organiser</h3><p>Associer les œufs à leurs modèles, comparer les formes et les tailles, dénombrer.</p></article>
+          </div>
+          <p class="cycle-source">Ces propositions font écho aux domaines d’apprentissage du cycle 1. <a href="https://eduscol.education.gouv.fr/4341/enseigner-au-cycle-1">Consulter les programmes officiels sur Éduscol.</a></p>
+          <aside class="cycle-continuity">
+            <p class="eyebrow">Des temps éducatifs complémentaires</p>
+            <h2>Une continuité éducative</h2>
+            <p>La malle favorise une complémentarité entre les temps scolaires, périscolaires et extrascolaires. Elle peut constituer un support commun pour les enseignants et les animateurs, chacun l’utilisant selon ses objectifs et sa pédagogie, notamment dans le cadre d’un projet éducatif territorial (PEDT).</p>
+            <p>Sans chercher à reproduire des situations scolaires, elle privilégie une pédagogie de l’expérience et de l’attention, respectueuse du rythme, de la curiosité et des initiatives de chaque enfant.</p>
+            <p><strong>Apprendre en rencontrant le vivant, plutôt qu’apprendre uniquement à son sujet.</strong></p>
+          </aside>
+        </div>
+      </section>
+
       <!-- UTILISATION -->
       <section class="formats">
 
@@ -1311,6 +1338,21 @@ import SiteFooter from "../components/SiteFooter.astro";
         }
 
       }
+
+      .cycle-learning { padding: 65px 5.5%; background: #f9f7f6; }
+      .cycle-inner { max-width: 1050px; margin: 0 auto; }
+      .cycle-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+      .cycle-grid article { padding: 25px; background: #edf1e8; border-radius: 8px; border-top: 3px solid #536653; }
+      .cycle-grid h3 { margin: 0 0 10px; color: #395b43; font-size: 1.18rem; }
+      .cycle-grid p, .cycle-source { margin: 0; font: .92rem/1.6 Arial, Helvetica, sans-serif; }
+      .cycle-source { margin: 20px 0 35px; color: #596243; }
+      .cycle-source a { color: #395b43; }
+      .cycle-continuity { background: #536653; color: #fffdf8; border-radius: 8px; padding: clamp(24px, 4vw, 45px); }
+      .cycle-continuity .eyebrow { color: #e0e7d8; }
+      .cycle-continuity h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 500; margin: 0 0 16px; }
+      .cycle-continuity p { line-height: 1.65; max-width: 850px; }
+      @media (max-width: 900px) { .cycle-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+      @media (max-width: 600px) { .cycle-grid { grid-template-columns: 1fr; } }
 
     </style>
 
